@@ -12,9 +12,12 @@ export default function Hud({ v }) {
         <div style={{ font: "500 9.5px/1.2 'DM Mono',monospace", color: "#6E5A4E", marginTop: "2px" }}>AKUN LV 23</div>
       </div>
       <div style={{ flex: "1" }} />
-      <div onClick={v.goShop} style={{ display: "flex", alignItems: "center", gap: "5px", height: "28px", padding: "0 9px 0 3px", borderRadius: "14px", background: "#2B1E18", color: "#FFF8EC", font: "700 12.5px/1 'Bricolage Grotesque'", cursor: "pointer" }}>
+      <div onClick={v.tapEnergy} style={{ position: "relative", display: "flex", alignItems: "center", gap: "5px", height: "28px", padding: "0 9px 0 3px", borderRadius: "14px", background: "#2B1E18", color: "#FFF8EC", font: "700 12.5px/1 'Bricolage Grotesque'", cursor: "pointer" }}>
         <span style={{ width: "22px", height: "22px", display: "grid", placeItems: "center", borderRadius: "50%", background: "#3C78C8", color: "#FFF8EC", font: "15px/1 'Material Symbols Rounded'" }}>bolt</span>
         {v.energyLabel}
+        {v.energyTimer && (
+          <span style={{ position: "absolute", top: "100%", left: "50%", transform: "translateX(-50%)", marginTop: "3px", padding: "2px 5px", borderRadius: "6px", background: "#3C78C8", color: "#FFF8EC", font: "500 8.5px/1 'DM Mono',monospace", letterSpacing: ".02em", whiteSpace: "nowrap", pointerEvents: "none" }}>{v.energyTimer}</span>
+        )}
       </div>
       <div onClick={v.goShop} style={{ display: "flex", alignItems: "center", gap: "5px", height: "28px", padding: "0 9px 0 4px", borderRadius: "14px", background: "#2B1E18", color: "#FFF8EC", font: "700 12.5px/1 'Bricolage Grotesque'", cursor: "pointer" }}>
         <span style={{ width: "20px", height: "20px", borderRadius: "50%", background: "#F2B63C", boxShadow: "inset 0 0 0 2px #C28A16,inset 0 0 0 5px #F2B63C,inset 0 0 0 6.5px #C28A16" }} />

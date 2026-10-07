@@ -18,8 +18,20 @@ export const SKILLS = [
   { id: 'ngemil', name: 'Ngemil', rar: 'Langka', icon: 'ramen_dining', desc: 'Pulihkan HP sebesar 15% kerusakan yang diberikan.', learn: 'Santoni kini bisa makan sambil bertarung. Dan sebaliknya.' },
   { id: 'tidur', name: 'Tidur Ayam', rar: 'Epik', icon: 'bedtime', desc: 'Sekali per battle saat HP < 30%: pulihkan 35% HP. Musuh menunggu karena sungkan.', learn: 'Santoni menguasai seni tidur di mana saja.' },
   { id: 'statis', name: 'Bulu Statis', rar: 'Epik', icon: 'bolt', desc: '25% peluang petir 70% ATK tiap serangan. Bulu makin mengembang.', learn: 'Santoni menggosok badan ke karpet. Sekarang Santoni berbahaya.' },
-  { id: 'belang', name: 'Sembilan Belang', rar: 'Legendaris', icon: 'auto_awesome', desc: 'Tiap serangan diikuti sabetan ekor 45% ATK. Ekornya tetap satu.', learn: 'Belang di ekor Santoni bersinar. Lalu berhenti. Malu.' }
+  { id: 'belang', name: 'Sembilan Belang', rar: 'Legendaris', icon: 'auto_awesome', desc: 'Tiap serangan diikuti sabetan ekor 45% ATK. Ekornya tetap satu.', learn: 'Belang di ekor Santoni bersinar. Lalu berhenti. Malu.' },
+  { id: 'menguap', name: 'Menguap', rar: 'Biasa', icon: 'snooze', desc: '12% peluang menghindari serangan musuh. Waktunya selalu pas.', learn: 'Santoni menguap. Sebuah tinju lewat di tempat kepalanya tadi berada.' },
+  { id: 'celengan', name: 'Celengan Ayam', rar: 'Biasa', icon: 'savings', desc: '+30% koin dari musuh dan kejadian di jalan.', learn: 'Santoni membawa celengan. Celengannya berbunyi tiap Santoni melangkah.' },
+  { id: 'kardus', name: 'Kardus Bekas', rar: 'Biasa', icon: 'inventory_2', desc: '+15% DEF. Serangan pertama musuh tiap battle hanya setengah sakit.', learn: 'Santoni memakai kardus. Tulisannya "JANGAN DIBANTING".' },
+  { id: 'catat', name: 'Buku Catatan', rar: 'Biasa', icon: 'edit_note', desc: '+30% XP dari semua sumber. Naik level lebih cepat.', learn: 'Santoni mulai mencatat. Catatan pertama: "beli bambu".' },
+  { id: 'sabar', name: 'Kesabaran Tipis', rar: 'Langka', icon: 'hourglass_bottom', desc: 'Tiap kali terkena serangan, ATK +7% sampai battle selesai. Menumpuk.', learn: 'Santoni menghitung sampai sepuluh. Santoni berhenti di tujuh.' },
+  { id: 'kaktus', name: 'Bantal Kaktus', rar: 'Langka', icon: 'grass', desc: 'Memantulkan 30% kerusakan yang diterima ke musuh.', learn: 'Santoni tidur di atas kaktus. Kaktusnya yang minta maaf.' },
+  { id: 'sambal', name: 'Sambal Terasi', rar: 'Epik', icon: 'local_fire_department', desc: 'Tiap serangan menambah 1 lapis pedas (maks 5). Musuh kepedasan 6% ATK per lapis tiap giliran.', learn: 'Santoni membawa sambal dalam toples. Tutupnya tidak rapat.' },
+  { id: 'kembaran', name: 'Kembaran Tak Resmi', rar: 'Epik', icon: 'group', desc: '30% peluang kembaran ikut memukul 70% ATK. Ia mengaku sepupu.', learn: 'Ada panda merah lain yang mirip Santoni. Ia tidak mau ditanya.' },
+  { id: 'sindiran', name: 'Sindiran Halus', rar: 'Epik', icon: 'sentiment_dissatisfied', desc: '+50% kerusakan ke musuh yang HP-nya di bawah 35%.', learn: 'Santoni belajar menyindir. Santoni tidak pernah menaikkan suara.' },
+  { id: 'kesiangan', name: 'Bangun Kesiangan', rar: 'Legendaris', icon: 'alarm', desc: 'Sekali per perjalanan: saat HP habis, Santoni bangun lagi dengan 50% HP.', learn: 'Santoni menyetel alarm. Alarmnya juga ketiduran.' }
 ];
+// Energy refills one point every `regenMs` up to `max`, also while the game is closed.
+export const ENERGY = { max: 30, cost: 5, regenMs: 5 * 60 * 1000 };
 export const ENEMIES = {
   tikus: { name: 'Tikus Kantoran', icon: 'pest_control_rodent', hp: 300, atk: 62, def: 6, intro: 'Ia membawa map berisi laporan yang belum selesai.', hit: 'Tikus Kantoran melempar stapler.', lose: 'Ia pulang lebih awal. Pertama kalinya dalam enam tahun.' },
   bebek: { name: 'Bebek Satpam', icon: 'flutter_dash', hp: 380, atk: 54, def: 14, intro: 'Ia meminta Santoni menitipkan KTP.', hit: 'Bebek Satpam meniup peluit tepat di telinga Santoni.', lose: 'Ia kembali ke pos. Pura-pura tidak terjadi apa-apa.' },

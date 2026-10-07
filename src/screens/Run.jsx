@@ -104,12 +104,12 @@ export default function Run({ v }) {
         </div>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: "8px", flex: "none", height: "54px" }}>
-        <div style={{ flex: "1", minWidth: "0", height: "100%", boxSizing: "border-box", display: "flex", alignItems: "center", gap: "8px", padding: "0 9px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", overflow: "hidden" }}>
+        <div style={{ flex: "1", minWidth: "0", height: "100%", boxSizing: "border-box", display: "flex", alignItems: "center", gap: "8px", padding: "0 9px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", overflowX: "auto", overflowY: "hidden", scrollbarWidth: "none" }}>
           {v.noSkills && (
             <span style={{ font: "600 12px/1.25 'Bricolage Grotesque'", color: "#6E5A4E" }}>Belum ada skill. Santoni mengandalkan wajah.</span>
           )}
           {v.ownedSkills.map((k, i) => (
-              <div key={k.key ?? k.id ?? i} style={{ position: "relative", width: "34px", height: "34px", flex: "none", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2px solid #2B1E18", borderRadius: "10px", background: k.bg, color: k.fg, font: "19px/1 'Material Symbols Rounded'" }}>
+              <div key={k.key ?? k.id ?? i} onClick={k.tap} style={{ cursor: "pointer", position: "relative", width: "34px", height: "34px", flex: "none", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2px solid #2B1E18", borderRadius: "10px", background: k.bg, color: k.fg, font: "19px/1 'Material Symbols Rounded'" }}>
                 {k.icon}
                 {k.multi && (
                   <span style={{ position: "absolute", right: "-5px", bottom: "-5px", minWidth: "16px", height: "16px", padding: "0 3px", boxSizing: "border-box", borderRadius: "8px", background: "#2B1E18", color: "#FFF8EC", font: "800 9px/16px 'Bricolage Grotesque'", textAlign: "center" }}>{k.count}</span>

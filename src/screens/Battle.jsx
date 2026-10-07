@@ -42,9 +42,9 @@ export default function Battle({ v }) {
       </div>
       <div style={{ position: "absolute", top: "404px", left: "238px", right: "12px", display: "flex", flexDirection: "column", gap: "9px" }}>
         <div style={{ font: "500 9.5px/1 'DM Mono',monospace", letterSpacing: ".1em", color: "#B9C4BE" }}>SKILL AKTIF</div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,40px)", gap: "8px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: `repeat(${v.bTile.cols},${v.bTile.size}px)`, gap: `${v.bTile.gap}px` }}>
           {v.battleSkills.map((k, i) => (
-              <div key={k.key ?? k.id ?? i} style={{ position: "relative", width: "40px", height: "40px", boxSizing: "border-box", display: "grid", placeItems: "center", border: `2.5px solid ${k.ring}`, borderRadius: "12px", background: k.bg, color: k.fg, font: "22px/1 'Material Symbols Rounded'", boxShadow: k.glow, transition: "box-shadow .15s,border-color .15s" }}>
+              <div key={k.key ?? k.id ?? i} style={{ position: "relative", width: `${v.bTile.size}px`, height: `${v.bTile.size}px`, boxSizing: "border-box", display: "grid", placeItems: "center", border: `2.5px solid ${k.ring}`, borderRadius: `${v.bTile.radius}px`, background: k.bg, color: k.fg, font: `${v.bTile.icon}px/1 'Material Symbols Rounded'`, boxShadow: k.glow, transition: "box-shadow .15s,border-color .15s" }}>
                 {k.icon}
                 {k.multi && (
                   <span style={{ position: "absolute", right: "-6px", bottom: "-6px", minWidth: "16px", height: "16px", padding: "0 3px", boxSizing: "border-box", borderRadius: "8px", background: "#FFF8EC", color: "#2B1E18", font: "800 9px/16px 'Bricolage Grotesque'", textAlign: "center" }}>{k.count}</span>
