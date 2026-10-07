@@ -1,0 +1,588 @@
+import { Component } from 'react';
+import * as C from './data.js';
+import { stripEl, popEl, bannerEl, burstEl, pullCardsEl } from './effects.jsx';
+import GameView from './GameView.jsx';
+import { loadSave, writeSave } from './save.js';
+
+// Petualangan Santoni — game state + rules. `buildView()` turns state into the flat
+// view model that the screen components in src/screens render.
+export default class Game extends Component {
+  constructor(props) {
+    super(props);
+    this._uid = 1000; this._acc = 0;
+    this.logRef = el => { this._logEl = el; if (el) this.scrollLog(); };
+    this._init = props.screen || 'lobby'; this._initDays = this.days(props);
+    this.state = this.initial(this._init, props);
+    const saved = props.persist && loadSave(this._initDays);
+    if (saved) { this.state = { ...this.state, ...saved.state }; this._uid = saved.uid || this._uid; }
+  }
+  uid() { this._uid = (this._uid || 1000) + 1; return this._uid; }
+  days(p) { const d = parseInt((p || this.props || {}).runDays, 10); return d === 10 || d === 30 ? d : 20; }
+  marks(days) { return [Math.round(days * 0.35), Math.round(days * 0.7), days]; }
+  pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+
+  seedJournal(days) {
+    const E = (id, day, text, fx, tone) => ({ id, day, text, fx: fx || [], tone: tone || 'plain' });
+    return [
+      { id: 901, chapter: 2, day: Math.round(days * 0.7), maxDay: days, win: false, entries: [
+        E(1, 0, 'Santoni berangkat ke Rawa Kerupuk. Tidak ada yang mengantar.'),
+        E(2, 2, 'Santoni mendaftar asuransi. Polisnya berlaku sejak kemarin.', [{ k: 'maxHp', v: 160 }]),
+        E(3, 4, 'Santoni mempelajari Ekor Kipas. Ekor Santoni bergerak sendiri. Santoni memutuskan tidak bertanya.', [], 'skill'),
+        E(4, 7, 'Seekor siput menyalip Santoni. Santoni tidak mengejar.'),
+        E(5, 10, 'Lebah Notaris kalah. Ia mengesahkan kekalahannya sendiri. Rapi.', [{ k: 'coins', v: 180 }, { k: 'xp', v: 90 }], 'win'),
+        E(6, 12, 'Santoni melihat ke dalam sumur. Isinya lebah. Lebahnya juga kaget.', [{ k: 'hp', v: -160 }], 'bad'),
+        E(7, 13, 'Santoni berdiri dengan dua kaki. Bebek Satpam memutuskan punya urusan lain.', [{ k: 'coins', v: 59 }], 'win'),
+        E(8, Math.round(days * 0.7), 'Kelinci Penagih menendang terlalu keras. Santoni memutuskan pulang.', [], 'bad')
+      ] },
+      { id: 902, chapter: 1, day: days, maxDay: days, win: true, entries: [
+        E(11, 0, 'Santoni berangkat ke Pasar Subuh. Pasarnya sudah tutup.'),
+        E(12, 5, 'Santoni menang lomba diam. Katak masih diam. Mungkin katak juga menang.', [{ k: 'xp', v: 60 }]),
+        E(13, 9, 'Santoni makan kerupuk melempem. Melempem, tapi jujur.', [{ k: 'hp', v: 110 }]),
+        E(14, days, 'Angsa Pengacara kalah. Ia mengajukan banding. Banding ditolak.', [{ k: 'coins', v: 1500 }], 'win')
+      ] }
+    ];
+  }
+  initial(screen, p) {
+    const days = this.days(p);
+    const s = {
+      screen: 'lobby', coins: 12480, gems: 1480, energy: 25, chapter: 2,
+      best: [days, days, Math.round(days * 0.7), 0, 0, 0],
+      chests: { '0-0': 1, '0-1': 1, '0-2': 1, '1-0': 1, '1-1': 1, '1-2': 1, '2-0': 1 },
+      equipped: { senjata: 'sumpit', topi: 'panci', baju: 'syal', kalung: 'tutup', sabuk: 'rafia', sepatu: 'sandal' },
+      bag: ['centong', 'helm', 'gesper', 'payung', 'pramuka', 'jashujan', 'cincin', 'kaoskaki', 'payung', 'cincin'],
+      pity: 2, sold: {}, bubble: 0, speed: 1, daily: false, act: null, heroPoseIdx: 0, openJ: null, tick: 0, journal: this.seedJournal(days),
+      run: null, offer: null, battle: null, result: null, pull: null, toast: null, shake: null
+    };
+    const d = Math.max(6, Math.round(days * 0.75));
+    const mkRun = () => ({
+      chapter: 2, day: d, maxDay: days, hp: 868, maxHp: 1310, atk: 172, def: 66, lvl: 5, xp: 70, xpNext: 160,
+      skills: ['kipas', 'cakar', 'bulu', 'kipas'], coins: 340, kills: 5, used: ['sandal', 'katak', 'tombol'], auto: true, event: null, queue: null,
+      log: [
+        { id: 1, day: d - 5, text: 'Kumbang Galau kalah. Ia terbang, merasa sedikit lebih baik.', fx: [{ k: 'coins', v: 62 }, { k: 'xp', v: 45 }], tone: 'win' },
+        { id: 2, day: d - 4, text: 'Santoni memakai sandal kiri. Langkahnya kini asimetris.', fx: [{ k: 'def', v: 10 }], tone: 'plain' },
+        { id: 3, day: d - 3, text: 'Seekor siput menyalip Santoni. Santoni tidak mengejar.', fx: [], tone: 'plain' },
+        { id: 4, day: d - 2, text: 'Santoni berdiri dengan dua kaki. Bebek Satpam memutuskan punya urusan lain.', fx: [{ k: 'coins', v: 59 }, { k: 'xp', v: 25 }], tone: 'win' },
+        { id: 5, day: d - 1, text: 'Santoni tidur siang empat jam. Dunia tidak menunggu.', fx: [{ k: 'hp', v: 90 }], tone: 'plain' }
+      ]
+    });
+    if (screen === 'run' || screen === 'skill' || screen === 'gertak') {
+      s.screen = 'run'; s.run = mkRun();
+      if (screen === 'run') s.run.event = { kind: 'choice', id: 'tombol' };
+      if (screen === 'gertak') s.run.event = { kind: 'enemy', enemy: 'kelinci' };
+      if (screen === 'skill') { s.run.day = d - 1; s.offer = { kind: 'lvl', from: 5, to: 6, ids: ['kipas', 'tidur', 'statis'], rerolls: 1 }; }
+    } else if (screen === 'battle') {
+      s.screen = 'battle'; s.run = mkRun(); s.run.day = days; s.run.hp = 640; s.act = { who: 'hero', t: 0 };
+      const en = this.makeEnemy('angsa', days); en.hp = Math.round(en.maxHp * 0.54);
+      s.battle = {
+        enemy: en, turn: 7, heroTurn: true, hits: 6, firstDone: true, napUsed: false, over: null, proc: 'kipas',
+        log: [
+          { id: 11, text: 'Angsa Pengacara menghadang. Ia mewakili semua angsa yang pernah merasa dirugikan.', tone: 'enemy' },
+          { id: 12, text: 'Angsa Pengacara mengajukan keberatan. Dengan paruh. 148.', tone: 'enemy' },
+          { id: 13, text: 'Santoni menatap kosong, lalu memukul. Kritis. 412.', tone: 'crit' },
+          { id: 14, text: 'Ekor Santoni mengipas. Angsa Pengacara jadi sejuk. 275.', tone: 'skill' }
+        ],
+        pops: [{ id: 21, t: 0, side: 'enemy', text: 'KRITIS 412', kind: 'crit', dx: -24, dy: 0 }, { id: 22, t: 0, side: 'enemy', text: '−275', kind: 'skill', dx: 46, dy: 40 }],
+        banner: { id: 31, text: 'Ekor Kipas!' }
+      };
+    } else if (screen === 'result') {
+      s.screen = 'result';
+      s.result = { win: false, day: Math.round(days * 0.8), maxDay: days, kills: 6, skills: 4, coins: 3420, gems: 40, xp: 312, item: 'centong', record: true, chapter: 2, quote: C.QUOTES[0] };
+    } else if (screen === 'hero' || screen === 'map' || screen === 'shop') s.screen = screen;
+    return s;
+  }
+
+  componentDidMount() {
+    this.syncTimer();
+    if (this.props.persist) {
+      this._save = () => writeSave(this.state, this.days(), this._uid);
+      this._saveIv = setInterval(this._save, 2000);
+      addEventListener('pagehide', this._save);
+      document.addEventListener('visibilitychange', this._save);
+    }
+    this.scrollLog();
+  }
+  componentWillUnmount() {
+    clearInterval(this._iv); this._iv = null;
+    if (this._save) {
+      clearInterval(this._saveIv);
+      removeEventListener('pagehide', this._save);
+      document.removeEventListener('visibilitychange', this._save);
+    }
+  }
+  componentDidUpdate(pp, ps) {
+    const p = this.props;
+    if ((p.screen || 'lobby') !== this._init || this.days(p) !== this._initDays) {
+      this._init = p.screen || 'lobby'; this._initDays = this.days(p);
+      this.setState(this.initial(this._init, p));
+    }
+    if (!!pp.still !== !!p.still) this.syncTimer();
+    const a = ps.run ? ps.run.log.length : -1, b = this.state.run ? this.state.run.log.length : -1;
+    if (a !== b || ps.screen !== this.state.screen || !!ps.offer !== !!this.state.offer) this.scrollLog();
+  }
+  // The whole game runs on one 100 ms tick; `still` freezes it for static previews.
+  syncTimer() {
+    clearInterval(this._iv); this._iv = null;
+    if (!this.props.still) this._iv = setInterval(() => this.loop(), 100);
+  }
+  scrollLog() { requestAnimationFrame(() => { const el = this._logEl; if (el) el.scrollTop = el.scrollHeight; }); }
+
+  loop() {
+    const s = this.state, p = this.props || {};
+    if (p.still) return;
+    if (s.shake) this.setState({ shake: null });
+    if (s.act && Date.now() - s.act.t > 380) this.setState({ act: null });
+    if (s.screen === 'lobby') { this._tk = (this._tk || 0) + 1; if (this._tk % 35 === 0) this.setState({ tick: (s.tick || 0) + 1 }); }
+    if (s.toast && Date.now() > s.toast.until) this.setState({ toast: null });
+    const step = 100 * (s.speed || 1);
+    if (s.screen === 'run' && s.run && !s.run.event && !s.offer && s.run.auto) {
+      this._acc += step;
+      if (this._acc >= 1400) { this._acc = 0; this.advanceDay(); }
+    } else if (s.screen === 'battle' && s.battle) {
+      this._acc += step;
+      if (s.battle.over) { if (this._acc >= 1300) { this._acc = 0; this.endBattle(); } }
+      else if (this._acc >= 650) { this._acc = 0; this.battleStep(); }
+    } else this._acc = 0;
+  }
+
+  heroBase(eq) {
+    let atk = 100, hp = 800, def = 20;
+    Object.values(eq).forEach(id => { const it = C.ITEMS[id]; if (!it) return; if (it.stat === 'ATK') atk += it.val; else if (it.stat === 'HP') hp += it.val; else def += it.val; });
+    return { atk, hp, def };
+  }
+  power(st) { return st.atk * 40 + st.hp * 4 + st.def * 60; }
+  itemScore(id) { const it = C.ITEMS[id]; return !it ? 0 : it.stat === 'HP' ? it.val / 6 : it.stat === 'DEF' ? it.val * 1.6 : it.val; }
+  makeEnemy(key, day) {
+    const e = C.ENEMIES[key], f = 1 + day * 0.06, hp = Math.round(e.hp * f);
+    return { key, name: e.name, icon: e.icon, boss: !!e.boss, lvl: Math.max(1, Math.round(day * 1.1) + (e.boss ? 4 : 0)), hp, maxHp: hp, atk: Math.round(e.atk * f), def: Math.round(e.def * f) };
+  }
+  rollSkills(n) {
+    const pool = C.SKILLS.slice(), out = [];
+    while (out.length < n && pool.length) {
+      const tot = pool.reduce((a, k) => a + C.RAR[k.rar].w, 0); let x = Math.random() * tot, i = 0;
+      for (; i < pool.length; i++) { x -= C.RAR[pool[i].rar].w; if (x <= 0) break; }
+      out.push(pool.splice(Math.min(i, pool.length - 1), 1)[0].id);
+    }
+    return out;
+  }
+  rollItem(good) {
+    const ids = Object.keys(C.ITEMS).filter(id => !good || C.ITEMS[id].rar !== 'Biasa');
+    const tot = ids.reduce((a, id) => a + C.RAR[C.ITEMS[id].rar].w, 0); let x = Math.random() * tot;
+    for (const id of ids) { x -= C.RAR[C.ITEMS[id].rar].w; if (x <= 0) return id; }
+    return ids[ids.length - 1];
+  }
+  bluffChance(r) { return Math.min(0.9, 0.55 + 0.15 * r.skills.filter(k => k === 'gertak').length); }
+
+  go(key) { this.setState({ screen: key, pull: null }); }
+  toast(text) { this.setState({ toast: { id: this.uid(), text, until: Date.now() + 2800 } }); }
+  shiftChapter(dir) {
+    const days = this.days(), n = this.state.chapter + dir;
+    if (n < 0 || n > 5) return;
+    if (n > 0 && this.state.best[n - 1] < days) return this.toast('Bab berikutnya masih terkunci. Gemboknya serius.');
+    this.setState({ chapter: n });
+  }
+  selectChapter(i) {
+    if (i > 0 && this.state.best[i - 1] < this.days()) return this.toast(`Selesaikan Bab ${i} dulu. Gemboknya serius.`);
+    this.setState({ chapter: i });
+  }
+  tapDaily() {
+    if (this.state.daily) return this.toast('Sudah diambil. Kembali besok. Santoni juga.');
+    this.setState({ daily: true, gems: this.state.gems + 50 });
+    this.toast('Login hari ke-4: +50 permata. Santoni datang lagi besok. Mungkin.');
+  }
+  claimChest(ci, mi) {
+    const s = this.state, m = this.marks(this.days())[mi], key = `${ci}-${mi}`;
+    if (s.chests[key]) return this.toast('Peti ini sudah kosong. Santoni sudah memeriksa dua kali.');
+    if (s.best[ci] < m) return this.toast(`Capai Hari ${m} untuk membuka. Petinya sabar.`);
+    const gems = 30 * (mi + 1);
+    this.setState({ chests: Object.assign({}, s.chests, { [key]: 1 }), gems: s.gems + gems });
+    this.toast(`Peti dibuka: +${gems} permata.`);
+  }
+
+  startRun() {
+    const s = this.state;
+    if (s.energy < 5) return this.toast('Energi habis. Santoni juga.');
+    const st = this.heroBase(s.equipped), ch = C.CHAPTERS[s.chapter];
+    const run = { chapter: s.chapter, day: 0, maxDay: this.days(), hp: st.hp, maxHp: st.hp, atk: st.atk, def: st.def, lvl: 1, xp: 0, xpNext: 70, skills: [], coins: 100, kills: 0, used: [], auto: true, event: null, queue: null,
+      log: [{ id: this.uid(), day: 0, text: `Santoni berangkat ke ${ch.name}. Tidak ada yang mengantar.`, fx: [], tone: 'plain' }] };
+    this._acc = 0;
+    this.setState({ energy: s.energy - 5, screen: 'run', run, battle: null, result: null, pull: null, offer: { kind: 'start', ids: this.rollSkills(3), rerolls: 1 } });
+  }
+  toggleAuto() { const r = this.state.run; if (r) this.setState({ run: Object.assign({}, r, { auto: !r.auto }) }); }
+  quitRun() { const r = this.state.run; if (r) this.finishRun(Object.assign({}, r), false); }
+  pickSkill(id) {
+    const s = this.state; if (!s.run) return;
+    const r = Object.assign({}, s.run, { skills: s.run.skills.concat(id) }), k = C.SKILLS.find(x => x.id === id), fx = [];
+    if (id === 'cakar') { const d = Math.round(r.atk * 0.12); r.atk += d; fx.push({ k: 'atk', v: d }); }
+    if (id === 'bulu') { const d = Math.round(r.maxHp * 0.18); r.maxHp += d; r.hp += d; fx.push({ k: 'maxHp', v: d }); }
+    r.log = r.log.concat({ id: this.uid(), day: r.day, text: `Santoni mempelajari ${k.name}. ${k.learn}`, fx, tone: 'skill' });
+    const next = r.queue || null; r.queue = null; this._acc = 0;
+    this.setState({ run: r, offer: next });
+  }
+  reroll() { const o = this.state.offer; if (!o || o.rerolls < 1) return; this.setState({ offer: Object.assign({}, o, { ids: this.rollSkills(3), rerolls: o.rerolls - 1 }) }); }
+
+  advanceDay() {
+    const s = this.state; if (!s.run) return;
+    const r = Object.assign({}, s.run, { day: s.run.day + 1 });
+    if (r.day >= r.maxDay) { r.day = r.maxDay; r.event = { kind: 'enemy', enemy: 'angsa' }; return this.setState({ run: r }); }
+    if (r.day === Math.round(r.maxDay / 2)) { r.event = { kind: 'enemy', enemy: 'lebah' }; return this.setState({ run: r }); }
+    const x = Math.random();
+    if (x < 0.27) { r.event = { kind: 'enemy', enemy: this.pick(C.COMMON) }; return this.setState({ run: r }); }
+    if (x < 0.6) {
+      const left = C.EVENTS.filter(e => r.used.indexOf(e.id) < 0);
+      if (left.length) { const ev = this.pick(left); r.used = r.used.concat(ev.id); r.event = { kind: 'choice', id: ev.id }; return this.setState({ run: r }); }
+    }
+    const fl = this.pick(C.FLAVOR);
+    this.applyOutcome(r, fl, fl.t);
+  }
+  applyOutcome(r, o, text, opts) {
+    opts = opts || {};
+    const fx = [];
+    if (o.maxHp) { r.maxHp += o.maxHp; r.hp += o.maxHp; fx.push({ k: 'maxHp', v: o.maxHp }); }
+    if (o.hp) { r.hp = Math.max(0, Math.min(r.maxHp, r.hp + o.hp)); fx.push({ k: 'hp', v: o.hp }); }
+    if (o.atk) { r.atk += o.atk; fx.push({ k: 'atk', v: o.atk }); }
+    if (o.def) { r.def += o.def; fx.push({ k: 'def', v: o.def }); }
+    if (o.coins) { r.coins = Math.max(0, r.coins + o.coins); fx.push({ k: 'coins', v: o.coins }); }
+    if (o.xp) fx.push({ k: 'xp', v: o.xp });
+    r.xp += (o.xp || 0) + (opts.noDaily ? 0 : 12 + Math.floor(Math.random() * 10));
+    r.log = r.log.concat({ id: this.uid(), day: r.day, text, fx, tone: opts.tone || ((o.hp || 0) < 0 ? 'bad' : 'plain') });
+    r.event = null;
+    if (r.hp <= 0) return this.finishRun(r, false);
+    let offer = o.skill ? { kind: 'bonus', ids: this.rollSkills(3), rerolls: 0 } : null;
+    if (r.xp >= r.xpNext) {
+      const from = r.lvl; r.xp -= r.xpNext; r.lvl += 1; r.xpNext = Math.round(r.xpNext * 1.3);
+      r.atk = Math.round(r.atk * 1.05); r.hp = Math.min(r.maxHp, r.hp + Math.round(r.maxHp * 0.15));
+      const lv = { kind: 'lvl', from, to: r.lvl, ids: this.rollSkills(3), rerolls: 1 };
+      if (offer) r.queue = lv; else offer = lv;
+    }
+    this._acc = 0;
+    this.setState(offer ? { run: r, offer } : { run: r });
+  }
+  choose(which) {
+    const s = this.state; if (!s.run || !s.run.event) return;
+    const r = Object.assign({}, s.run), ev = r.event;
+    if (ev.kind === 'choice') {
+      const opt = C.EVENTS.find(e => e.id === ev.id)[which];
+      if (opt.cost && r.coins < opt.cost) return this.toast('Koin perjalanan kurang. Tidak ada yang memberi kredit di sini.');
+      const o = Object.assign({}, opt.res());
+      if (opt.cost) o.coins = (o.coins || 0) - opt.cost;
+      return this.applyOutcome(r, o, o.t, { tone: o.skill ? 'skill' : undefined });
+    }
+    const e = C.ENEMIES[ev.enemy];
+    if (which === 'a') return this.startBattle(r, ev.enemy, false);
+    if (e.boss || (this.props || {}).gertak === false) return;
+    if (Math.random() < this.bluffChance(r)) return this.applyOutcome(r, { coins: 20 + r.day * 3, xp: 25 }, `Santoni berdiri dengan dua kaki. ${e.name} memutuskan punya urusan lain.`, { tone: 'win' });
+    this.startBattle(r, ev.enemy, true);
+  }
+  startBattle(r, key, offended) {
+    const e = C.ENEMIES[key], en = this.makeEnemy(key, r.day);
+    const log = [{ id: this.uid(), text: `${e.name} menghadang. ${e.intro}`, tone: 'enemy' }];
+    if (offended) { en.atk = Math.round(en.atk * 1.2); log.push({ id: this.uid(), text: `Santoni berdiri dengan dua kaki. ${e.name} tidak terkesan. ATK musuh +20%.`, tone: 'bad' }); }
+    this._acc = 0;
+    this.setState({ run: Object.assign({}, r, { event: null }), screen: 'battle', shake: null,
+      battle: { enemy: en, turn: 1, heroTurn: !offended, hits: 0, firstDone: false, napUsed: false, over: null, log, pops: [], banner: null, proc: null } });
+  }
+  battleStep() {
+    const s = this.state; if (!s.battle || s.battle.over) return;
+    const b = Object.assign({}, s.battle, { enemy: Object.assign({}, s.battle.enemy) }), r = Object.assign({}, s.run);
+    const e = C.ENEMIES[b.enemy.key], n = id => r.skills.filter(k => k === id).length, now = Date.now();
+    const log = b.log.slice(), pops = b.pops.filter(x => now - x.t < 1100);
+    const push = (side, text, kind) => pops.push({ id: this.uid(), t: now, side, text, kind, dx: Math.round(Math.random() * 70 - 35), dy: pops.filter(x => x.side === side).length * 30 });
+    const say = (text, tone) => log.push({ id: this.uid(), text, tone });
+    const hit = d => { b.enemy.hp = Math.max(0, b.enemy.hp - d); };
+    let shake = null, banner = b.banner, proc = null, act = null;
+    if (b.heroTurn) {
+      b.hits += 1; act = { who: 'hero', t: now };
+      const crit = Math.random() < 0.08 + 0.15 * n('kritis');
+      let mult = (0.9 + Math.random() * 0.2) * (crit ? 2 : 1);
+      if (!b.firstDone && n('kerupuk')) { mult *= 1 + 0.6 * n('kerupuk'); banner = { id: this.uid(), text: 'Lempar Kerupuk!' }; proc = 'kerupuk'; }
+      b.firstDone = true;
+      let total = 0;
+      const dmg = Math.max(1, Math.round(r.atk * mult - b.enemy.def * 0.5)); hit(dmg); total += dmg;
+      push('enemy', crit ? `KRITIS ${dmg}` : `−${dmg}`, crit ? 'crit' : 'hit');
+      say(crit ? `Santoni menatap kosong, lalu memukul. Kritis. ${dmg}.` : `Santoni memukul ${b.enemy.name}. ${dmg}.`, crit ? 'crit' : 'plain');
+      if (n('kipas') && b.hits % 3 === 0 && b.enemy.hp > 0) { const d = Math.round(r.atk * 0.8 * n('kipas')); hit(d); total += d; push('enemy', `−${d}`, 'skill'); banner = { id: this.uid(), text: 'Ekor Kipas!' }; proc = 'kipas'; say(`Ekor Santoni mengipas. ${b.enemy.name} jadi sejuk. ${d}.`, 'skill'); }
+      if (n('statis') && Math.random() < 0.25 && b.enemy.hp > 0) { const d = Math.round(r.atk * 0.7 * n('statis')); hit(d); total += d; push('enemy', `−${d}`, 'skill'); banner = { id: this.uid(), text: 'Bulu Statis!' }; proc = 'statis'; say(`Bulu Santoni menyetrum. ${d}.`, 'skill'); }
+      if (n('belang') && b.enemy.hp > 0) { const d = Math.round(r.atk * 0.45 * n('belang')); hit(d); total += d; push('enemy', `−${d}`, 'skill'); proc = proc || 'belang'; }
+      if (n('ngemil') && r.hp < r.maxHp) { const h = Math.round(total * 0.15 * n('ngemil')); if (h > 0) { r.hp = Math.min(r.maxHp, r.hp + h); push('hero', `+${h}`, 'heal'); proc = proc || 'ngemil'; } }
+      shake = 'enemy';
+    } else {
+      if (n('gertak') && Math.random() < 0.2 * n('gertak')) {
+        push('enemy', 'BINGUNG', 'miss'); proc = 'gertak'; act = { who: 'hero', t: now, seram: true };
+        say(`${b.enemy.name} melihat Santoni berdiri dengan dua kaki. ${b.enemy.name} lupa mau apa.`, 'skill');
+      } else {
+        const dmg = Math.max(1, Math.round(b.enemy.atk * (0.9 + Math.random() * 0.2) - r.def * 0.5));
+        r.hp = Math.max(0, r.hp - dmg); push('hero', `−${dmg}`, 'hurt'); shake = 'hero'; act = { who: 'enemy', t: now, hurt: true };
+        say(Math.random() < 0.5 ? `${e.hit} ${dmg}.` : `${b.enemy.name} menyerang. ${dmg}.`, 'enemy');
+      }
+      if (n('tidur') && !b.napUsed && r.hp > 0 && r.hp < r.maxHp * 0.3) {
+        const h = Math.round(r.maxHp * 0.35); r.hp = Math.min(r.maxHp, r.hp + h); b.napUsed = true;
+        push('hero', `+${h}`, 'heal'); banner = { id: this.uid(), text: 'Tidur Ayam!' }; proc = 'tidur';
+        say(`Santoni tidur sebentar. ${b.enemy.name} menunggu karena sungkan. +${h} HP.`, 'skill');
+      }
+      b.turn += 1;
+    }
+    b.heroTurn = !b.heroTurn;
+    if (b.enemy.hp <= 0) { b.over = 'win'; say(`${b.enemy.name} kalah. ${e.lose}`, 'win'); }
+    else if (r.hp <= 0) { b.over = 'lose'; say('Santoni terjatuh. Santoni memutuskan ini cukup.', 'bad'); }
+    b.log = log.slice(-5); b.pops = pops.slice(-8); b.banner = banner; b.proc = proc || b.proc;
+    this.setState({ battle: b, run: r, shake, act });
+  }
+  endBattle() {
+    const s = this.state, b = s.battle; if (!b) return;
+    const r = Object.assign({}, s.run);
+    if (b.over === 'lose') return this.finishRun(r, false);
+    r.kills += 1;
+    const e = C.ENEMIES[b.enemy.key];
+    if (b.enemy.key === 'angsa') return this.finishRun(r, true);
+    this.setState({ screen: 'run', battle: null, shake: null });
+    this.applyOutcome(r, { coins: Math.round((e.boss ? 160 : 40) + r.day * 4), xp: e.boss ? 90 : 30 + r.day * 2 }, `${b.enemy.name} kalah. ${e.lose}`, { tone: 'win', noDaily: true });
+  }
+  finishRun(r, win) {
+    const s = this.state;
+    const best = s.best.slice(), record = r.day > best[r.chapter];
+    best[r.chapter] = Math.max(best[r.chapter], r.day);
+    this.setState({ screen: 'result', battle: null, offer: null, shake: null, best, journal: [{ id: this.uid(), chapter: r.chapter, day: r.day, maxDay: r.maxDay, win, entries: r.log }].concat(s.journal || []).slice(0, 8), run: Object.assign({}, r, { event: null }),
+      result: { win, day: r.day, maxDay: r.maxDay, kills: r.kills, skills: r.skills.length, coins: r.coins + r.day * 90 + r.kills * 60 + (win ? 1500 : 0), gems: win ? 120 : Math.floor(r.day / 4) * 10, xp: r.day * 12 + r.kills * 20,
+        item: win ? this.rollItem(true) : r.day >= 5 ? this.rollItem(false) : null, record, chapter: r.chapter, quote: this.pick(win ? C.QUOTES_WIN : C.QUOTES) } });
+  }
+  claim(m) {
+    const s = this.state, rs = s.result; if (!rs) return;
+    this.setState({ coins: s.coins + rs.coins * m, gems: s.gems + rs.gems * m, bag: rs.item ? s.bag.concat(rs.item) : s.bag, screen: 'lobby', result: null, run: null, battle: null, offer: null });
+    this.toast(m === 2 ? 'Iklan ditonton. Hadiah ×2. Santoni ikut menonton.' : 'Hadiah masuk. Santoni tidak berkomentar.');
+  }
+
+  equip(id) {
+    const s = this.state, it = C.ITEMS[id], eq = Object.assign({}, s.equipped), bag = s.bag.slice(), i = bag.indexOf(id);
+    if (i < 0) return;
+    bag.splice(i, 1);
+    if (eq[it.type]) bag.push(eq[it.type]);
+    eq[it.type] = id;
+    this.setState({ equipped: eq, bag });
+    this.toast(`${it.name} dipasang. ${it.desc}`);
+  }
+  autoEquip() {
+    const s = this.state, all = s.bag.concat(Object.values(s.equipped)), eq = {};
+    ['senjata', 'topi', 'baju', 'kalung', 'sabuk', 'sepatu'].forEach(t => {
+      const c = all.filter(id => C.ITEMS[id].type === t).sort((x, y) => this.itemScore(y) - this.itemScore(x));
+      if (c[0]) eq[t] = c[0];
+    });
+    const bag = all.slice(); Object.values(eq).forEach(id => bag.splice(bag.indexOf(id), 1));
+    const changed = Object.keys(eq).some(t => eq[t] !== s.equipped[t]);
+    this.setState({ equipped: eq, bag });
+    this.toast(changed ? 'Yang terbaik sudah dipasang. Ekspresi Santoni tetap sama.' : 'Sudah yang terbaik. Santoni sudah tahu.');
+  }
+  pull(n) {
+    const s = this.state, cost = n === 1 ? 150 : 1350;
+    if (s.gems < cost) return this.toast('Permata kurang. Santoni juga kurang tidur.');
+    const hiIds = Object.keys(C.ITEMS).filter(k => C.ITEMS[k].rar === 'Epik' || C.ITEMS[k].rar === 'Legendaris');
+    let pity = s.pity; const items = [];
+    for (let i = 0; i < n; i++) {
+      pity += 1;
+      let id = this.rollItem(false);
+      if (pity >= 10 && hiIds.indexOf(id) < 0) id = this.pick(hiIds);
+      if (hiIds.indexOf(id) >= 0) pity = 0;
+      items.push(id);
+    }
+    this.setState({ gems: s.gems - cost, pity, bag: s.bag.concat(items), pull: { id: this.uid(), items } });
+  }
+  buy(id) {
+    const s = this.state, of = C.OFFERS.find(x => x.id === id);
+    if (!of || s.sold[id]) return;
+    const patch = { sold: Object.assign({}, s.sold, { [id]: 1 }) };
+    if (of.cur === 'gem') { if (s.gems < of.price) return this.toast('Permata kurang. Santoni juga kurang tidur.'); patch.gems = s.gems - of.price; }
+    if (of.cur === 'coin') { if (s.coins < of.price) return this.toast('Koin kurang. Santoni memeriksa saku. Kosong.'); patch.coins = s.coins - of.price; }
+    const gv = of.give || {};
+    if (gv.energy) patch.energy = s.energy + gv.energy;
+    if (gv.coins) patch.coins = (patch.coins != null ? patch.coins : s.coins) + gv.coins;
+    if (gv.gems) patch.gems = (patch.gems != null ? patch.gems : s.gems) + gv.gems;
+    let msg = of.msg;
+    if (gv.item) { const it = this.rollItem(true); patch.bag = s.bag.concat(it); msg = `Isinya: ${C.ITEMS[it].name}. ${C.ITEMS[it].desc}`; }
+    this.setState(patch);
+    this.toast(msg);
+  }
+
+  buildView() {
+    const s = this.state, p = this.props || {}, R = C.RAR;
+    const still = !!p.still, days = this.days(p), scr = s.screen;
+    const fmt = n => Math.round(n).toLocaleString('id-ID');
+    const g = fn => (still ? () => {} : fn);
+    const pct = (a, b) => `${Math.max(0, Math.min(1, b ? a / b : 0)) * 100}%`;
+    const base = this.heroBase(s.equipped), marks = this.marks(days), ch = C.CHAPTERS[s.chapter];
+    const unlocked = i => i === 0 || s.best[i - 1] >= days;
+    const r = s.run, b = s.battle, o = s.offer, rs = s.result;
+    const counts = {};
+    (r ? r.skills : []).forEach(k => { counts[k] = (counts[k] || 0) + 1; });
+    const skillTiles = Object.keys(counts).map(id => {
+      const k = C.SKILLS.find(x => x.id === id), rr = R[k.rar], on = !!b && b.proc === id;
+      return { id, icon: k.icon, bg: rr.bg, fg: rr.fg, count: counts[id], multi: counts[id] > 1, ring: on ? '#F2B63C' : '#2B1E18', glow: on ? '0 0 0 3px #F2B63C' : 'none' };
+    });
+    const chestFor = ci => marks.map((m, mi) => {
+      const claimed = !!s.chests[`${ci}-${mi}`], ready = !claimed && s.best[ci] >= m;
+      return { left: `${(m / days) * 100}%`, label: `H${m}`, icon: claimed ? 'check' : ready ? 'redeem' : 'lock', bg: claimed ? '#CFE6D6' : ready ? '#F2B63C' : '#EADBC5', color: claimed ? '#2F7A5C' : '#2B1E18', claim: g(() => this.claimChest(ci, mi)) };
+    });
+    const toneLight = { plain: '#6E5A4E', win: '#2F7A5C', bad: '#C2412A', skill: '#7E43B5', enemy: '#C2412A' };
+    const toneDark = { plain: '#FFF8EC', crit: '#F2B63C', skill: '#C9A8F0', enemy: '#FF9C8A', win: '#8FD6A8', bad: '#FF9C8A' };
+    const FX = { hp: ['favorite', 'HP'], maxHp: ['favorite', 'HP maks'], atk: ['swords', 'ATK'], def: ['shield', 'DEF'], coins: ['toll', 'koin'], xp: ['star', 'XP'] };
+    const labels = { lobby: 'Lobby', run: 'Petualangan', battle: 'Battle', hero: 'Hero', map: 'Peta', shop: 'Toko', result: 'Hasil', journal: 'Jurnal' };
+    const hudScreens = ['lobby', 'hero', 'map', 'shop', 'journal'];
+    const v = {
+      screenLabel: o && scr === 'run' ? 'Pilih skill' : labels[scr],
+      isLobby: scr === 'lobby', isRun: scr === 'run', isBattle: scr === 'battle', isHero: scr === 'hero', isMap: scr === 'map', isShop: scr === 'shop', isResult: scr === 'result',
+      showHud: hudScreens.indexOf(scr) >= 0, showNav: hudScreens.indexOf(scr) >= 0,
+      energyLabel: `${s.energy}/30`, coinsLabel: fmt(s.coins), gemsLabel: fmt(s.gems), goShop: g(() => this.go('shop')),
+      power: fmt(this.power(base)),
+      chapterNo: s.chapter + 1, chapterName: ch.name, chapterBest: Math.min(s.best[s.chapter], days), daysTotal: days,
+      prevOpacity: s.chapter > 0 ? 1 : 0.35, nextOpacity: s.chapter < 5 && unlocked(s.chapter + 1) ? 1 : 0.35,
+      prevChapter: g(() => this.shiftChapter(-1)), nextChapter: g(() => this.shiftChapter(1)),
+      bubbleText: C.BUBBLES[s.bubble % C.BUBBLES.length], nextBubble: g(() => this.setState({ bubble: s.bubble + 1 })),
+      dailyDot: !s.daily, tapDaily: g(() => this.tapDaily()),
+      tapMail: g(() => this.toast('Dua surat. Satu dari bebek asuransi. Satu lagi juga.')),
+      tapFest: g(() => this.toast('Festival Bambu mulai tiga hari lagi. Bambunya sudah datang duluan.')),
+      tapPass: g(() => this.toast('Kartu Musim: hadiah lebih banyak untuk jalan yang sama.')),
+      chests: chestFor(s.chapter), chestPct: pct(s.best[s.chapter], days), goRun: g(() => this.startRun()),
+      toggleAuto: g(() => this.toggleAuto()), pauseIcon: 'pause', runChapterNo: 1, runChapterUpper: '', day: 0, maxDay: days, runCoins: '0', dayPct: '0%',
+      weatherIcon: 'wb_sunny', weather: '', walkStatus: '', lvl: 1, hpPct: '100%', hpLabel: '', xpPct: '0%', xpLabel: '', atk: '0', def: '0',
+      logCount: 0, logRef: this.logRef, log: [], hasEvent: false, evTagBg: '#2B1E18', evTag: '', evIsEnemy: false, evIcon: 'help', evName: '', evSub: '', evText: '', evChoices: [], hasEvFoot: false, evFoot: '',
+      noSkills: skillTiles.length === 0, ownedSkills: skillTiles, cycleSpeed: g(() => this.setState({ speed: (s.speed % 3) + 1 })), speedLabel: `×${s.speed}`, quitRun: g(() => this.quitRun()),
+      hasOffer: false, burst: null, offerTitle: '', offerHasLvl: false, offerFrom: 0, offerTo: 0, offerSub: '', offerCards: [], reroll: g(() => this.reroll()), rerollDisabled: true, rerollOpacity: 0.4, rerollLeft: 0,
+      bTurn: 1, bBoss: false, speeds: [1, 2, 3].map(n => ({ n, set: g(() => this.setState({ speed: n })), bg: s.speed === n ? '#F2B63C' : 'transparent', fg: s.speed === n ? '#2B1E18' : '#FFF8EC' })),
+      eIcon: 'help', eName: '', eLvl: 1, eHpPct: '100%', eHpLabel: '', eTf: 'none', hTf: 'none', eArtId: 'art-musuh', eArtLabel: '', enemyPops: null, heroPops: null, banner: null, battleSkills: skillTiles, bLog: [], bOver: false, bOverColor: '#F2B63C', bOverText: '',
+      slotsL: [], slotsR: [], heroStats: [], autoEquip: g(() => this.autoEquip()), mergeItems: g(() => this.toast('Butuh tiga item kembar. Santoni cuma punya satu dari hampir semuanya.')), bagCount: s.bag.length, bag: [],
+      mapSummary: `${s.best.filter(x => x >= days).length} DARI 6 SELESAI`, chapters: [],
+      pityLeft: Math.max(1, 10 - s.pity), pull1: g(() => this.pull(1)), pull10: g(() => this.pull(10)), offers: [], hasPull: !!s.pull, pullBurst: null, pullSub: '', pullCards: null, closePull: g(() => this.setState({ pull: null })),
+      resRibbonBg: '#D2532A', resRibbon: '', resTitle: '', resSub: '', resStats: [], resRecord: false, resRewards: [], resQuote: '', claim1: g(() => this.claim(1)), claim2: g(() => this.claim(2)),
+      tabs: [], hasToast: !!s.toast, toastText: s.toast ? s.toast.text : '',
+      still, chapterUpper: ch.name.toUpperCase(), walkPose: 'idle', sceneEnemy: false, sceneEnemyKind: 'tikus', sceneQuestion: false, farStrip: null, groundStrip: null,
+      evKind: 'tikus', eKind: 'tikus', heroPose: 'idle', hLunge: 'none', eLunge: 'none', resPose: rs && rs.win ? 'seram' : 'sleep',
+      heroScreenPose: C.POSES[(s.heroPoseIdx || 0) % 6][0], heroScreenPoseLabel: C.POSES[(s.heroPoseIdx || 0) % 6][1].toUpperCase(), cyclePose: g(() => this.setState({ heroPoseIdx: (s.heroPoseIdx || 0) + 1 }))
+    };
+
+    if (r) {
+      const W = [['wb_sunny', 'Cerah, agak ambigu'], ['cloud', 'Berawan. Awannya diam.'], ['water_drop', 'Gerimis tipis'], ['air', 'Berangin, arah salah']][Math.floor(r.day / 4) % 4];
+      Object.assign(v, {
+        pauseIcon: r.auto ? 'pause' : 'play_arrow', runChapterNo: r.chapter + 1, runChapterUpper: C.CHAPTERS[r.chapter].name.toUpperCase(),
+        day: r.day, maxDay: r.maxDay, runCoins: fmt(r.coins), dayPct: pct(r.day, r.maxDay), weatherIcon: W[0], weather: W[1],
+        walkStatus: r.event ? 'BERHENTI' : o ? 'MENUNGGU' : r.auto ? 'BERJALAN…' : 'JEDA',
+        lvl: r.lvl, hpPct: pct(r.hp, r.maxHp), hpLabel: `${fmt(r.hp)} / ${fmt(r.maxHp)}`, xpPct: pct(r.xp, r.xpNext), xpLabel: `${r.xp}/${r.xpNext}`, atk: fmt(r.atk), def: fmt(r.def),
+        logCount: r.log.length,
+        log: r.log.map(e => ({ id: e.id, text: e.text, stamp: `H${e.day}`, stampColor: toneLight[e.tone] || toneLight.plain, hasFx: e.fx.length > 0,
+          fx: e.fx.map(f => ({ icon: FX[f.k][0], label: `${f.v > 0 ? '+' : '−'}${fmt(Math.abs(f.v))} ${FX[f.k][1]}`, bg: f.v < 0 ? '#F6C9BD' : f.k === 'coins' ? '#FBE6B4' : f.k === 'xp' ? '#E7D9F5' : '#CFE6D6' })) }))
+      });
+      const walking = r.auto && !r.event && !o && scr === 'run' && !still;
+      Object.assign(v, { walkPose: r.auto && !r.event && !o ? 'walk' : 'idle', sceneEnemy: !!r.event && r.event.kind === 'enemy', sceneEnemyKind: r.event && r.event.kind === 'enemy' ? r.event.enemy : 'tikus', sceneQuestion: !!r.event && r.event.kind === 'choice', farStrip: stripEl('far', walking), groundStrip: stripEl('near', walking) });
+      const ev = r.event;
+      if (ev && ev.kind === 'choice') {
+        const d = C.EVENTS.find(x => x.id === ev.id);
+        Object.assign(v, { hasEvent: true, evTag: 'SESUATU TERJADI', evTagBg: '#2B1E18', evText: d.text,
+          evChoices: ['a', 'b'].map((w, i) => { const c = d[w], poor = !!c.cost && r.coins < c.cost; return { label: c.label, icon: c.icon, hint: poor ? 'koin kurang' : c.hint, bg: i === 0 ? '#F2B63C' : '#FFF8EC', opacity: poor ? 0.5 : 1, onClick: g(() => this.choose(w)) }; }) });
+      } else if (ev && ev.kind === 'enemy') {
+        const e = C.ENEMIES[ev.enemy], en = this.makeEnemy(ev.enemy, r.day), gOn = p.gertak !== false;
+        const choices = [{ label: 'Lawan', icon: 'swords', hint: 'auto-battle', bg: '#F2B63C', opacity: 1, onClick: g(() => this.choose('a')) }];
+        if (gOn) choices.push(e.boss
+          ? { label: 'Pose Seram', icon: 'sports_martial_arts', hint: 'bos kebal', bg: '#EADBC5', opacity: 0.55, onClick: g(() => this.toast(e.immune)) }
+          : { label: 'Pose Seram', icon: 'sports_martial_arts', hint: `${Math.round(this.bluffChance(r) * 100)}% kabur`, bg: '#FFF8EC', opacity: 1, onClick: g(() => this.choose('b')) });
+        Object.assign(v, { evKind: ev.enemy, hasEvent: true, evTag: e.boss ? 'BOS MENGHADANG' : 'ADA YANG MENGHADANG', evTagBg: '#D2532A', evIsEnemy: true, evIcon: e.icon, evName: e.name,
+          evSub: `LV ${en.lvl} · HP ${fmt(en.maxHp)} · ATK ${fmt(en.atk)}`, evText: e.intro, evChoices: choices, hasEvFoot: gOn,
+          evFoot: e.boss ? e.immune : 'Pose Seram: Santoni berdiri dengan dua kaki. Kalau gagal, musuh tersinggung — menyerang duluan dengan ATK +20%.' });
+      }
+    }
+    if (o && scr === 'run') {
+      const T = { start: ['BEKAL AWAL', 'Pilih satu untuk dibawa. Ransel Santoni kecil.'], bonus: ['SESUATU BERUBAH', 'Tombol merah memberi pilihan. Tombol merah tidak menjelaskan.'], lvl: ['NAIK LEVEL!', 'Pilih satu. Dua lainnya akan baik-baik saja. Mungkin.'] }[o.kind];
+      Object.assign(v, { hasOffer: true, burst: burstEl('b1', 120), offerTitle: T[0], offerSub: T[1], offerHasLvl: o.kind === 'lvl', offerFrom: o.from || 0, offerTo: o.to || 0,
+        offerCards: o.ids.map(id => { const k = C.SKILLS.find(x => x.id === id), rr = R[k.rar], have = counts[id] || 0;
+          return { id, name: k.name, icon: k.icon, desc: k.desc, rarity: rr.label, bg: rr.bg, fg: rr.fg, tag: have ? `LV ${have} → ${have + 1}` : 'BARU', pick: g(() => this.pickSkill(id)) }; }),
+        rerollDisabled: o.rerolls < 1, rerollOpacity: o.rerolls > 0 ? 1 : 0.4, rerollLeft: o.rerolls });
+    }
+    if (b) {
+      const en = b.enemy;
+      const act = s.act;
+      const heroPose = b.over === 'win' ? 'seram' : b.over === 'lose' ? 'sleep' : act && act.who === 'hero' ? (act.seram ? 'seram' : 'attack') : act && act.who === 'enemy' && act.hurt ? 'hurt' : 'idle';
+      Object.assign(v, { eKind: en.key, heroPose, hLunge: act && act.who === 'hero' && !act.seram ? 'translate(28px,-12px)' : 'none', eLunge: act && act.who === 'enemy' ? 'translate(-34px,14px)' : 'none' });
+      Object.assign(v, { bTurn: b.turn, bBoss: en.boss, eIcon: en.icon, eName: en.name, eLvl: en.lvl, eHpPct: pct(en.hp, en.maxHp), eHpLabel: `${fmt(en.hp)} / ${fmt(en.maxHp)}`,
+        eTf: s.shake === 'enemy' ? 'translate(10px,-4px) rotate(4deg)' : 'none', hTf: s.shake === 'hero' ? 'translate(-10px,4px) rotate(-4deg)' : 'none',
+        eArtId: `art-musuh-${en.key}`, eArtLabel: `Ilustrasi musuh — ${en.name}`,
+        enemyPops: b.pops.filter(x => x.side === 'enemy').map(x => popEl(x, still)), heroPops: b.pops.filter(x => x.side === 'hero').map(x => popEl(x, still)),
+        banner: b.banner ? bannerEl(b.banner, still) : null,
+        bLog: b.log.map((l, i, a) => ({ id: l.id, text: l.text, color: toneDark[l.tone] || toneDark.plain, opacity: i === a.length - 1 ? 1 : 0.5 })),
+        bOver: !!b.over, bOverText: b.over === 'win' ? 'MENANG' : 'KALAH', bOverColor: b.over === 'win' ? '#F2B63C' : '#E0503A' });
+    }
+    if (scr === 'hero') {
+      const TL = { senjata: 'SENJATA', topi: 'TOPI', baju: 'BAJU', kalung: 'KALUNG', sabuk: 'SABUK', sepatu: 'SEPATU' };
+      const order = { Legendaris: 0, Epik: 1, Langka: 2, Biasa: 3 };
+      const slot = t => {
+        const it = C.ITEMS[s.equipped[t]];
+        if (!it) return { icon: 'add', bg: '#EADBC5', fg: '#6E5A4E', lvl: '—', type: TL[t], tap: g(() => {}) };
+        const rr = R[it.rar];
+        return { icon: it.icon, bg: rr.bg, fg: rr.fg, lvl: it.lvl, type: TL[t], tap: g(() => this.toast(`${it.name} · ${it.stat} +${it.val}. ${it.desc}`)) };
+      };
+      Object.assign(v, { slotsL: ['senjata', 'topi', 'baju'].map(slot), slotsR: ['kalung', 'sabuk', 'sepatu'].map(slot),
+        heroStats: [{ icon: 'swords', label: 'ATK', value: fmt(base.atk) }, { icon: 'favorite', label: 'HP', value: fmt(base.hp) }, { icon: 'shield', label: 'DEF', value: fmt(base.def) }, { icon: 'bolt', label: 'KRIT', value: '8%' }],
+        bag: s.bag.map((id, i) => ({ id, i })).sort((x, y) => order[C.ITEMS[x.id].rar] - order[C.ITEMS[y.id].rar]).map(({ id, i }) => {
+          const it = C.ITEMS[id], rr = R[it.rar], cur = s.equipped[it.type];
+          return { key: `${id}-${i}`, icon: it.icon, bg: rr.bg, fg: rr.fg, lvl: it.lvl, better: !cur || this.itemScore(id) > this.itemScore(cur), equip: g(() => this.equip(id)) };
+        }) });
+    }
+    if (scr === 'map') {
+      v.chapters = C.CHAPTERS.map((c, i) => {
+        const un = unlocked(i), done = s.best[i] >= days, cur = i === s.chapter;
+        return { no: i + 1, name: c.name, desc: c.desc, icon: c.icon, expanded: cur, compact: !cur,
+          nodeBg: cur ? '#D2532A' : done ? '#2F7A5C' : un ? '#FFF8EC' : '#E2D5C3', nodeFg: cur || done ? '#FFF8EC' : un ? '#2B1E18' : '#8A776A',
+          status: done ? 'SELESAI · MAIN LAGI?' : 'SEDANG DITEMPUH', artId: `art-bab-${i + 1}`, artLabel: `Banner bab — ${c.name}`,
+          best: `REKOR: HARI ${Math.min(s.best[i], days)} / ${days}`,
+          line: done ? `Selesai · ${days}/${days} hari` : un ? `Rekor: Hari ${s.best[i]} / ${days}` : `Selesaikan Bab ${i} dulu`,
+          endIcon: done ? 'check_circle' : un ? 'chevron_right' : 'lock', endFg: done ? '#2F7A5C' : '#6E5A4E',
+          cardBg: un ? '#FFF8EC' : '#EDE2D2', opacity: un ? 1 : 0.62, thumbBg: un ? (done ? '#CFE6D6' : '#FBE6B4') : '#E2D5C3',
+          select: g(() => this.selectChapter(i)), dayPct: pct(s.best[i], days), chests: chestFor(i), cta: done ? 'MAIN LAGI' : 'LANJUTKAN', play: g(() => this.startRun()) };
+      });
+    }
+    if (scr === 'shop') {
+      v.offers = C.OFFERS.map(of => {
+        const sold = !!s.sold[of.id], rr = R[of.rar];
+        return { id: of.id, name: of.name, icon: of.icon, bg: rr.bg, fg: rr.fg, curIcon: of.cur === 'gem' ? 'diamond' : of.cur === 'coin' ? 'toll' : 'smart_display',
+          price: sold ? 'Terjual' : typeof of.price === 'number' ? fmt(of.price) : of.price, btnBg: sold ? '#EADBC5' : of.cur === 'ad' ? '#CFE6D6' : '#F2B63C', opacity: sold ? 0.55 : 1, sold, buy: g(() => this.buy(of.id)) };
+      });
+    }
+    if (s.pull) {
+      const items = s.pull.items, hi = items.filter(id => C.ITEMS[id].rar === 'Epik' || C.ITEMS[id].rar === 'Legendaris').length, it0 = C.ITEMS[items[0]];
+      Object.assign(v, { pullBurst: burstEl('b2', 300), pullCards: pullCardsEl(s.pull),
+        pullSub: items.length === 1 ? `${it0.name}. ${it0.desc}` : hi ? `${hi} item Epik ke atas. Sisanya tetap teman.` : 'Tidak ada yang Epik. Petinya minta maaf.' });
+    }
+    if (rs) {
+      const it = rs.item ? C.ITEMS[rs.item] : null, rr = it ? R[it.rar] : null;
+      Object.assign(v, { resRibbonBg: rs.win ? '#2F7A5C' : '#D2532A', resRibbon: rs.win ? 'BAB SELESAI' : 'PERJALANAN BERAKHIR', resTitle: rs.win ? 'SANTONI MENANG.' : 'SANTONI PULANG.',
+        resSub: `${C.CHAPTERS[rs.chapter].name} · Hari ${rs.day} dari ${rs.maxDay}`,
+        resStats: [{ value: rs.day, label: 'HARI' }, { value: rs.kills, label: 'MUSUH' }, { value: rs.skills, label: 'SKILL' }], resRecord: rs.record,
+        resRewards: [{ icon: 'toll', label: `+${fmt(rs.coins)}`, bg: '#FBE6B4', fg: '#B0620A' }, { icon: 'diamond', label: `+${fmt(rs.gems)}`, bg: '#E7D9F5', fg: '#7E43B5' }, { icon: 'star', label: `+${fmt(rs.xp)} XP`, bg: '#CFE6D6', fg: '#2F7A5C' },
+          it ? { icon: it.icon, label: it.name, bg: rr.bg, fg: rr.fg } : { icon: 'sentiment_neutral', label: 'Tanpa item', bg: '#EADBC5', fg: '#6E5A4E' }],
+        resQuote: rs.quote });
+    }
+    const J = s.journal || [];
+    const mapEntry = e => ({ id: e.id, text: e.text, stamp: `H${e.day}`, stampColor: toneLight[e.tone] || toneLight.plain, hasFx: e.fx.length > 0,
+      fx: e.fx.map(f => ({ icon: FX[f.k][0], label: `${f.v > 0 ? '+' : '−'}${fmt(Math.abs(f.v))} ${FX[f.k][1]}`, bg: f.v < 0 ? '#F6C9BD' : f.k === 'coins' ? '#FBE6B4' : f.k === 'xp' ? '#E7D9F5' : '#CFE6D6' })) });
+    const lj = J[0], te = lj && lj.entries.length ? lj.entries[(s.tick || 0) % lj.entries.length] : null;
+    Object.assign(v, {
+      isJournal: scr === 'journal', journalSummary: `${J.length} PERJALANAN`, openJournal: g(() => this.go('journal')),
+      tickerText: te ? `H${te.day} · ${te.text}` : 'Belum ada catatan. Santoni belum ke mana-mana.',
+      tapBebek: g(() => this.toast('Bebek Satpam: "KTP-nya, Mas." Santoni tidak punya KTP.')),
+      tapKelinci: g(() => this.toast('Kelinci Penagih mengintip. Ia mencatat sesuatu. Santoni pura-pura tidak lihat.')),
+      tapLebah: g(() => this.toast('Lebah Notaris lewat. Kunjungan ini sudah dilegalisir.')),
+      tapMisi: g(() => this.toast('Misi harian 2/5: jalan 3 hari ✓, buka peti ✓, kalahkan 5 musuh (3/5).')),
+      tapTeman: g(() => this.toast('Teman: 0. Santoni bilang itu pilihan.')),
+      journal: J.map(j => { const open = s.openJ === j.id, ents = open ? j.entries : j.entries.slice(-4);
+        return { title: C.CHAPTERS[j.chapter].name, sub: `HARI ${j.day} / ${j.maxDay} · ${j.entries.length} CATATAN`, badge: j.win ? 'MENANG' : 'PULANG', headBg: j.win ? '#CFE6D6' : '#F7D9BF', icon: C.CHAPTERS[j.chapter].icon,
+          entries: ents.map(mapEntry), more: j.entries.length > 4, moreLabel: open ? 'Ringkas' : `Lihat semua ${j.entries.length} catatan`, toggle: g(() => this.setState({ openJ: open ? null : j.id })) }; })
+    });
+    v.tabs = [['shop', 'Toko', 'storefront'], ['hero', 'Hero', 'pets'], ['lobby', 'Jalan', 'hiking'], ['map', 'Peta', 'map'], ['journal', 'Jurnal', 'menu_book']].map(([key, label, icon]) => {
+      const on = scr === key, center = key === 'lobby';
+      return { key, label, icon, go: g(() => (key === 'misi' ? this.toast('Misi: belum ada. Seperti rencana hidup Santoni.') : this.go(key))),
+        size: center ? '58px' : '44px', iconSize: center ? '30px' : '24px', lift: center ? '-16px' : on ? '-6px' : '0px',
+        bg: on ? '#F2B63C' : center ? '#D2532A' : 'transparent', border: on || center ? '#FFF8EC' : 'transparent', iconColor: on ? '#2B1E18' : '#FFF8EC',
+        color: on ? '#F2B63C' : 'rgba(255,248,236,.72)', shadow: on || center ? '0 4px 0 #120C09' : 'none' };
+    });
+    return v;
+  }
+
+  render() {
+    return <GameView v={this.buildView()} />;
+  }
+}

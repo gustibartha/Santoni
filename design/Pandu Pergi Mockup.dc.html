@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,600,1,0&display=block">
+<script src="./image-slot.js"></script>
+<style>
+body{margin:0;background:#E4E1DB;font-family:'Bricolage Grotesque',system-ui,sans-serif;color:#2B1E18}
+a{color:#A93D1C}a:hover{color:#D2532A}
+.dv-turn{padding:40px 44px 44px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 24px}
+.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}
+.dv-tname{font:700 14px/1.2 'Bricolage Grotesque',system-ui,sans-serif;color:#1a1a1a}
+.dv-opts{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:10px;scroll-margin-top:16px}
+.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:8px;font:600 12.5px/1.3 'Bricolage Grotesque',system-ui,sans-serif;color:rgba(0,0,0,.62)}
+.dv-opt:target .dv-oid{background:#2a78d6;color:#fff}
+.dv-next{margin:30px 0 0;font:13px/1.5 'Bricolage Grotesque',system-ui,sans-serif;color:rgba(0,0,0,.55)}
+</style>
+</helmet>
+<section class="dv-turn" id="t2">
+  <div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">Desain karakter + gameplay — dipasang ke prototype v2</span></div>
+
+  <div class="dv-opts" style="margin-bottom:40px">
+    <div class="dv-opt" id="2a" data-screen-label="2a Karakter Pandu">
+      <div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>Lembar karakter — Pandu</div>
+      <div style="width:1120px;box-sizing:border-box;padding:30px;border:2.5px solid #2B1E18;border-radius:28px;background-color:#F3E6D3;background-image:radial-gradient(rgba(43,30,24,.075) 1.1px,transparent 1.4px);background-size:9px 9px;box-shadow:0 4px 0 #2B1E18;display:flex;flex-direction:column;gap:26px">
+        <div style="display:grid;grid-template-columns:400px minmax(0,1fr);gap:30px">
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div style="position:relative;height:420px;border:2.5px solid #2B1E18;border-radius:24px;background:#F7D9BF;overflow:hidden;box-shadow:0 3px 0 #2B1E18">
+              <div style="position:absolute;left:50%;top:44%;width:310px;height:310px;margin:-155px 0 0 -155px;border-radius:50%;background:#F3B49A"></div>
+              <div style="position:absolute;left:0;right:0;bottom:0;height:72px;background:#CFE6D6;border-top:2.5px solid #2B1E18"></div>
+              <div style="position:absolute;left:50%;bottom:36px;width:300px;height:330px;margin-left:-165px"><dc-import name="Pandu Karakter" pose="idle" hint-size="300px,330px" style="width:100%;height:100%"></dc-import></div>
+              <div style="position:absolute;top:16px;left:16px;padding:6px 9px;border-radius:8px;background:#2B1E18;color:#FFF8EC;font:500 10px/1 'DM Mono',monospace;letter-spacing:.1em">TOKOH UTAMA</div>
+            </div>
+            <div>
+              <div style="font:54px/1 'Bagel Fat One',system-ui">Pandu</div>
+              <div style="font:600 15px/1.45 'Bricolage Grotesque';color:#5B4A40;margin-top:8px;text-wrap:pretty">Panda merah, 3 tahun. Tidak ambisius, tapi tidak pernah berhenti jalan.</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:22px;min-width:0">
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+              <div style="padding:14px 16px;border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18"><div style="font:18px/1.1 'Bagel Fat One',system-ui">Wajah datar permanen</div><div style="font:500 13px/1.45 'Bricolage Grotesque';color:#5B4A40;margin-top:6px;text-wrap:pretty">Kelopak setengah turun, mulut satu garis. Lucunya dari kontras: situasi heboh, wajah biasa saja.</div></div>
+              <div style="padding:14px 16px;border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18"><div style="font:18px/1.1 'Bagel Fat One',system-ui">Ekor belang</div><div style="font:500 13px/1.45 'Bricolage Grotesque';color:#5B4A40;margin-top:6px;text-wrap:pretty">Cincin terang-gelap jadi penanda siluet, dan dasar mekanik Ekor Belang (<a class="dv-oid" href="#1b">1b</a>).</div></div>
+              <div style="padding:14px 16px;border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18"><div style="font:18px/1.1 'Bagel Fat One',system-ui">Sandal kiri</div><div style="font:500 13px/1.45 'Bricolage Grotesque';color:#5B4A40;margin-top:6px;text-wrap:pretty">Hanya kaki kiri yang bersandal. Item Legendaris di game. Asal-usulnya tidak pernah dijelaskan.</div></div>
+              <div style="padding:14px 16px;border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18"><div style="font:18px/1.1 'Bagel Fat One',system-ui">Berdiri dua kaki</div><div style="font:500 13px/1.45 'Bricolage Grotesque';color:#5B4A40;margin-top:6px;text-wrap:pretty">Perilaku asli panda merah saat terancam — jadi mekanik Pose Seram (<a class="dv-oid" href="#1a">1a</a>).</div></div>
+            </div>
+            <div>
+              <div style="font:500 10px/1 'DM Mono',monospace;letter-spacing:.12em;color:#6E5A4E">EKSPRESI · SEMUANYA TETAP DATAR</div>
+              <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:10px">
+                <div style="border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;overflow:hidden"><div style="position:relative;height:112px;overflow:hidden;background:#F7D9BF"><div style="position:absolute;left:50%;top:-14px;width:180px;height:198px;margin-left:-90px"><dc-import name="Pandu Karakter" expr="datar" still="{{ true }}" hint-size="180px,198px" style="width:100%;height:100%"></dc-import></div></div><div style="padding:8px 10px;font:800 12.5px/1 'Bricolage Grotesque';border-top:2.5px solid #2B1E18">Datar</div></div>
+                <div style="border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;overflow:hidden"><div style="position:relative;height:112px;overflow:hidden;background:#F7D9BF"><div style="position:absolute;left:50%;top:-14px;width:180px;height:198px;margin-left:-90px"><dc-import name="Pandu Karakter" expr="kaget" still="{{ true }}" hint-size="180px,198px" style="width:100%;height:100%"></dc-import></div></div><div style="padding:8px 10px;font:800 12.5px/1 'Bricolage Grotesque';border-top:2.5px solid #2B1E18">Kaget (versi datar)</div></div>
+                <div style="border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;overflow:hidden"><div style="position:relative;height:112px;overflow:hidden;background:#F7D9BF"><div style="position:absolute;left:50%;top:-14px;width:180px;height:198px;margin-left:-90px"><dc-import name="Pandu Karakter" expr="sakit" still="{{ true }}" hint-size="180px,198px" style="width:100%;height:100%"></dc-import></div></div><div style="padding:8px 10px;font:800 12.5px/1 'Bricolage Grotesque';border-top:2.5px solid #2B1E18">Sakit</div></div>
+                <div style="border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;overflow:hidden"><div style="position:relative;height:112px;overflow:hidden;background:#F7D9BF"><div style="position:absolute;left:50%;top:-14px;width:180px;height:198px;margin-left:-90px"><dc-import name="Pandu Karakter" expr="tidur" still="{{ true }}" hint-size="180px,198px" style="width:100%;height:100%"></dc-import></div></div><div style="padding:8px 10px;font:800 12.5px/1 'Bricolage Grotesque';border-top:2.5px solid #2B1E18">Tidur</div></div>
+              </div>
+            </div>
+            <div>
+              <div style="font:500 10px/1 'DM Mono',monospace;letter-spacing:.12em;color:#6E5A4E">PALET</div>
+              <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-top:10px">
+                <div style="display:flex;align-items:center;gap:8px"><span style="width:32px;height:32px;flex:none;box-sizing:border-box;border-radius:50%;border:2.5px solid #2B1E18;background:#D2532A"></span><div><div style="font:800 12px/1.1 'Bricolage Grotesque'">Bulu</div><div style="font:500 9.5px/1.2 'DM Mono',monospace;color:#6E5A4E">#D2532A</div></div></div>
+                <div style="display:flex;align-items:center;gap:8px"><span style="width:32px;height:32px;flex:none;box-sizing:border-box;border-radius:50%;border:2.5px solid #2B1E18;background:#F0A070"></span><div><div style="font:800 12px/1.1 'Bricolage Grotesque'">Belang</div><div style="font:500 9.5px/1.2 'DM Mono',monospace;color:#6E5A4E">#F0A070</div></div></div>
+                <div style="display:flex;align-items:center;gap:8px"><span style="width:32px;height:32px;flex:none;box-sizing:border-box;border-radius:50%;border:2.5px solid #2B1E18;background:#FFF8EC"></span><div><div style="font:800 12px/1.1 'Bricolage Grotesque'">Wajah</div><div style="font:500 9.5px/1.2 'DM Mono',monospace;color:#6E5A4E">#FFF8EC</div></div></div>
+                <div style="display:flex;align-items:center;gap:8px"><span style="width:32px;height:32px;flex:none;box-sizing:border-box;border-radius:50%;border:2.5px solid #2B1E18;background:#3A2420"></span><div><div style="font:800 12px/1.1 'Bricolage Grotesque'">Kaki</div><div style="font:500 9.5px/1.2 'DM Mono',monospace;color:#6E5A4E">#3A2420</div></div></div>
+                <div style="display:flex;align-items:center;gap:8px"><span style="width:32px;height:32px;flex:none;box-sizing:border-box;border-radius:50%;border:2.5px solid #2B1E18;background:#8E3418"></span><div><div style="font:800 12px/1.1 'Bricolage Grotesque'">Garis mata</div><div style="font:500 9.5px/1.2 'DM Mono',monospace;color:#6E5A4E">#8E3418</div></div></div>
+                <div style="display:flex;align-items:center;gap:8px"><span style="width:32px;height:32px;flex:none;box-sizing:border-box;border-radius:50%;border:2.5px solid #2B1E18;background:#F2B63C"></span><div><div style="font:800 12px/1.1 'Bricolage Grotesque'">Sandal</div><div style="font:500 9.5px/1.2 'DM Mono',monospace;color:#6E5A4E">#F2B63C</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="font:500 10px/1 'DM Mono',monospace;letter-spacing:.12em;color:#6E5A4E">POSE · SEMUA DIPAKAI DI GAME</div>
+          <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-top:10px">
+            <div style="border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;overflow:hidden;box-shadow:0 3px 0 #2B1E18"><div style="position:relative;height:170px;background:#F7D9BF"><div style="position:absolute;left:50%;bottom:4px;width:140px;height:154px;margin-left:-74px"><dc-import name="Pandu Karakter" pose="idle" hint-size="140px,154px" style="width:100%;height:100%"></dc-import></div></div><div style="padding:9px 10px;border-top:2.5px solid #2B1E18"><div style="font:800 13px/1 'Bricolage Grotesque'">Diam</div><div style="font:500 11px/1.3 'Bricolage Grotesque';color:#6E5A4E;margin-top:3px">Lobby, hero</div></div></div>
+            <div style="border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;overflow:hidden;box-shadow:0 3px 0 #2B1E18"><div style="position:relative;height:170px;background:#F7D9BF"><div style="position:absolute;left:50%;bottom:4px;width:140px;height:154px;margin-left:-74px"><dc-import name="Pandu Karakter" pose="walk" hint-size="140px,154px" style="width:100%;height:100%"></dc-import></div></div><div style="padding:9px 10px;border-top:2.5px solid #2B1E18"><div style="font:800 13px/1 'Bricolage Grotesque'">Jalan</div><div style="font:500 11px/1.3 'Bricolage Grotesque';color:#6E5A4E;margin-top:3px">Petualangan</div></div></div>
+            <div style="border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;overflow:hidden;box-shadow:0 3px 0 #2B1E18"><div style="position:relative;height:170px;background:#F7D9BF"><div style="position:absolute;left:50%;bottom:4px;width:140px;height:154px;margin-left:-80px"><dc-import name="Pandu Karakter" pose="attack" hint-size="140px,154px" style="width:100%;height:100%"></dc-import></div></div><div style="padding:9px 10px;border-top:2.5px solid #2B1E18"><div style="font:800 13px/1 'Bricolage Grotesque'">Serang</div><div style="font:500 11px/1.3 'Bricolage Grotesque';color:#6E5A4E;margin-top:3px">Giliran Pandu</div></div></div>
+            <div style="border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;overflow:hidden;box-shadow:0 3px 0 #2B1E18"><div style="position:relative;height:170px;background:#F7D9BF"><div style="position:absolute;left:50%;bottom:4px;width:140px;height:154px;margin-left:-74px"><dc-import name="Pandu Karakter" pose="seram" hint-size="140px,154px" style="width:100%;height:100%"></dc-import></div></div><div style="padding:9px 10px;border-top:2.5px solid #2B1E18"><div style="font:800 13px/1 'Bricolage Grotesque'">Pose Seram</div><div style="font:500 11px/1.3 'Bricolage Grotesque';color:#6E5A4E;margin-top:3px">Gertak, menang</div></div></div>
+            <div style="border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;overflow:hidden;box-shadow:0 3px 0 #2B1E18"><div style="position:relative;height:170px;background:#F7D9BF"><div style="position:absolute;left:50%;bottom:4px;width:140px;height:154px;margin-left:-66px"><dc-import name="Pandu Karakter" pose="hurt" hint-size="140px,154px" style="width:100%;height:100%"></dc-import></div></div><div style="padding:9px 10px;border-top:2.5px solid #2B1E18"><div style="font:800 13px/1 'Bricolage Grotesque'">Terkena</div><div style="font:500 11px/1.3 'Bricolage Grotesque';color:#6E5A4E;margin-top:3px">Giliran musuh</div></div></div>
+            <div style="border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;overflow:hidden;box-shadow:0 3px 0 #2B1E18"><div style="position:relative;height:170px;background:#F7D9BF"><div style="position:absolute;left:50%;bottom:4px;width:140px;height:154px;margin-left:-74px"><dc-import name="Pandu Karakter" pose="sleep" hint-size="140px,154px" style="width:100%;height:100%"></dc-import></div></div><div style="padding:9px 10px;border-top:2.5px solid #2B1E18"><div style="font:800 13px/1 'Bricolage Grotesque'">Tidur</div><div style="font:500 11px/1.3 'Bricolage Grotesque';color:#6E5A4E;margin-top:3px">Kalah, Tidur Siang</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dv-opts" style="margin-bottom:40px">
+    <div class="dv-opt" id="2b" data-screen-label="2b Musuh">
+      <div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a>Musuh — satu bentuk bulat + satu atribut pekerjaan</div>
+      <div style="width:1120px;box-sizing:border-box;padding:26px;border:2.5px solid #2B1E18;border-radius:28px;background-color:#F3E6D3;background-image:radial-gradient(rgba(43,30,24,.075) 1.1px,transparent 1.4px);background-size:9px 9px;box-shadow:0 4px 0 #2B1E18;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px">
+        <div style="border:2.5px solid #2B1E18;border-radius:18px;background:#FFF8EC;overflow:hidden;box-shadow:0 3px 0 #2B1E18"><div style="position:relative;height:170px;background:#E1E7D6;border-bottom:2.5px solid #2B1E18"><div style="position:absolute;left:50%;top:10px;width:150px;height:150px;margin-left:-75px"><dc-import name="Musuh" kind="tikus" hint-size="150px,150px" style="width:100%;height:100%"></dc-import></div></div><div style="padding:12px 14px 14px"><div style="font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.1em;color:#5E6E52">BIASA</div><div style="font:19px/1.1 'Bagel Fat One',system-ui;margin-top:5px">Tikus Kantoran</div><div style="font:500 12.5px/1.4 'Bricolage Grotesque';color:#5B4A40;margin-top:5px">Membawa laporan yang belum selesai.</div></div></div>
+        <div style="border:2.5px solid #2B1E18;border-radius:18px;background:#FFF8EC;overflow:hidden;box-shadow:0 3px 0 #2B1E18"><div style="position:relative;height:170px;background:#FBE6B4;border-bottom:2.5px solid #2B1E18"><div style="position:absolute;left:50%;top:10px;width:150px;height:150px;margin-left:-75px"><dc-import name="Musuh" kind="bebek" hint-size="150px,150px" style="width:100%;height:100%"></dc-import></div></div><div style="padding:12px 14px 14px"><div style="font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.1em;color:#5E6E52">BIASA</div><div style="font:19px/1.1 'Bagel Fat One',system-ui;margin-top:5px">Bebek Satpam</div><div style="font:500 12.5px/1.4 'Bricolage Grotesque';color:#5B4A40;margin-top:5px">Meminta Pandu menitipkan KTP.</div></div></div>
+        <div style="border:2.5px solid #2B1E18;border-radius:18px;background:#FFF8EC;overflow:hidden;box-shadow:0 3px 0 #2B1E18"><div style="position:relative;height:170px;background:#CFE6D6;border-bottom:2.5px solid #2B1E18"><div style="position:absolute;left:50%;top:10px;width:150px;height:150px;margin-left:-75px"><dc-import name="Musuh" kind="kumbang" hint-size="150px,150px" style="width:100%;height:100%"></dc-import></div></div><div style="padding:12px 14px 14px"><div style="font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.1em;color:#5E6E52">BIASA</div><div style="font:19px/1.1 'Bagel Fat One',system-ui;margin-top:5px">Kumbang Galau</div><div style="font:500 12.5px/1.4 'Bricolage Grotesque';color:#5B4A40;margin-top:5px">Baru putus. Ingin seseorang ikut merasakan.</div></div></div>
+        <div style="border:2.5px solid #2B1E18;border-radius:18px;background:#FFF8EC;overflow:hidden;box-shadow:0 3px 0 #2B1E18"><div style="position:relative;height:170px;background:#D5E3F6;border-bottom:2.5px solid #2B1E18"><div style="position:absolute;left:50%;top:10px;width:150px;height:150px;margin-left:-75px"><dc-import name="Musuh" kind="lele" hint-size="150px,150px" style="width:100%;height:100%"></dc-import></div></div><div style="padding:12px 14px 14px"><div style="font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.1em;color:#5E6E52">BIASA</div><div style="font:19px/1.1 'Bagel Fat One',system-ui;margin-top:5px">Lele Motivator</div><div style="font:500 12.5px/1.4 'Bricolage Grotesque';color:#5B4A40;margin-top:5px">"Kamu pasti bisa," katanya, lalu menyerang.</div></div></div>
+        <div style="border:2.5px solid #2B1E18;border-radius:18px;background:#FFF8EC;overflow:hidden;box-shadow:0 3px 0 #2B1E18"><div style="position:relative;height:170px;background:#F6C9BD;border-bottom:2.5px solid #2B1E18"><div style="position:absolute;left:50%;top:10px;width:150px;height:150px;margin-left:-75px"><dc-import name="Musuh" kind="kelinci" hint-size="150px,150px" style="width:100%;height:100%"></dc-import></div></div><div style="padding:12px 14px 14px"><div style="font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.1em;color:#5E6E52">BIASA</div><div style="font:19px/1.1 'Bagel Fat One',system-ui;margin-top:5px">Kelinci Penagih</div><div style="font:500 12.5px/1.4 'Bricolage Grotesque';color:#5B4A40;margin-top:5px">Pandu tidak ingat punya utang. Kelinci ingat.</div></div></div>
+        <div style="border:2.5px solid #2B1E18;border-radius:18px;background:#FFF8EC;overflow:hidden;box-shadow:0 3px 0 #2B1E18"><div style="position:relative;height:170px;background:#FBE3B8;border-bottom:2.5px solid #2B1E18"><div style="position:absolute;left:50%;top:10px;width:150px;height:150px;margin-left:-75px"><dc-import name="Musuh" kind="lebah" hint-size="150px,150px" style="width:100%;height:100%"></dc-import></div></div><div style="padding:12px 14px 14px"><div style="font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.1em;color:#B0620A">MINI-BOS · HARI 10</div><div style="font:19px/1.1 'Bagel Fat One',system-ui;margin-top:5px">Lebah Notaris</div><div style="font:500 12.5px/1.4 'Bricolage Grotesque';color:#5B4A40;margin-top:5px">Semua perkelahian harus dilegalisir.</div></div></div>
+        <div style="border:2.5px solid #2B1E18;border-radius:18px;background:#FFF8EC;overflow:hidden;box-shadow:0 3px 0 #2B1E18"><div style="position:relative;height:170px;background:#E7D9F5;border-bottom:2.5px solid #2B1E18"><div style="position:absolute;left:50%;top:6px;width:158px;height:158px;margin-left:-79px"><dc-import name="Musuh" kind="angsa" hint-size="158px,158px" style="width:100%;height:100%"></dc-import></div></div><div style="padding:12px 14px 14px"><div style="font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.1em;color:#C2412A">BOS · HARI 20</div><div style="font:19px/1.1 'Bagel Fat One',system-ui;margin-top:5px">Angsa Pengacara</div><div style="font:500 12.5px/1.4 'Bricolage Grotesque';color:#5B4A40;margin-top:5px">Mewakili semua angsa yang pernah merasa dirugikan.</div></div></div>
+        <div style="padding:18px;border:2.5px dashed #2B1E18;border-radius:18px;display:flex;flex-direction:column;gap:10px">
+          <div style="font:20px/1.1 'Bagel Fat One',system-ui">Aturan desain musuh</div>
+          <div style="font:500 13px/1.45 'Bricolage Grotesque';color:#5B4A40;text-wrap:pretty">Badan bulat sederhana + satu atribut pekerjaan (map, peluit, stempel, palu). Bos lebih tinggi dan membawa properti besar. Semua menghadap Pandu saat battle.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dv-opts" style="margin-bottom:40px">
+    <div class="dv-opt" id="2c" data-screen-label="2c Gameplay">
+      <div class="dv-olabel"><a class="dv-oid" href="#2c">2c</a>Gameplay — dua loop</div>
+      <div style="width:1120px;box-sizing:border-box;padding:28px;border:2.5px solid #2B1E18;border-radius:28px;background:#FFF8EC;box-shadow:0 4px 0 #2B1E18;display:flex;flex-direction:column;gap:22px">
+        <div><div style="font:36px/1 'Bagel Fat One',system-ui">Gameplay</div><div style="font:600 15px/1.45 'Bricolage Grotesque';color:#5B4A40;margin-top:8px">Satu bab = 20 hari ≈ 4–6 menit. Pemain hanya membuat keputusan kecil; sisanya Pandu yang jalan.</div></div>
+        <div>
+          <div style="font:500 10px/1 'DM Mono',monospace;letter-spacing:.12em;color:#A93D1C">DALAM BAB · DIULANG TIAP HARI</div>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px;font:800 13.5px/1 'Bricolage Grotesque'">
+            <span style="padding:10px 12px;border:2.5px solid #2B1E18;border-radius:12px;background:#F7D9BF">Hari +1</span><span style="font:20px/1 'Material Symbols Rounded'">arrow_forward</span>
+            <span style="padding:10px 12px;border:2.5px solid #2B1E18;border-radius:12px;background:#CFE6D6">Santai 40%</span><span style="font:13px/1 'DM Mono',monospace">/</span>
+            <span style="padding:10px 12px;border:2.5px solid #2B1E18;border-radius:12px;background:#FBE6B4">Kejadian pilihan 33%</span><span style="font:13px/1 'DM Mono',monospace">/</span>
+            <span style="padding:10px 12px;border:2.5px solid #2B1E18;border-radius:12px;background:#F6C9BD">Musuh 27%: Lawan atau Pose Seram</span><span style="font:20px/1 'Material Symbols Rounded'">arrow_forward</span>
+            <span style="padding:10px 12px;border:2.5px solid #2B1E18;border-radius:12px;background:#E7D9F5">XP → naik level → pilih 1 dari 3 skill</span><span style="font:20px/1 'Material Symbols Rounded'">replay</span>
+          </div>
+          <div style="font:500 12.5px/1.4 'Bricolage Grotesque';color:#6E5A4E;margin-top:8px">Hari 10: Lebah Notaris (mini-bos). Hari 20: Angsa Pengacara (bos). Kejadian tidak berulang dalam satu bab.</div>
+        </div>
+        <div>
+          <div style="font:500 10px/1 'DM Mono',monospace;letter-spacing:.12em;color:#A93D1C">ANTAR BAB</div>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px;font:800 13.5px/1 'Bricolage Grotesque'">
+            <span style="padding:10px 12px;border:2.5px solid #2B1E18;border-radius:12px;background:#D5E3F6">Energi −5</span><span style="font:20px/1 'Material Symbols Rounded'">arrow_forward</span>
+            <span style="padding:10px 12px;border:2.5px solid #2B1E18;border-radius:12px;background:#F7D9BF">Jalan 20 hari</span><span style="font:20px/1 'Material Symbols Rounded'">arrow_forward</span>
+            <span style="padding:10px 12px;border:2.5px solid #2B1E18;border-radius:12px;background:#FBE6B4">Koin, permata, item</span><span style="font:20px/1 'Material Symbols Rounded'">arrow_forward</span>
+            <span style="padding:10px 12px;border:2.5px solid #2B1E18;border-radius:12px;background:#E7D9F5">Pasang equipment · undi peti</span><span style="font:20px/1 'Material Symbols Rounded'">arrow_forward</span>
+            <span style="padding:10px 12px;border:2.5px solid #2B1E18;border-radius:12px;background:#CFE6D6">Kekuatan naik → bab berikutnya</span><span style="font:20px/1 'Material Symbols Rounded'">replay</span>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px">
+          <div style="padding:16px;border:2.5px solid #2B1E18;border-radius:16px;background:#F3E6D3"><div style="font:18px/1.1 'Bagel Fat One',system-ui">Battle otomatis</div><ul style="margin:10px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font:500 13px/1.45 'Bricolage Grotesque'"><li>Bergantian Pandu → musuh, 0,65 detik per aksi (×1/×2/×3).</li><li>Damage = ATK × 0,9–1,1 (kritis 2×) − ½ DEF lawan.</li><li>Skill memicu efek: kipas tiap 3 serangan, petir 25%, tidur saat HP &lt; 30%.</li><li>Musuh menguat 6% per hari.</li></ul></div>
+          <div style="padding:16px;border:2.5px solid #2B1E18;border-radius:16px;background:#F3E6D3"><div style="font:18px/1.1 'Bagel Fat One',system-ui">Level &amp; skill</div><ul style="margin:10px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font:500 13px/1.45 'Bricolage Grotesque'"><li>XP harian 12–21 + bonus kejadian dan musuh.</li><li>Naik level: pulih 15% HP, ATK +5%.</li><li>Peluang tawaran: Biasa 52 · Langka 30 · Epik 14 · Legendaris 4.</li><li>1× acak ulang per level; skill sama bisa ditumpuk.</li></ul></div>
+          <div style="padding:16px;border:2.5px solid #2B1E18;border-radius:16px;background:#F3E6D3"><div style="font:18px/1.1 'Bagel Fat One',system-ui">Ekonomi</div><ul style="margin:10px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font:500 13px/1.45 'Bricolage Grotesque'"><li>Energi 5 per bab, maks 30.</li><li>Koin = koin perjalanan + 90/hari + 60/musuh (+1.500 jika menang).</li><li>Permata 10 per 4 hari, 120 jika bab selesai.</li><li>Undian 150 / 1.350 (10×), Epik dijamin tiap 10.</li></ul></div>
+        </div>
+        <div>
+          <div style="font:500 10px/1 'DM Mono',monospace;letter-spacing:.12em;color:#A93D1C">10 SKILL · DIPILIH SAAT NAIK LEVEL</div>
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px;margin-top:10px">
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border:2px solid #2B1E18;border-radius:12px"><span style="width:32px;height:32px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2px solid #2B1E18;border-radius:10px;background:#E1E7D6;color:#5E6E52;font:18px/1 'Material Symbols Rounded'">pets</span><div style="min-width:0"><div style="font:800 13px/1.2 'Bricolage Grotesque'">Cakar Bambu <span style="font:500 9px/1 'DM Mono',monospace;color:#5E6E52">BIASA</span></div><div style="font:500 12px/1.35 'Bricolage Grotesque';color:#5B4A40">+12% ATK. Bambu tidak terlibat.</div></div></div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border:2px solid #2B1E18;border-radius:12px"><span style="width:32px;height:32px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2px solid #2B1E18;border-radius:10px;background:#E1E7D6;color:#5E6E52;font:18px/1 'Material Symbols Rounded'">shield</span><div style="min-width:0"><div style="font:800 13px/1.2 'Bricolage Grotesque'">Bulu Tebal <span style="font:500 9px/1 'DM Mono',monospace;color:#5E6E52">BIASA</span></div><div style="font:500 12px/1.35 'Bricolage Grotesque';color:#5B4A40">+18% HP maks. Juga hangat.</div></div></div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border:2px solid #2B1E18;border-radius:12px"><span style="width:32px;height:32px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2px solid #2B1E18;border-radius:10px;background:#E1E7D6;color:#5E6E52;font:18px/1 'Material Symbols Rounded'">cookie</span><div style="min-width:0"><div style="font:800 13px/1.2 'Bricolage Grotesque'">Lempar Kerupuk <span style="font:500 9px/1 'DM Mono',monospace;color:#5E6E52">BIASA</span></div><div style="font:500 12px/1.35 'Bricolage Grotesque';color:#5B4A40">Serangan pertama tiap battle 160% ATK.</div></div></div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border:2px solid #2B1E18;border-radius:12px"><span style="width:32px;height:32px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2px solid #2B1E18;border-radius:10px;background:#D5E3F6;color:#3166B0;font:18px/1 'Material Symbols Rounded'">air</span><div style="min-width:0"><div style="font:800 13px/1.2 'Bricolage Grotesque'">Ekor Kipas <span style="font:500 9px/1 'DM Mono',monospace;color:#3166B0">LANGKA</span></div><div style="font:500 12px/1.35 'Bricolage Grotesque';color:#5B4A40">Tiap 3 serangan: kipasan 80% ATK.</div></div></div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border:2px solid #2B1E18;border-radius:12px"><span style="width:32px;height:32px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2px solid #2B1E18;border-radius:10px;background:#D5E3F6;color:#3166B0;font:18px/1 'Material Symbols Rounded'">sports_martial_arts</span><div style="min-width:0"><div style="font:800 13px/1.2 'Bricolage Grotesque'">Pose Seram <span style="font:500 9px/1 'DM Mono',monospace;color:#3166B0">LANGKA</span></div><div style="font:500 12px/1.35 'Bricolage Grotesque';color:#5B4A40">Musuh 20% melewatkan giliran; gertak +15%.</div></div></div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border:2px solid #2B1E18;border-radius:12px"><span style="width:32px;height:32px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2px solid #2B1E18;border-radius:10px;background:#D5E3F6;color:#3166B0;font:18px/1 'Material Symbols Rounded'">visibility</span><div style="min-width:0"><div style="font:800 13px/1.2 'Bricolage Grotesque'">Tatapan Kosong <span style="font:500 9px/1 'DM Mono',monospace;color:#3166B0">LANGKA</span></div><div style="font:500 12px/1.35 'Bricolage Grotesque';color:#5B4A40">+15% peluang kritis.</div></div></div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border:2px solid #2B1E18;border-radius:12px"><span style="width:32px;height:32px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2px solid #2B1E18;border-radius:10px;background:#D5E3F6;color:#3166B0;font:18px/1 'Material Symbols Rounded'">ramen_dining</span><div style="min-width:0"><div style="font:800 13px/1.2 'Bricolage Grotesque'">Ngemil <span style="font:500 9px/1 'DM Mono',monospace;color:#3166B0">LANGKA</span></div><div style="font:500 12px/1.35 'Bricolage Grotesque';color:#5B4A40">Pulihkan HP 15% dari kerusakan.</div></div></div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border:2px solid #2B1E18;border-radius:12px"><span style="width:32px;height:32px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2px solid #2B1E18;border-radius:10px;background:#E7D9F5;color:#7E43B5;font:18px/1 'Material Symbols Rounded'">bedtime</span><div style="min-width:0"><div style="font:800 13px/1.2 'Bricolage Grotesque'">Tidur Ayam <span style="font:500 9px/1 'DM Mono',monospace;color:#7E43B5">EPIK</span></div><div style="font:500 12px/1.35 'Bricolage Grotesque';color:#5B4A40">Sekali per battle saat HP &lt; 30%: pulih 35%.</div></div></div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border:2px solid #2B1E18;border-radius:12px"><span style="width:32px;height:32px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2px solid #2B1E18;border-radius:10px;background:#E7D9F5;color:#7E43B5;font:18px/1 'Material Symbols Rounded'">bolt</span><div style="min-width:0"><div style="font:800 13px/1.2 'Bricolage Grotesque'">Bulu Statis <span style="font:500 9px/1 'DM Mono',monospace;color:#7E43B5">EPIK</span></div><div style="font:500 12px/1.35 'Bricolage Grotesque';color:#5B4A40">25% peluang petir 70% ATK tiap serangan.</div></div></div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border:2px solid #2B1E18;border-radius:12px"><span style="width:32px;height:32px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2px solid #2B1E18;border-radius:10px;background:#FBE3B8;color:#B0620A;font:18px/1 'Material Symbols Rounded'">auto_awesome</span><div style="min-width:0"><div style="font:800 13px/1.2 'Bricolage Grotesque'">Sembilan Belang <span style="font:500 9px/1 'DM Mono',monospace;color:#B0620A">LEGENDARIS</span></div><div style="font:500 12px/1.35 'Bricolage Grotesque';color:#5B4A40">Tiap serangan + sabetan ekor 45% ATK.</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="font:500 11px/1 'DM Mono',monospace;letter-spacing:.14em;color:rgba(0,0,0,.5);margin:0 0 14px">PROTOTYPE V2 · KARAKTER SUDAH BERGERAK</div>
+  <div class="dv-opts">
+    <div class="dv-opt" id="2d" data-screen-label="2d Prototype v2"><div class="dv-olabel"><a class="dv-oid" href="#2d">2d</a>Mainkan — ketuk PERGI</div><dc-import name="Pandu Pergi Game v2" screen="lobby" hint-size="390px,844px" style="width:390px;height:844px"></dc-import></div>
+    <div class="dv-opt" data-screen-label="v2 Lobby"><div class="dv-olabel"><span class="dv-oid">v2</span>Lobby</div><dc-import name="Pandu Pergi Game v2" screen="lobby" still="{{ true }}" hint-size="390px,844px" style="width:390px;height:844px"></dc-import></div>
+    <div class="dv-opt" data-screen-label="v2 Petualangan"><div class="dv-olabel"><span class="dv-oid">v2</span>Petualangan — musuh muncul</div><dc-import name="Pandu Pergi Game v2" screen="gertak" still="{{ true }}" hint-size="390px,844px" style="width:390px;height:844px"></dc-import></div>
+    <div class="dv-opt" data-screen-label="v2 Battle"><div class="dv-olabel"><span class="dv-oid">v2</span>Battle — Pandu menyerang</div><dc-import name="Pandu Pergi Game v2" screen="battle" still="{{ true }}" hint-size="390px,844px" style="width:390px;height:844px"></dc-import></div>
+    <div class="dv-opt" data-screen-label="v2 Hero"><div class="dv-olabel"><span class="dv-oid">v2</span>Hero — ketuk Pandu ganti pose</div><dc-import name="Pandu Pergi Game v2" screen="hero" still="{{ true }}" hint-size="390px,844px" style="width:390px;height:844px"></dc-import></div>
+    <div class="dv-opt" data-screen-label="v2 Hasil"><div class="dv-olabel"><span class="dv-oid">v2</span>Hasil</div><dc-import name="Pandu Pergi Game v2" screen="result" still="{{ true }}" hint-size="390px,844px" style="width:390px;height:844px"></dc-import></div>
+  </div>
+  <p class="dv-next">Coba: "warna bulu Pandu lebih gelap" · "buat musuh untuk Bab 4 Gunung Kasur" · "jadikan <a class="dv-oid" href="#1b">1b</a> bisa dimainkan"</p>
+</section>
+<section class="dv-turn" id="t1">
+  <div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Pandu Pergi — prototype, 8 layar inti, 3 ide mekanik baru</span></div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start;margin-bottom:38px">
+    <div style="max-width:520px">
+      <div style="font:46px/1 'Bagel Fat One',system-ui">Pandu Pergi</div>
+      <p style="margin:14px 0 0;font:500 16px/1.5 'Bricolage Grotesque';text-wrap:pretty">Roguelike santai untuk HP. Pandu, panda merah berwajah datar, berjalan 20 hari per bab. Tiap hari ada kejadian absurd, pilihan, atau musuh. Battle berjalan otomatis; naik level berarti pilih 1 dari 3 skill.</p>
+    </div>
+    <div style="max-width:430px;padding:16px 18px;border:2px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18">
+      <div style="font:500 10px/1 'DM Mono',monospace;letter-spacing:.12em;color:#A93D1C">ASUMSI</div>
+      <ul style="margin:10px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font:500 13.5px/1.45 'Bricolage Grotesque';text-wrap:pretty">
+        <li>IP orisinal — karakter, nama, dan gaya visual baru, bukan aset Capybara Go.</li>
+        <li>Layar 390 × 844 tanpa frame. Bahasa Indonesia, nada deadpan.</li>
+        <li>Kotak bergaris = slot ilustrasi. Seret gambar ke sana; slot dengan nama sama ikut terisi di layar lain.</li>
+        <li>Ikon sementara dari Material Symbols.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="font:500 11px/1 'DM Mono',monospace;letter-spacing:.14em;color:rgba(0,0,0,.5);margin:0 0 14px">MAINKAN</div>
+  <div class="dv-opts" style="margin-bottom:48px">
+    <div class="dv-opt" data-screen-label="Prototype">
+      <div class="dv-olabel"><span class="dv-oid">P</span>Prototype — ketuk PERGI</div>
+      <dc-import name="Pandu Pergi Game" screen="lobby" hint-size="390px,844px" style="width:390px;height:844px"></dc-import>
+    </div>
+    <div style="width:300px;display:flex;flex-direction:column;gap:14px;padding-top:30px">
+      <div style="padding:16px 18px;border:2px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18">
+        <div style="font:20px/1 'Bagel Fat One',system-ui">Cara main</div>
+        <ol style="margin:12px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:7px;font:500 13.5px/1.45 'Bricolage Grotesque';text-wrap:pretty">
+          <li>Ketuk PERGI (5 energi), pilih bekal awal.</li>
+          <li>Hari berjalan sendiri. Ada kejadian? Pilih salah satu.</li>
+          <li>Ketemu musuh: Lawan, atau Pose Seram (<a class="dv-oid" href="#1a">1a</a>).</li>
+          <li>Naik level → pilih 1 dari 3 skill.</li>
+          <li>Kalah, pulang, atau kalahkan bos Hari 20 → layar hasil.</li>
+        </ol>
+      </div>
+      <div style="font:500 12.5px/1.5 'Bricolage Grotesque';color:rgba(0,0,0,.6);text-wrap:pretty">Tab Hero, Peta, dan Toko juga hidup: pasang item, buka peti bab, undi peti. Jumlah hari per bab dan Pose Seram bisa diatur lewat Tweaks di file Pandu Pergi Game.</div>
+    </div>
+  </div>
+
+  <div style="font:500 11px/1 'DM Mono',monospace;letter-spacing:.14em;color:rgba(0,0,0,.5);margin:0 0 14px">8 LAYAR INTI</div>
+  <div class="dv-opts" style="margin-bottom:48px">
+    <div class="dv-opt" data-screen-label="S1 Lobby"><div class="dv-olabel"><span class="dv-oid">S1</span>Lobby</div><dc-import name="Pandu Pergi Game" screen="lobby" still="{{ true }}" hint-size="390px,844px" style="width:390px;height:844px"></dc-import></div>
+    <div class="dv-opt" data-screen-label="S2 Petualangan"><div class="dv-olabel"><span class="dv-oid">S2</span>Petualangan — log harian + kejadian</div><dc-import name="Pandu Pergi Game" screen="run" still="{{ true }}" hint-size="390px,844px" style="width:390px;height:844px"></dc-import></div>
+    <div class="dv-opt" data-screen-label="S3 Pilih skill"><div class="dv-olabel"><span class="dv-oid">S3</span>Pilih skill (1 dari 3)</div><dc-import name="Pandu Pergi Game" screen="skill" still="{{ true }}" hint-size="390px,844px" style="width:390px;height:844px"></dc-import></div>
+    <div class="dv-opt" data-screen-label="S4 Battle"><div class="dv-olabel"><span class="dv-oid">S4</span>Battle otomatis — bos</div><dc-import name="Pandu Pergi Game" screen="battle" still="{{ true }}" hint-size="390px,844px" style="width:390px;height:844px"></dc-import></div>
+    <div class="dv-opt" data-screen-label="S5 Hero"><div class="dv-olabel"><span class="dv-oid">S5</span>Hero &amp; equipment</div><dc-import name="Pandu Pergi Game" screen="hero" still="{{ true }}" hint-size="390px,844px" style="width:390px;height:844px"></dc-import></div>
+    <div class="dv-opt" data-screen-label="S6 Peta"><div class="dv-olabel"><span class="dv-oid">S6</span>Peta chapter</div><dc-import name="Pandu Pergi Game" screen="map" still="{{ true }}" hint-size="390px,844px" style="width:390px;height:844px"></dc-import></div>
+    <div class="dv-opt" data-screen-label="S7 Toko"><div class="dv-olabel"><span class="dv-oid">S7</span>Toko &amp; undian</div><dc-import name="Pandu Pergi Game" screen="shop" still="{{ true }}" hint-size="390px,844px" style="width:390px;height:844px"></dc-import></div>
+    <div class="dv-opt" data-screen-label="S8 Hasil"><div class="dv-olabel"><span class="dv-oid">S8</span>Hasil &amp; hadiah</div><dc-import name="Pandu Pergi Game" screen="result" still="{{ true }}" hint-size="390px,844px" style="width:390px;height:844px"></dc-import></div>
+  </div>
+
+  <div style="font:500 11px/1 'DM Mono',monospace;letter-spacing:.14em;color:rgba(0,0,0,.5);margin:0 0 14px">IDE MEKANIK BARU — DI LUAR CAPYBARA GO</div>
+  <div class="dv-opts">
+
+    <div class="dv-opt" id="1a" data-screen-label="1a Pose Seram">
+      <div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Pose Seram — gertak sebelum battle</div>
+      <dc-import name="Pandu Pergi Game" screen="gertak" still="{{ true }}" hint-size="390px,844px" style="width:390px;height:844px"></dc-import>
+      <div style="width:390px;box-sizing:border-box;padding:16px 18px;border:2px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font:22px/1 'Bagel Fat One',system-ui">Pose Seram</span><span style="padding:4px 7px;border-radius:6px;background:#2F7A5C;color:#FFF8EC;font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.08em">SUDAH ADA DI PROTOTYPE</span></div>
+        <ul style="margin:10px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font:500 13.5px/1.45 'Bricolage Grotesque';text-wrap:pretty">
+          <li>Sebelum battle biasa: Lawan, atau Pose Seram — Pandu berdiri dengan dua kaki, seperti panda merah sungguhan.</li>
+          <li>Berhasil (55%, +15% per skill Pose Seram): musuh kabur, Pandu dapat koin dan XP tanpa kehilangan HP.</li>
+          <li>Gagal: musuh tersinggung, menyerang duluan dengan ATK +20%. Bos kebal.</li>
+        </ul>
+        <div style="margin-top:10px;font:600 12.5px/1.4 'Bricolage Grotesque';color:#6E5A4E">Kenapa beda: ada keputusan risiko di setiap pertemuan, bukan cuma di event.</div>
+      </div>
+    </div>
+
+    <div class="dv-opt" id="1b" data-screen-label="1b Ekor Belang">
+      <div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Ekor Belang — skill dipasang di cincin ekor</div>
+      <div style="position:relative;width:390px;height:844px;overflow:hidden;border-radius:34px;background-color:#F3E6D3;background-image:radial-gradient(rgba(43,30,24,.075) 1.1px,transparent 1.4px);background-size:9px 9px;color:#2B1E18;font-family:'Bricolage Grotesque',system-ui,sans-serif">
+        <div style="position:absolute;top:14px;left:12px;right:12px;display:flex;align-items:center;gap:10px">
+          <div style="width:42px;height:42px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid #2B1E18;border-radius:14px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18;font:26px/1 'Material Symbols Rounded'">chevron_left</div>
+          <div style="flex:1;min-width:0"><div style="font:500 10px/1.2 'DM Mono',monospace;letter-spacing:.08em;color:#A93D1C">IDE MEKANIK · EKOR BELANG</div><div style="font:26px/1 'Bagel Fat One',system-ui;margin-top:3px">Susun Ekor</div></div>
+          <div style="padding:8px 10px;border-radius:12px;background:#2B1E18;color:#FFF8EC;font:500 10.5px/1 'DM Mono',monospace;letter-spacing:.08em">LV 6</div>
+        </div>
+        <div style="position:absolute;top:72px;left:12px;right:12px;display:flex;align-items:center;gap:12px;padding:10px 12px;border:3px solid #2B1E18;border-radius:20px;background:#FFF8EC;box-shadow:0 5px 0 #2B1E18">
+          <div style="width:60px;height:60px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid #2B1E18;border-radius:16px;background:#E7D9F5;color:#7E43B5;font:32px/1 'Material Symbols Rounded'">bolt</div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;gap:6px;align-items:center"><span style="padding:3px 7px;border-radius:7px;background:#7E43B5;color:#FFF8EC;font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.08em">EPIK</span><span style="padding:2px 6px;border-radius:7px;border:1.5px solid #2B1E18;font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.08em">PETIR</span></div>
+            <div style="font:19px/1.1 'Bagel Fat One',system-ui;margin-top:6px">Bulu Statis</div>
+            <div style="font:500 12px/1.3 'Bricolage Grotesque';color:#5B4A40;margin-top:3px">Seret ke cincin kosong. Sekali pasang, tidak bisa dipindah.</div>
+          </div>
+          <span style="font:26px/1 'Material Symbols Rounded';color:#6E5A4E">drag_indicator</span>
+        </div>
+        <div style="position:absolute;top:178px;left:14px;display:flex;align-items:center;gap:4px;font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.1em;color:#6E5A4E"><span style="font:13px/1 'Material Symbols Rounded'">arrow_upward</span>UJUNG · MEMICU DULUAN</div>
+
+        <div style="position:absolute;top:200px;left:64px;width:220px;height:52px;box-sizing:border-box;display:flex;align-items:center;gap:10px;padding:0 14px 0 6px;border:3px solid #2B1E18;border-radius:26px;background:#D2532A;color:#FFF8EC;box-shadow:0 3px 0 #2B1E18;transform:rotate(-7deg)">
+          <div style="width:36px;height:36px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid #2B1E18;border-radius:50%;background:#E1E7D6;color:#5E6E52;font:20px/1 'Material Symbols Rounded'">pets</div>
+          <div style="flex:1;min-width:0;font:800 14px/1.1 'Bricolage Grotesque'">Cakar Bambu</div>
+          <span style="font:500 9px/1 'DM Mono',monospace;letter-spacing:.08em">FISIK</span>
+        </div>
+        <div style="position:absolute;top:258px;left:50px;width:220px;height:52px;box-sizing:border-box;display:flex;align-items:center;gap:10px;padding:0 14px 0 6px;border:3px solid #2B1E18;border-radius:26px;background:#FFF8EC;color:#2B1E18;box-shadow:0 3px 0 #2B1E18;transform:rotate(-4.5deg)">
+          <div style="width:36px;height:36px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid #2B1E18;border-radius:50%;background:#D5E3F6;color:#3166B0;font:20px/1 'Material Symbols Rounded'">air</div>
+          <div style="flex:1;min-width:0;font:800 14px/1.1 'Bricolage Grotesque'">Ekor Kipas</div>
+          <span style="font:500 9px/1 'DM Mono',monospace;letter-spacing:.08em">ANGIN</span>
+        </div>
+        <div style="position:absolute;top:316px;left:40px;width:220px;height:52px;box-sizing:border-box;display:flex;align-items:center;gap:10px;padding:0 12px 0 6px;border:3px dashed #2B1E18;border-radius:26px;background:#FBE6B4;color:#2B1E18;box-shadow:0 0 0 5px rgba(242,182,60,.5);transform:rotate(-2.5deg)">
+          <div style="width:36px;height:36px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2.5px dashed #7E43B5;border-radius:50%;background:#FFF8EC;color:#7E43B5;font:20px/1 'Material Symbols Rounded'">add</div>
+          <div style="flex:1;min-width:0"><div style="font:800 13px/1.1 'Bricolage Grotesque'">Cincin 3 kosong</div><div style="font:500 9px/1 'DM Mono',monospace;letter-spacing:.06em;color:#6E5A4E;margin-top:3px">TARUH DI SINI</div></div>
+        </div>
+        <div style="position:absolute;top:374px;left:34px;width:220px;height:52px;box-sizing:border-box;display:flex;align-items:center;gap:10px;padding:0 14px 0 6px;border:3px solid #2B1E18;border-radius:26px;background:#FFF8EC;color:#2B1E18;box-shadow:0 3px 0 #2B1E18;transform:rotate(-1deg)">
+          <div style="width:36px;height:36px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid #2B1E18;border-radius:50%;background:#E1E7D6;color:#5E6E52;font:20px/1 'Material Symbols Rounded'">shield</div>
+          <div style="flex:1;min-width:0;font:800 14px/1.1 'Bricolage Grotesque'">Bulu Tebal</div>
+          <span style="font:500 9px/1 'DM Mono',monospace;letter-spacing:.08em">FISIK</span>
+        </div>
+        <div style="position:absolute;top:432px;left:32px;width:220px;height:52px;box-sizing:border-box;display:flex;align-items:center;gap:10px;padding:0 14px 0 6px;border:3px solid #2B1E18;border-radius:26px;background:#D2532A;color:#FFF8EC;box-shadow:0 3px 0 #2B1E18;transform:rotate(.5deg)">
+          <div style="width:36px;height:36px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid #2B1E18;border-radius:50%;background:#E7D9F5;color:#7E43B5;font:20px/1 'Material Symbols Rounded'">bedtime</div>
+          <div style="flex:1;min-width:0;font:800 14px/1.1 'Bricolage Grotesque'">Tidur Ayam</div>
+          <span style="font:500 9px/1 'DM Mono',monospace;letter-spacing:.08em">KANTUK</span>
+        </div>
+        <div style="position:absolute;top:490px;left:36px;width:220px;height:52px;box-sizing:border-box;display:flex;align-items:center;gap:10px;padding:0 14px 0 6px;border:3px solid #2B1E18;border-radius:26px;background:#E2D5C3;color:#6E5A4E;transform:rotate(2deg);opacity:.8">
+          <div style="width:36px;height:36px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid #6E5A4E;border-radius:50%;font:18px/1 'Material Symbols Rounded'">lock</div>
+          <div style="flex:1;min-width:0;font:700 13px/1.1 'Bricolage Grotesque'">Terbuka di Lv 8</div>
+        </div>
+        <div style="position:absolute;top:548px;left:46px;width:220px;height:52px;box-sizing:border-box;display:flex;align-items:center;gap:10px;padding:0 14px 0 6px;border:3px solid #2B1E18;border-radius:26px;background:#D9C9B5;color:#6E5A4E;transform:rotate(4deg);opacity:.8">
+          <div style="width:36px;height:36px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid #6E5A4E;border-radius:50%;font:18px/1 'Material Symbols Rounded'">lock</div>
+          <div style="flex:1;min-width:0;font:700 13px/1.1 'Bricolage Grotesque'">Terbuka di Lv 12</div>
+        </div>
+
+        <div style="position:absolute;top:266px;right:12px;width:124px;box-sizing:border-box;padding:10px 11px 11px;border:3px solid #2B1E18;border-radius:16px;background:#F2B63C;box-shadow:0 5px 0 #2B1E18;transform:rotate(4deg)">
+          <div style="display:flex;align-items:center;gap:4px;font:500 9px/1 'DM Mono',monospace;letter-spacing:.1em"><span style="font:13px/1 'Material Symbols Rounded'">link</span>COMBO</div>
+          <div style="font:17px/1.05 'Bagel Fat One',system-ui;margin-top:5px">Badai Kecil</div>
+          <div style="font:600 11px/1.3 'Bricolage Grotesque';margin-top:5px;text-wrap:pretty">Angin + Petir. Ekor Kipas ikut menyetrum, 2× per giliran.</div>
+        </div>
+
+        <div style="position:absolute;top:614px;left:14px;display:flex;align-items:center;gap:4px;font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.1em;color:#6E5A4E"><span style="font:13px/1 'Material Symbols Rounded'">arrow_downward</span>PANGKAL</div>
+        <div style="position:absolute;top:640px;left:12px;right:12px;display:flex;flex-wrap:wrap;gap:6px">
+          <span style="padding:6px 9px;border-radius:10px;border:2px solid #2B1E18;background:#FFF8EC;font:700 11.5px/1 'Bricolage Grotesque'">Cincin baru tiap 4 level</span>
+          <span style="padding:6px 9px;border-radius:10px;border:2px solid #2B1E18;background:#FFF8EC;font:700 11.5px/1 'Bricolage Grotesque'">Elemen cocok bersebelahan = combo</span>
+        </div>
+        <div style="position:absolute;left:20px;right:20px;bottom:76px;height:60px;box-sizing:border-box;display:grid;place-items:center;border:3px solid #2B1E18;border-radius:20px;background:#D2532A;box-shadow:0 6px 0 #2B1E18;color:#FFF8EC;font:22px/1 'Bagel Fat One',system-ui;text-shadow:2px 0 0 #2B1E18,-2px 0 0 #2B1E18,0 2px 0 #2B1E18,0 -2px 0 #2B1E18,1.5px 1.5px 0 #2B1E18,-1.5px 1.5px 0 #2B1E18,1.5px -1.5px 0 #2B1E18,-1.5px -1.5px 0 #2B1E18,0 3px 0 #2B1E18">PASANG DI CINCIN 3</div>
+        <div style="position:absolute;left:0;right:0;bottom:34px;text-align:center;font:700 13.5px/1 'Bricolage Grotesque';color:#5B4A40;text-decoration:underline;text-underline-offset:3px">Simpan dulu · 1 slot tersisa</div>
+        <div style="position:absolute;inset:0;border:2.5px solid #2B1E18;border-radius:34px;pointer-events:none"></div>
+      </div>
+      <div style="width:390px;box-sizing:border-box;padding:16px 18px;border:2px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font:22px/1 'Bagel Fat One',system-ui">Ekor Belang</span><span style="padding:4px 7px;border-radius:6px;background:#2B1E18;color:#FFF8EC;font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.08em">KONSEP</span></div>
+        <ul style="margin:10px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font:500 13.5px/1.45 'Bricolage Grotesque';text-wrap:pretty">
+          <li>Skill tidak masuk daftar — dipasang di cincin ekor. Mulai 5 cincin, bisa dibuka sampai 9.</li>
+          <li>Dua cincin bersebelahan dengan elemen cocok menyatu jadi combo (Angin + Petir = Badai Kecil).</li>
+          <li>Urutan penting: cincin ujung memicu duluan tiap giliran. Yang sudah dipasang tidak bisa dipindah.</li>
+        </ul>
+        <div style="margin-top:10px;font:600 12.5px/1.4 'Bricolage Grotesque';color:#6E5A4E">Kenapa beda: memilih skill jadi teka-teki posisi, bukan cuma 1 dari 3.</div>
+      </div>
+    </div>
+
+    <div class="dv-opt" id="1c" data-screen-label="1c Tidur Siang">
+      <div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Tidur Siang — tukar hari dengan HP</div>
+      <div style="position:relative;width:390px;height:844px;overflow:hidden;border-radius:34px;background-color:#F3E6D3;background-image:radial-gradient(rgba(43,30,24,.075) 1.1px,transparent 1.4px);background-size:9px 9px;color:#2B1E18;font-family:'Bricolage Grotesque',system-ui,sans-serif">
+        <div style="position:absolute;top:14px;left:12px;right:12px;display:flex;align-items:center;gap:10px">
+          <div style="width:42px;height:42px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid #2B1E18;border-radius:14px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18;font:26px/1 'Material Symbols Rounded'">chevron_left</div>
+          <div style="flex:1;min-width:0"><div style="font:500 10px/1.2 'DM Mono',monospace;letter-spacing:.08em;color:#A93D1C">IDE MEKANIK · TIDUR SIANG</div><div style="font:26px/1 'Bagel Fat One',system-ui;margin-top:3px">Tidur Dulu?</div></div>
+          <div style="padding:8px 10px;border-radius:12px;background:#2B1E18;color:#FFF8EC;font:500 10.5px/1 'DM Mono',monospace;letter-spacing:.08em">HARI 12</div>
+        </div>
+        <div style="position:absolute;top:70px;left:12px;right:12px;height:140px;border:2.5px solid #2B1E18;border-radius:22px;overflow:hidden;background-color:#D5E3F6;background-image:radial-gradient(rgba(43,30,24,.12) 1.2px,transparent 1.5px);background-size:10px 10px;box-shadow:0 3px 0 #2B1E18">
+          <image-slot id="art-pandu-tidur" shape="rect" placeholder="Pandu tidur tengkurap di dahan pohon" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
+          <div style="position:absolute;top:10px;right:14px;font:26px/1 'Bagel Fat One',system-ui;color:#FFF8EC;letter-spacing:.08em;text-shadow:2px 0 0 #2B1E18,-2px 0 0 #2B1E18,0 2px 0 #2B1E18,0 -2px 0 #2B1E18,0 3px 0 #2B1E18;pointer-events:none">z Z z</div>
+        </div>
+        <div style="position:absolute;top:222px;left:12px;right:12px;display:flex;align-items:center;gap:8px">
+          <span style="display:flex;align-items:center;gap:3px;font:800 12px/1 'Bricolage Grotesque'"><span style="font:14px/1 'Material Symbols Rounded';color:#C2412A">favorite</span>HP</span>
+          <div style="flex:1;height:16px;box-sizing:border-box;border:2.5px solid #2B1E18;border-radius:8px;background:#3A2A22;overflow:hidden"><div style="height:100%;width:24%;background:#E0503A"></div></div>
+          <span style="font:500 10.5px/1 'DM Mono',monospace">312 / 1.310</span>
+        </div>
+        <div style="position:absolute;top:258px;left:12px;right:12px;display:flex;align-items:baseline;justify-content:space-between"><span style="font:800 15px/1 'Bricolage Grotesque'">Tidur berapa hari?</span><span style="font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.08em;color:#6E5A4E">1–5 HARI</span></div>
+        <div style="position:absolute;top:284px;left:12px;right:12px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px">
+          <div style="height:62px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18"><span style="font:24px/1 'Bagel Fat One',system-ui">1</span><span style="font:500 8.5px/1 'DM Mono',monospace;letter-spacing:.08em;color:#6E5A4E">HARI</span></div>
+          <div style="height:62px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18"><span style="font:24px/1 'Bagel Fat One',system-ui">2</span><span style="font:500 8.5px/1 'DM Mono',monospace;letter-spacing:.08em;color:#6E5A4E">HARI</span></div>
+          <div style="height:62px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:3px solid #2B1E18;border-radius:16px;background:#F2B63C;box-shadow:0 6px 0 #2B1E18;transform:translateY(-4px)"><span style="font:24px/1 'Bagel Fat One',system-ui">3</span><span style="font:500 8.5px/1 'DM Mono',monospace;letter-spacing:.08em">HARI</span></div>
+          <div style="height:62px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18"><span style="font:24px/1 'Bagel Fat One',system-ui">4</span><span style="font:500 8.5px/1 'DM Mono',monospace;letter-spacing:.08em;color:#6E5A4E">HARI</span></div>
+          <div style="height:62px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18"><span style="font:24px/1 'Bagel Fat One',system-ui">5</span><span style="font:500 8.5px/1 'DM Mono',monospace;letter-spacing:.08em;color:#6E5A4E">HARI</span></div>
+        </div>
+        <div style="position:absolute;top:362px;left:12px;right:12px;padding:10px 12px 4px;border:2.5px solid #2B1E18;border-radius:20px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18">
+          <div style="font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.1em;color:#6E5A4E;margin-bottom:4px">AKIBATNYA</div>
+          <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1.5px dashed rgba(43,30,24,.16)">
+            <div style="width:32px;height:32px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2px solid #2B1E18;border-radius:10px;background:#CFE6D6;color:#2F7A5C;font:18px/1 'Material Symbols Rounded'">favorite</div>
+            <div style="flex:1;min-width:0"><div style="font:800 13.5px/1.2 'Bricolage Grotesque'">HP pulih</div><div style="font:500 11.5px/1.3 'Bricolage Grotesque';color:#6E5A4E">Tidur adalah obat. Kata Pandu.</div></div>
+            <span style="padding:5px 8px;border-radius:9px;background:#2F7A5C;color:#FFF8EC;font:500 10.5px/1 'DM Mono',monospace">+60%</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1.5px dashed rgba(43,30,24,.16)">
+            <div style="width:32px;height:32px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2px solid #2B1E18;border-radius:10px;background:#F6C9BD;color:#C2412A;font:18px/1 'Material Symbols Rounded'">trending_up</div>
+            <div style="flex:1;min-width:0"><div style="font:800 13.5px/1.2 'Bricolage Grotesque'">Musuh ikut naik level</div><div style="font:500 11.5px/1.3 'Bricolage Grotesque';color:#6E5A4E">Mereka tidak tidur.</div></div>
+            <span style="padding:5px 8px;border-radius:9px;background:#C2412A;color:#FFF8EC;font:500 10.5px/1 'DM Mono',monospace">+3 LV</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1.5px dashed rgba(43,30,24,.16)">
+            <div style="width:32px;height:32px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2px solid #2B1E18;border-radius:10px;background:#EADBC5;color:#6E5A4E;font:18px/1 'Material Symbols Rounded'">storefront</div>
+            <div style="flex:1;min-width:0"><div style="font:800 13.5px/1.2 'Bricolage Grotesque'">Pedagang kerupuk pergi</div><div style="font:500 11.5px/1.3 'Bricolage Grotesque';color:#6E5A4E">Ia tidak bisa menunggu selamanya.</div></div>
+            <span style="padding:5px 8px;border-radius:9px;background:#6E5A4E;color:#FFF8EC;font:500 10.5px/1 'DM Mono',monospace">HILANG</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:7px 0">
+            <div style="width:32px;height:32px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2px solid #2B1E18;border-radius:10px;background:#E7D9F5;color:#7E43B5;font:18px/1 'Material Symbols Rounded'">bedtime</div>
+            <div style="flex:1;min-width:0"><div style="font:800 13.5px/1.2 'Bricolage Grotesque'">Mimpi</div><div style="font:500 11.5px/1.3 'Bricolage Grotesque';color:#6E5A4E">Satu kartu mimpi, diacak saat bangun.</div></div>
+            <span style="padding:5px 8px;border-radius:9px;background:#7E43B5;color:#FFF8EC;font:500 10.5px/1 'DM Mono',monospace">1 KARTU</span>
+          </div>
+        </div>
+        <div style="position:absolute;top:592px;left:18px;right:18px;padding:11px 14px 12px;border:2.5px solid #2B1E18;border-radius:18px;background:#E7D9F5;box-shadow:0 3px 0 #2B1E18;transform:rotate(-1.5deg)">
+          <div style="display:flex;align-items:center;gap:5px;font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.1em;color:#7E43B5"><span style="font:13px/1 'Material Symbols Rounded'">auto_awesome</span>CONTOH MIMPI · HARI 13–15</div>
+          <div style="font:600 13px/1.4 'Bricolage Grotesque';margin-top:6px;text-wrap:pretty">Pandu bermimpi menjadi rak sepatu. Ia bangun dengan DEF +20 dan rasa tanggung jawab yang aneh.</div>
+        </div>
+        <div style="position:absolute;left:20px;right:20px;bottom:84px;height:58px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:10px;border:3px solid #2B1E18;border-radius:20px;background:#2B1E18;box-shadow:0 6px 0 #120C09;color:#FFF8EC;font:22px/1 'Bagel Fat One',system-ui"><span style="font:24px/1 'Material Symbols Rounded';color:#F2B63C">bedtime</span>TIDUR 3 HARI</div>
+        <div style="position:absolute;left:0;right:0;bottom:44px;text-align:center;font:700 13.5px/1 'Bricolage Grotesque';color:#5B4A40;text-decoration:underline;text-underline-offset:3px">Tidak jadi, lanjut jalan</div>
+        <div style="position:absolute;inset:0;border:2.5px solid #2B1E18;border-radius:34px;pointer-events:none"></div>
+      </div>
+      <div style="width:390px;box-sizing:border-box;padding:16px 18px;border:2px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font:22px/1 'Bagel Fat One',system-ui">Tidur Siang</span><span style="padding:4px 7px;border-radius:6px;background:#2B1E18;color:#FFF8EC;font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.08em">KONSEP</span></div>
+        <ul style="margin:10px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font:500 13.5px/1.45 'Bricolage Grotesque';text-wrap:pretty">
+          <li>Di luar battle, Pandu bisa tidur 1–5 hari untuk memulihkan HP — pengganti ramuan.</li>
+          <li>Dunia tetap berjalan: musuh naik level, pedagang dan kejadian yang terlewat hilang.</li>
+          <li>Setiap tidur memberi satu Kartu Mimpi acak: buff permanen yang absurd.</li>
+        </ul>
+        <div style="margin-top:10px;font:600 12.5px/1.4 'Bricolage Grotesque';color:#6E5A4E">Kenapa beda: waktu jadi sumber daya. Membuang hari bisa jadi strategi.</div>
+      </div>
+    </div>
+
+  </div>
+  <p class="dv-next">Coba: "jadikan <a class="dv-oid" href="#1b">1b</a> bisa dimainkan di prototype" · "gabungkan <a class="dv-oid" href="#1c">1c</a> ke log petualangan" · "buat 2 variasi lobby yang lebih ramai"</p>
+</section>
+</x-dc>
+</body>
+</html>

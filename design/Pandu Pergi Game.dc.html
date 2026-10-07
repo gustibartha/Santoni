@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,600,1,0&display=block">
+<script src="./image-slot.js"></script>
+<style>
+@keyframes panduPop{0%{opacity:0;transform:translate(-50%,12px) scale(.5)}18%{opacity:1;transform:translate(-50%,-8px) scale(1.18)}32%{opacity:1;transform:translate(-50%,-12px) scale(1)}100%{opacity:0;transform:translate(-50%,-64px) scale(.95)}}
+@keyframes panduBanner{0%{opacity:0;transform:translate(-50%,-50%) rotate(-9deg) scale(.4)}18%{opacity:1;transform:translate(-50%,-50%) rotate(-3deg) scale(1.1)}30%{opacity:1;transform:translate(-50%,-50%) rotate(-3deg) scale(1)}78%{opacity:1;transform:translate(-50%,-50%) rotate(-3deg) scale(1)}100%{opacity:0;transform:translate(-50%,-80%) rotate(-3deg) scale(1)}}
+@keyframes panduSpin{to{transform:rotate(360deg)}}
+@keyframes panduFlip{0%{opacity:0;transform:perspective(600px) rotateY(90deg) scale(.7)}100%{opacity:1;transform:none}}
+</style>
+</helmet>
+<div style="display:flex;justify-content:center;width:100%">
+<div data-screen-label="{{ screenLabel }}" ref="{{ rootRef }}" style="position:relative;width:390px;height:844px;flex:none;overflow:hidden;border-radius:34px;background-color:#F3E6D3;background-image:radial-gradient(rgba(43,30,24,.075) 1.1px,transparent 1.4px);background-size:9px 9px;color:#2B1E18;font-family:'Bricolage Grotesque',system-ui,sans-serif;isolation:isolate;-webkit-font-smoothing:antialiased">
+
+<sc-if value="{{ showHud }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;gap:8px;padding:14px 12px 8px">
+  <div style="position:relative;width:42px;height:42px;flex:none;display:grid;place-items:center;border:2.5px solid #2B1E18;border-radius:50%;background:#D2532A;box-shadow:0 2px 0 #2B1E18;color:#FFF8EC;font:28px/1 'Material Symbols Rounded'">sentiment_neutral<span style="position:absolute;right:-7px;bottom:-5px;padding:2px 5px;border-radius:7px;border:2px solid #2B1E18;background:#F2B63C;color:#2B1E18;font:800 9px/1 'Bricolage Grotesque'">23</span></div>
+  <div style="min-width:0"><div style="font:800 14px/1.1 'Bricolage Grotesque'">Pandu</div><div style="font:500 9.5px/1.2 'DM Mono',monospace;color:#6E5A4E;margin-top:2px">AKUN LV 23</div></div>
+  <div style="flex:1"></div>
+  <div onClick="{{ goShop }}" style="display:flex;align-items:center;gap:5px;height:28px;padding:0 9px 0 3px;border-radius:14px;background:#2B1E18;color:#FFF8EC;font:700 12.5px/1 'Bricolage Grotesque';cursor:pointer"><span style="width:22px;height:22px;display:grid;place-items:center;border-radius:50%;background:#3C78C8;color:#FFF8EC;font:15px/1 'Material Symbols Rounded'">bolt</span>{{ energyLabel }}</div>
+  <div onClick="{{ goShop }}" style="display:flex;align-items:center;gap:5px;height:28px;padding:0 9px 0 4px;border-radius:14px;background:#2B1E18;color:#FFF8EC;font:700 12.5px/1 'Bricolage Grotesque';cursor:pointer"><span style="width:20px;height:20px;border-radius:50%;background:#F2B63C;box-shadow:inset 0 0 0 2px #C28A16,inset 0 0 0 5px #F2B63C,inset 0 0 0 6.5px #C28A16"></span>{{ coinsLabel }}</div>
+  <div onClick="{{ goShop }}" style="display:flex;align-items:center;gap:5px;height:28px;padding:0 9px 0 3px;border-radius:14px;background:#2B1E18;color:#FFF8EC;font:700 12.5px/1 'Bricolage Grotesque';cursor:pointer"><span style="width:22px;height:22px;display:grid;place-items:center;border-radius:50%;background:#7E43B5;color:#FFF8EC;font:14px/1 'Material Symbols Rounded'">diamond</span>{{ gemsLabel }}</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isLobby }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;top:66px;left:0;right:0;bottom:84px;display:flex;flex-direction:column;gap:12px;padding:6px 14px 16px">
+  <div style="display:flex;align-items:center;gap:8px">
+    <button onClick="{{ prevChapter }}" style="flex:none;width:40px;height:40px;display:grid;place-items:center;padding:0;border:2.5px solid #2B1E18;border-radius:14px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18;color:#2B1E18;font:26px/1 'Material Symbols Rounded';cursor:pointer;opacity:{{ prevOpacity }}">chevron_left</button>
+    <div style="flex:1;min-width:0;text-align:center;padding:7px 10px 8px;border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18">
+      <div style="font:500 10px/1.2 'DM Mono',monospace;letter-spacing:.1em;color:#A93D1C">BAB {{ chapterNo }} DARI 6</div>
+      <div style="font:21px/1.15 'Bagel Fat One',system-ui;margin-top:3px">{{ chapterName }}</div>
+      <div style="font:600 12px/1.3 'Bricolage Grotesque';color:#6E5A4E;margin-top:2px">Rekor: Hari {{ chapterBest }} / {{ daysTotal }}</div>
+    </div>
+    <button onClick="{{ nextChapter }}" style="flex:none;width:40px;height:40px;display:grid;place-items:center;padding:0;border:2.5px solid #2B1E18;border-radius:14px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18;color:#2B1E18;font:26px/1 'Material Symbols Rounded';cursor:pointer;opacity:{{ nextOpacity }}">chevron_right</button>
+  </div>
+  <div style="position:relative;flex:1;min-height:0;border:2.5px solid #2B1E18;border-radius:26px;overflow:hidden;background-color:#F3B49A;background-image:radial-gradient(rgba(43,30,24,.13) 1.2px,transparent 1.5px);background-size:10px 10px;box-shadow:0 4px 0 #2B1E18">
+    <image-slot id="art-lobby" shape="rect" placeholder="Ilustrasi lobby — Pandu berdiri di gerbang bab, wajah datar" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
+    <div onClick="{{ nextBubble }}" style="position:absolute;top:14px;left:14px;max-width:192px;padding:10px 12px;border:2.5px solid #2B1E18;border-radius:16px 16px 16px 4px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18;font:600 13px/1.35 'Bricolage Grotesque';text-wrap:pretty;cursor:pointer">{{ bubbleText }}</div>
+    <div style="position:absolute;top:14px;right:12px;display:grid;grid-template-columns:repeat(2,54px);gap:12px 8px">
+      <div onClick="{{ tapDaily }}" style="position:relative;width:54px;height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18;cursor:pointer">
+        <span style="font:24px/1 'Material Symbols Rounded';color:#D2532A">calendar_month</span>
+        <span style="font:700 10px/1 'Bricolage Grotesque'">7 Hari</span>
+        <sc-if value="{{ dailyDot }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:-6px;right:-6px;width:16px;height:16px;box-sizing:border-box;border-radius:50%;border:2px solid #2B1E18;background:#D2532A"></span></sc-if>
+      </div>
+      <div onClick="{{ tapMail }}" style="position:relative;width:54px;height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18;cursor:pointer">
+        <span style="font:24px/1 'Material Symbols Rounded';color:#3166B0">mail</span>
+        <span style="font:700 10px/1 'Bricolage Grotesque'">Surat</span>
+        <span style="position:absolute;top:-7px;right:-7px;min-width:18px;height:18px;box-sizing:border-box;padding:0 4px;border-radius:9px;border:2px solid #2B1E18;background:#D2532A;color:#FFF8EC;font:800 10px/14px 'Bricolage Grotesque';text-align:center">2</span>
+      </div>
+      <div onClick="{{ tapFest }}" style="position:relative;width:54px;height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18;cursor:pointer">
+        <span style="font:24px/1 'Material Symbols Rounded';color:#2F7A5C">celebration</span>
+        <span style="font:700 10px/1 'Bricolage Grotesque'">Festival</span>
+      </div>
+      <div onClick="{{ tapPass }}" style="position:relative;width:54px;height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18;cursor:pointer">
+        <span style="font:24px/1 'Material Symbols Rounded';color:#B0620A">workspace_premium</span>
+        <span style="font:700 10px/1 'Bricolage Grotesque'">Musim</span>
+      </div>
+    </div>
+    <div style="position:absolute;left:14px;bottom:14px;display:flex;align-items:center;gap:6px;padding:6px 10px 6px 7px;border-radius:12px;background:#2B1E18;color:#FFF8EC;font:700 12px/1 'Bricolage Grotesque';pointer-events:none"><span style="font:16px/1 'Material Symbols Rounded';color:#F2B63C">military_tech</span>Kekuatan {{ power }}</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px;padding:8px 14px 8px 12px;border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18">
+    <div style="flex:none"><div style="font:800 12px/1.1 'Bricolage Grotesque'">Peti bab</div><div style="font:500 9.5px/1.2 'DM Mono',monospace;color:#6E5A4E;margin-top:3px">REKOR H{{ chapterBest }}</div></div>
+    <div style="position:relative;flex:1;height:46px;margin-right:14px">
+      <div style="position:absolute;left:0;right:0;top:11px;height:10px;box-sizing:border-box;border:2px solid #2B1E18;border-radius:6px;background:#EADBC5;overflow:hidden"><div style="height:100%;width:{{ chestPct }};background:#F2B63C"></div></div>
+      <sc-for list="{{ chests }}" as="c" hint-placeholder-count="3">
+        <div onClick="{{ c.claim }}" style="position:absolute;top:0;left:{{ c.left }};transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer">
+          <div style="width:32px;height:32px;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid #2B1E18;border-radius:10px;background:{{ c.bg }};color:{{ c.color }};font:18px/1 'Material Symbols Rounded';box-shadow:0 2px 0 #2B1E18">{{ c.icon }}</div>
+          <div style="font:500 9px/1 'DM Mono',monospace">{{ c.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <button onClick="{{ goRun }}" style="flex:none;height:68px;margin:0 20px;display:flex;align-items:center;justify-content:center;gap:12px;padding:0;border:3px solid #2B1E18;border-radius:22px;background:#D2532A;box-shadow:0 6px 0 #2B1E18;color:#FFF8EC;font:30px/1 'Bagel Fat One',system-ui;text-shadow:2px 0 0 #2B1E18,-2px 0 0 #2B1E18,0 2px 0 #2B1E18,0 -2px 0 #2B1E18,1.5px 1.5px 0 #2B1E18,-1.5px 1.5px 0 #2B1E18,1.5px -1.5px 0 #2B1E18,-1.5px -1.5px 0 #2B1E18,0 4px 0 #2B1E18;cursor:pointer" style-active="transform:translateY(4px);box-shadow:0 2px 0 #2B1E18">PERGI<span style="display:flex;align-items:center;gap:2px;padding:5px 9px 5px 6px;border-radius:12px;background:#2B1E18;color:#FFF8EC;font:800 14px/1 'Bricolage Grotesque';text-shadow:none"><span style="font:17px/1 'Material Symbols Rounded';color:#F2B63C">bolt</span>5</span></button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isRun }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;display:flex;flex-direction:column;gap:10px;padding:14px 12px 12px">
+  <div style="display:flex;align-items:center;gap:10px;flex:none">
+    <button onClick="{{ toggleAuto }}" style="width:42px;height:42px;flex:none;display:grid;place-items:center;padding:0;border:2.5px solid #2B1E18;border-radius:14px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18;color:#2B1E18;font:24px/1 'Material Symbols Rounded';cursor:pointer">{{ pauseIcon }}</button>
+    <div style="flex:1;min-width:0">
+      <div style="font:500 10px/1.2 'DM Mono',monospace;letter-spacing:.08em;color:#A93D1C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">BAB {{ runChapterNo }} · {{ runChapterUpper }}</div>
+      <div style="display:flex;align-items:baseline;gap:5px;margin-top:3px"><span style="font:26px/1 'Bagel Fat One',system-ui">Hari {{ day }}</span><span style="font:700 14px/1 'Bricolage Grotesque';color:#6E5A4E">/ {{ maxDay }}</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:5px;height:30px;padding:0 10px 0 5px;border-radius:15px;background:#2B1E18;color:#FFF8EC;font:700 13px/1 'Bricolage Grotesque'"><span style="width:20px;height:20px;border-radius:50%;background:#F2B63C;box-shadow:inset 0 0 0 2px #C28A16,inset 0 0 0 5px #F2B63C,inset 0 0 0 6.5px #C28A16"></span>{{ runCoins }}</div>
+  </div>
+  <div style="position:relative;height:14px;flex:none;margin:2px 14px 2px 4px">
+    <div style="position:absolute;inset:0;box-sizing:border-box;border:2.5px solid #2B1E18;border-radius:8px;background:#EADBC5;overflow:hidden"><div style="height:100%;width:{{ dayPct }};background:#D2532A;transition:width .4s"></div></div>
+    <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:24px;height:24px;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid #2B1E18;border-radius:8px;background:#F2B63C;color:#2B1E18;font:14px/1 'Material Symbols Rounded'">swords</div>
+    <div style="position:absolute;right:-12px;top:50%;transform:translateY(-50%);width:28px;height:28px;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid #2B1E18;border-radius:9px;background:#2B1E18;color:#F2B63C;font:17px/1 'Material Symbols Rounded'">local_fire_department</div>
+  </div>
+  <div style="position:relative;height:168px;flex:none;border:2.5px solid #2B1E18;border-radius:22px;overflow:hidden;background-color:#CFE6D6;background-image:radial-gradient(rgba(43,30,24,.12) 1.2px,transparent 1.5px);background-size:10px 10px;box-shadow:0 3px 0 #2B1E18">
+    <image-slot id="art-jalan" shape="rect" placeholder="Ilustrasi jalan — Pandu berjalan ke kanan, latar rawa" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
+    <div style="position:absolute;top:10px;left:10px;display:flex;align-items:center;gap:5px;padding:5px 9px 5px 6px;border-radius:11px;border:2px solid #2B1E18;background:#FFF8EC;font:700 11px/1 'Bricolage Grotesque';pointer-events:none"><span style="font:15px/1 'Material Symbols Rounded';color:#C28A16">{{ weatherIcon }}</span>{{ weather }}</div>
+    <div style="position:absolute;right:10px;bottom:10px;padding:5px 9px;border-radius:10px;background:#2B1E18;color:#FFF8EC;font:500 10.5px/1 'DM Mono',monospace;letter-spacing:.06em;pointer-events:none">{{ walkStatus }}</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;flex:none">
+    <div style="width:50px;height:50px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid #2B1E18;border-radius:50%;background:#F2B63C;box-shadow:0 3px 0 #2B1E18;text-align:center">
+      <div><div style="font:500 8.5px/1 'DM Mono',monospace;letter-spacing:.08em">LV</div><div style="font:20px/1 'Bagel Fat One',system-ui;margin-top:1px">{{ lvl }}</div></div>
+    </div>
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">
+      <div style="position:relative;height:20px;box-sizing:border-box;border:2.5px solid #2B1E18;border-radius:10px;background:#3A2A22;overflow:hidden">
+        <div style="height:100%;width:{{ hpPct }};background:#4FAE72;transition:width .3s"></div>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 8px;color:#FFF8EC;font:800 11px/1 'Bricolage Grotesque';text-shadow:0 1px 0 #2B1E18,1px 0 0 #2B1E18,-1px 0 0 #2B1E18,0 -1px 0 #2B1E18"><span style="display:flex;align-items:center;gap:3px"><span style="font:12px/1 'Material Symbols Rounded'">favorite</span>HP</span><span>{{ hpLabel }}</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div style="flex:1;height:9px;box-sizing:border-box;border:2px solid #2B1E18;border-radius:5px;background:#EADBC5;overflow:hidden"><div style="height:100%;width:{{ xpPct }};background:#F2B63C;transition:width .3s"></div></div>
+        <span style="font:500 9.5px/1 'DM Mono',monospace;white-space:nowrap">XP {{ xpLabel }}</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;flex:none">
+      <div style="display:flex;align-items:center;gap:4px;height:22px;padding:0 8px 0 6px;border:2px solid #2B1E18;border-radius:8px;background:#FFF8EC;font:800 12px/1 'Bricolage Grotesque'"><span style="font:13px/1 'Material Symbols Rounded';color:#D2532A">swords</span>{{ atk }}</div>
+      <div style="display:flex;align-items:center;gap:4px;height:22px;padding:0 8px 0 6px;border:2px solid #2B1E18;border-radius:8px;background:#FFF8EC;font:800 12px/1 'Bricolage Grotesque'"><span style="font:13px/1 'Material Symbols Rounded';color:#3166B0">shield</span>{{ def }}</div>
+    </div>
+  </div>
+  <div style="position:relative;flex:1;min-height:0;border:2.5px solid #2B1E18;border-radius:20px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18;overflow:hidden">
+    <div style="position:absolute;top:0;left:0;right:0;z-index:1;display:flex;justify-content:space-between;padding:9px 14px 7px;background:#FFF8EC;border-bottom:1.5px dashed rgba(43,30,24,.25);font:500 10px/1 'DM Mono',monospace;letter-spacing:.08em;color:#6E5A4E"><span>CATATAN PERJALANAN</span><span>{{ logCount }} ENTRI</span></div>
+    <div ref="{{ logRef }}" style="position:absolute;top:28px;left:0;right:0;bottom:0;overflow-y:auto;padding:2px 14px 14px;scrollbar-width:none;display:flex;flex-direction:column-reverse">
+      <div>
+      <sc-for list="{{ log }}" as="e" hint-placeholder-count="4">
+        <div style="display:grid;grid-template-columns:38px minmax(0,1fr);gap:10px;padding:10px 0;border-bottom:1.5px dashed rgba(43,30,24,.14)">
+          <div style="align-self:start;padding:4px 0;text-align:center;border:1.5px solid {{ e.stampColor }};border-radius:6px;color:{{ e.stampColor }};font:500 10.5px/1 'DM Mono',monospace;transform:rotate(-4deg)">{{ e.stamp }}</div>
+          <div style="min-width:0">
+            <div style="font:500 14px/1.42 'Bricolage Grotesque';text-wrap:pretty">{{ e.text }}</div>
+            <sc-if value="{{ e.hasFx }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:6px">
+                <sc-for list="{{ e.fx }}" as="f" hint-placeholder-count="1">
+                  <span style="display:inline-flex;align-items:center;gap:3px;padding:3px 7px 3px 5px;border-radius:8px;border:1.5px solid #2B1E18;background:{{ f.bg }};color:#2B1E18;font:700 11px/1 'Bricolage Grotesque'"><span style="font:12px/1 'Material Symbols Rounded'">{{ f.icon }}</span>{{ f.label }}</span>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-for>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;flex:none;height:54px">
+    <div style="flex:1;min-width:0;height:100%;box-sizing:border-box;display:flex;align-items:center;gap:8px;padding:0 9px;border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18;overflow:hidden">
+      <sc-if value="{{ noSkills }}" hint-placeholder-val="{{ false }}"><span style="font:600 12px/1.25 'Bricolage Grotesque';color:#6E5A4E">Belum ada skill. Pandu mengandalkan wajah.</span></sc-if>
+      <sc-for list="{{ ownedSkills }}" as="k" hint-placeholder-count="3">
+        <div style="position:relative;width:34px;height:34px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2px solid #2B1E18;border-radius:10px;background:{{ k.bg }};color:{{ k.fg }};font:19px/1 'Material Symbols Rounded'">{{ k.icon }}<sc-if value="{{ k.multi }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;right:-5px;bottom:-5px;min-width:16px;height:16px;padding:0 3px;box-sizing:border-box;border-radius:8px;background:#2B1E18;color:#FFF8EC;font:800 9px/16px 'Bricolage Grotesque';text-align:center">{{ k.count }}</span></sc-if></div>
+      </sc-for>
+    </div>
+    <button onClick="{{ cycleSpeed }}" style="width:54px;height:54px;flex:none;padding:0;border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18;color:#2B1E18;font:18px/1 'Bagel Fat One',system-ui;cursor:pointer" style-active="transform:translateY(2px);box-shadow:0 1px 0 #2B1E18">{{ speedLabel }}</button>
+    <button onClick="{{ quitRun }}" style="height:54px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:0 12px;border:2.5px solid #2B1E18;border-radius:16px;background:#2B1E18;box-shadow:0 3px 0 #120C09;color:#FFF8EC;font:700 11px/1 'Bricolage Grotesque';cursor:pointer"><span style="font:20px/1 'Material Symbols Rounded';color:#F2B63C">home</span>Pulang</button>
+  </div>
+  <sc-if value="{{ hasEvent }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;left:12px;right:12px;bottom:78px;z-index:8;padding:16px 16px 14px;border:3px solid #2B1E18;border-radius:24px;background:#FFF8EC;box-shadow:0 6px 0 #2B1E18,0 22px 44px rgba(43,30,24,.38)">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <span style="padding:5px 8px;border-radius:8px;background:{{ evTagBg }};color:#FFF8EC;font:500 10px/1 'DM Mono',monospace;letter-spacing:.08em">{{ evTag }}</span>
+        <span style="font:500 10px/1 'DM Mono',monospace;letter-spacing:.08em;color:#6E5A4E">HARI {{ day }}</span>
+      </div>
+      <sc-if value="{{ evIsEnemy }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:12px;margin-top:12px">
+          <div style="width:56px;height:56px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid #2B1E18;border-radius:16px;background:#E7D9F5;color:#2B1E18;font:32px/1 'Material Symbols Rounded';box-shadow:0 3px 0 #2B1E18">{{ evIcon }}</div>
+          <div style="min-width:0"><div style="font:22px/1.1 'Bagel Fat One',system-ui">{{ evName }}</div><div style="font:500 10.5px/1.3 'DM Mono',monospace;color:#6E5A4E;margin-top:4px">{{ evSub }}</div></div>
+        </div>
+      </sc-if>
+      <div style="margin-top:11px;font:500 15px/1.45 'Bricolage Grotesque';text-wrap:pretty">{{ evText }}</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">
+        <sc-for list="{{ evChoices }}" as="c" hint-placeholder-count="2">
+          <button onClick="{{ c.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:52px;padding:8px 10px 8px 14px;border:2.5px solid #2B1E18;border-radius:16px;background:{{ c.bg }};box-shadow:0 4px 0 #2B1E18;color:#2B1E18;font:800 15px/1.2 'Bricolage Grotesque';text-align:left;cursor:pointer;opacity:{{ c.opacity }}" style-active="transform:translateY(3px);box-shadow:0 1px 0 #2B1E18">
+            <span style="display:flex;align-items:center;gap:8px"><span style="font:21px/1 'Material Symbols Rounded'">{{ c.icon }}</span>{{ c.label }}</span>
+            <span style="flex:none;padding:5px 8px;border-radius:9px;background:#2B1E18;color:#FFF8EC;font:500 10.5px/1 'DM Mono',monospace">{{ c.hint }}</span>
+          </button>
+        </sc-for>
+      </div>
+      <sc-if value="{{ hasEvFoot }}" hint-placeholder-val="{{ false }}"><div style="margin-top:11px;font:500 11.5px/1.4 'Bricolage Grotesque';color:#6E5A4E;text-wrap:pretty">{{ evFoot }}</div></sc-if>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ hasOffer }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;padding:58px 18px 24px;background:rgba(32,22,17,.84);overflow:hidden">
+  {{ burst }}
+  <div style="position:relative;font:40px/1 'Bagel Fat One',system-ui;color:#F2B63C;text-align:center;text-shadow:2px 0 0 #2B1E18,-2px 0 0 #2B1E18,0 2px 0 #2B1E18,0 -2px 0 #2B1E18,1.5px 1.5px 0 #2B1E18,-1.5px 1.5px 0 #2B1E18,1.5px -1.5px 0 #2B1E18,-1.5px -1.5px 0 #2B1E18,0 4px 0 #2B1E18">{{ offerTitle }}</div>
+  <sc-if value="{{ offerHasLvl }}" hint-placeholder-val="{{ false }}"><div style="position:relative;margin-top:12px;padding:6px 12px;border:2.5px solid #2B1E18;border-radius:12px;background:#FFF8EC;font:800 13px/1 'Bricolage Grotesque'">Lv {{ offerFrom }} → Lv {{ offerTo }}</div></sc-if>
+  <div style="position:relative;margin-top:12px;max-width:290px;text-align:center;color:#FFF8EC;font:500 14px/1.4 'Bricolage Grotesque';text-wrap:pretty">{{ offerSub }}</div>
+  <div style="position:relative;display:flex;flex-direction:column;gap:14px;width:100%;margin-top:22px">
+    <sc-for list="{{ offerCards }}" as="o" hint-placeholder-count="3">
+      <div onClick="{{ o.pick }}" style="display:flex;gap:14px;align-items:center;padding:12px 14px 12px 12px;border:3px solid #2B1E18;border-radius:22px;background:#FFF8EC;box-shadow:0 5px 0 #2B1E18;cursor:pointer;transition:transform .12s" style-hover="transform:translateY(-3px)" style-active="transform:translateY(3px);box-shadow:0 2px 0 #2B1E18">
+        <div style="width:72px;height:72px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid #2B1E18;border-radius:18px;background:{{ o.bg }};color:{{ o.fg }};font:38px/1 'Material Symbols Rounded'">{{ o.icon }}</div>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:6px"><span style="padding:3px 7px;border-radius:7px;background:{{ o.fg }};color:#FFF8EC;font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.08em">{{ o.rarity }}</span><span style="font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.06em;color:#6E5A4E">{{ o.tag }}</span></div>
+          <div style="font:19px/1.1 'Bagel Fat One',system-ui;margin-top:6px">{{ o.name }}</div>
+          <div style="font:500 12.5px/1.35 'Bricolage Grotesque';color:#5B4A40;margin-top:4px;text-wrap:pretty">{{ o.desc }}</div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <button onClick="{{ reroll }}" disabled="{{ rerollDisabled }}" style="position:relative;margin-top:22px;display:flex;align-items:center;gap:8px;height:46px;padding:0 18px;border:2.5px solid #FFF8EC;border-radius:16px;background:transparent;color:#FFF8EC;font:700 14px/1 'Bricolage Grotesque';cursor:pointer;opacity:{{ rerollOpacity }}"><span style="font:20px/1 'Material Symbols Rounded'">casino</span>Acak ulang · {{ rerollLeft }}</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isBattle }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background-color:#1E2622;background-image:radial-gradient(rgba(255,248,236,.06) 1.2px,transparent 1.5px);background-size:10px 10px;color:#FFF8EC">
+  <div style="position:absolute;top:14px;left:12px;right:12px;display:flex;align-items:center;gap:8px">
+    <div style="padding:8px 10px;border-radius:12px;border:2px solid #0F1411;background:#2E3A34;font:500 10.5px/1 'DM Mono',monospace;letter-spacing:.08em">GILIRAN {{ bTurn }}</div>
+    <sc-if value="{{ bBoss }}" hint-placeholder-val="{{ false }}"><div style="padding:8px 10px;border-radius:12px;border:2px solid #0F1411;background:#D2532A;font:500 10.5px/1 'DM Mono',monospace;letter-spacing:.08em">BOS</div></sc-if>
+    <div style="flex:1"></div>
+    <div style="display:flex;gap:3px;padding:3px;border-radius:14px;background:#0F1411">
+      <sc-for list="{{ speeds }}" as="sp" hint-placeholder-count="3">
+        <button onClick="{{ sp.set }}" style="width:40px;height:30px;padding:0;border:0;border-radius:10px;background:{{ sp.bg }};color:{{ sp.fg }};font:800 13px/1 'Bricolage Grotesque';cursor:pointer">×{{ sp.n }}</button>
+      </sc-for>
+    </div>
+  </div>
+  <div style="position:absolute;top:66px;left:12px;right:12px;display:flex;align-items:center;gap:10px">
+    <div style="width:46px;height:46px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid #0F1411;border-radius:14px;background:#E7D9F5;color:#2B1E18;font:27px/1 'Material Symbols Rounded'">{{ eIcon }}</div>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px"><span style="font:20px/1.1 'Bagel Fat One',system-ui">{{ eName }}</span><span style="font:500 10.5px/1 'DM Mono',monospace;color:#B9C4BE">LV {{ eLvl }}</span></div>
+      <div style="position:relative;height:18px;margin-top:6px;box-sizing:border-box;border:2.5px solid #0F1411;border-radius:9px;background:#0F1411;overflow:hidden">
+        <div style="height:100%;width:{{ eHpPct }};background:#E0503A;transition:width .25s"></div>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:800 10.5px/1 'Bricolage Grotesque';text-shadow:0 1px 0 #0F1411">{{ eHpLabel }}</div>
+      </div>
+    </div>
+  </div>
+  <div style="position:absolute;top:138px;right:20px;width:230px;height:206px;transform:{{ eTf }};transition:transform .09s">
+    <div style="position:absolute;inset:0;border-radius:28px;border:2.5px solid rgba(255,248,236,.22);background:rgba(255,248,236,.05);overflow:hidden">
+      <image-slot id="{{ eArtId }}" shape="rect" placeholder="{{ eArtLabel }}" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
+    </div>
+    <div style="position:absolute;inset:0;pointer-events:none">{{ enemyPops }}</div>
+  </div>
+  <div style="position:absolute;left:0;right:0;top:350px;height:44px;z-index:4;pointer-events:none">{{ banner }}</div>
+  <div style="position:absolute;top:396px;left:18px;width:206px;height:188px;transform:{{ hTf }};transition:transform .09s">
+    <div style="position:absolute;inset:0;border-radius:28px;border:2.5px solid rgba(255,248,236,.22);background:rgba(255,248,236,.05);overflow:hidden">
+      <image-slot id="art-pandu-battle" shape="rect" placeholder="Pandu — pose bertarung, dilihat dari samping" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
+    </div>
+    <div style="position:absolute;inset:0;pointer-events:none">{{ heroPops }}</div>
+  </div>
+  <div style="position:absolute;top:404px;left:238px;right:12px;display:flex;flex-direction:column;gap:9px">
+    <div style="font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.1em;color:#B9C4BE">SKILL AKTIF</div>
+    <div style="display:grid;grid-template-columns:repeat(3,40px);gap:8px">
+      <sc-for list="{{ battleSkills }}" as="k" hint-placeholder-count="3">
+        <div style="position:relative;width:40px;height:40px;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid {{ k.ring }};border-radius:12px;background:{{ k.bg }};color:{{ k.fg }};font:22px/1 'Material Symbols Rounded';box-shadow:{{ k.glow }};transition:box-shadow .15s,border-color .15s">{{ k.icon }}<sc-if value="{{ k.multi }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;right:-6px;bottom:-6px;min-width:16px;height:16px;padding:0 3px;box-sizing:border-box;border-radius:8px;background:#FFF8EC;color:#2B1E18;font:800 9px/16px 'Bricolage Grotesque';text-align:center">{{ k.count }}</span></sc-if></div>
+      </sc-for>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:4px">
+      <div style="display:flex;align-items:center;gap:4px;padding:5px 8px 5px 6px;border-radius:10px;background:#2E3A34;font:800 12px/1 'Bricolage Grotesque'"><span style="font:14px/1 'Material Symbols Rounded';color:#F2B63C">swords</span>{{ atk }}</div>
+      <div style="display:flex;align-items:center;gap:4px;padding:5px 8px 5px 6px;border-radius:10px;background:#2E3A34;font:800 12px/1 'Bricolage Grotesque'"><span style="font:14px/1 'Material Symbols Rounded';color:#9EC3F0">shield</span>{{ def }}</div>
+    </div>
+  </div>
+  <div style="position:absolute;top:600px;left:12px;right:12px;display:flex;align-items:center;gap:10px">
+    <div style="flex:none"><div style="font:18px/1 'Bagel Fat One',system-ui">Pandu</div><div style="font:500 10px/1 'DM Mono',monospace;color:#B9C4BE;margin-top:4px">LV {{ lvl }}</div></div>
+    <div style="position:relative;flex:1;height:22px;box-sizing:border-box;border:2.5px solid #0F1411;border-radius:11px;background:#0F1411;overflow:hidden">
+      <div style="height:100%;width:{{ hpPct }};background:#4FAE72;transition:width .25s"></div>
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:800 11px/1 'Bricolage Grotesque';text-shadow:0 1px 0 #0F1411,1px 0 0 #0F1411,-1px 0 0 #0F1411">{{ hpLabel }}</div>
+    </div>
+  </div>
+  <div style="position:absolute;left:12px;right:12px;bottom:12px;height:162px;box-sizing:border-box;padding:10px 12px;border-radius:18px;border:2px solid #0F1411;background:#141A17;display:flex;flex-direction:column;justify-content:flex-end;gap:7px;overflow:hidden">
+    <sc-for list="{{ bLog }}" as="l" hint-placeholder-count="4">
+      <div style="font:500 11.5px/1.4 'DM Mono',monospace;color:{{ l.color }};opacity:{{ l.opacity }};text-wrap:pretty">{{ l.text }}</div>
+    </sc-for>
+  </div>
+  <sc-if value="{{ bOver }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;left:50%;top:372px;z-index:6;transform:translate(-50%,-50%) rotate(-6deg);padding:10px 26px 12px;border:3.5px solid #2B1E18;border-radius:18px;background:{{ bOverColor }};color:#2B1E18;font:40px/1 'Bagel Fat One',system-ui;box-shadow:0 6px 0 #2B1E18;pointer-events:none">{{ bOverText }}</div>
+  </sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isHero }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;top:66px;left:0;right:0;bottom:84px;display:flex;flex-direction:column;gap:12px;padding:6px 14px 12px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:10px">
+    <div><div style="font:28px/1 'Bagel Fat One',system-ui">Pandu</div><div style="font:600 12px/1.3 'Bricolage Grotesque';color:#6E5A4E;margin-top:4px">Panda merah · tidak ambisius</div></div>
+    <div style="display:flex;align-items:center;gap:6px;height:36px;padding:0 12px 0 9px;border-radius:18px;background:#2B1E18;color:#FFF8EC"><span style="font:19px/1 'Material Symbols Rounded';color:#F2B63C">military_tech</span><span style="font:18px/1 'Bagel Fat One',system-ui">{{ power }}</span></div>
+  </div>
+  <div style="display:grid;grid-template-columns:74px minmax(0,1fr) 74px;gap:10px;align-items:center">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <sc-for list="{{ slotsL }}" as="q" hint-placeholder-count="3">
+        <div onClick="{{ q.tap }}" style="position:relative;height:74px;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid #2B1E18;border-radius:18px;background:{{ q.bg }};box-shadow:0 3px 0 #2B1E18;cursor:pointer">
+          <span style="font:34px/1 'Material Symbols Rounded';color:{{ q.fg }}">{{ q.icon }}</span>
+          <span style="position:absolute;left:6px;top:5px;font:500 8px/1 'DM Mono',monospace;letter-spacing:.04em;color:{{ q.fg }}">{{ q.type }}</span>
+          <span style="position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);padding:2px 6px;border-radius:7px;background:#2B1E18;color:#FFF8EC;font:700 10px/1.2 'Bricolage Grotesque';white-space:nowrap">Lv {{ q.lvl }}</span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="position:relative;height:258px;border:2.5px solid #2B1E18;border-radius:24px;overflow:hidden;background-color:#F3B49A;background-image:radial-gradient(rgba(43,30,24,.13) 1.2px,transparent 1.5px);background-size:10px 10px;box-shadow:0 3px 0 #2B1E18">
+      <image-slot id="art-pandu-hero" shape="rect" placeholder="Pandu — badan penuh, menghadap depan" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <sc-for list="{{ slotsR }}" as="q" hint-placeholder-count="3">
+        <div onClick="{{ q.tap }}" style="position:relative;height:74px;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid #2B1E18;border-radius:18px;background:{{ q.bg }};box-shadow:0 3px 0 #2B1E18;cursor:pointer">
+          <span style="font:34px/1 'Material Symbols Rounded';color:{{ q.fg }}">{{ q.icon }}</span>
+          <span style="position:absolute;left:6px;top:5px;font:500 8px/1 'DM Mono',monospace;letter-spacing:.04em;color:{{ q.fg }}">{{ q.type }}</span>
+          <span style="position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);padding:2px 6px;border-radius:7px;background:#2B1E18;color:#FFF8EC;font:700 10px/1.2 'Bricolage Grotesque';white-space:nowrap">Lv {{ q.lvl }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;margin-top:4px;border:2.5px solid #2B1E18;border-radius:16px;background:#2B1E18;box-shadow:0 3px 0 #2B1E18;overflow:hidden">
+    <sc-for list="{{ heroStats }}" as="st" hint-placeholder-count="4">
+      <div style="padding:8px 4px 9px;background:#FFF8EC;text-align:center">
+        <div style="display:flex;align-items:center;justify-content:center;gap:3px;font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.06em;color:#6E5A4E"><span style="font:13px/1 'Material Symbols Rounded'">{{ st.icon }}</span>{{ st.label }}</div>
+        <div style="font:18px/1 'Bagel Fat One',system-ui;margin-top:6px">{{ st.value }}</div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <button onClick="{{ autoEquip }}" style="height:46px;display:flex;align-items:center;justify-content:center;gap:6px;padding:0;border:2.5px solid #2B1E18;border-radius:15px;background:#F2B63C;box-shadow:0 4px 0 #2B1E18;color:#2B1E18;font:800 14px/1 'Bricolage Grotesque';cursor:pointer" style-active="transform:translateY(3px);box-shadow:0 1px 0 #2B1E18"><span style="font:19px/1 'Material Symbols Rounded'">auto_fix_high</span>Pasang terbaik</button>
+    <button onClick="{{ mergeItems }}" style="height:46px;display:flex;align-items:center;justify-content:center;gap:6px;padding:0;border:2.5px solid #2B1E18;border-radius:15px;background:#FFF8EC;box-shadow:0 4px 0 #2B1E18;color:#2B1E18;font:800 14px/1 'Bricolage Grotesque';cursor:pointer" style-active="transform:translateY(3px);box-shadow:0 1px 0 #2B1E18"><span style="font:19px/1 'Material Symbols Rounded'">merge_type</span>Gabung item</button>
+  </div>
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px"><span style="font:18px/1 'Bagel Fat One',system-ui">Tas</span><span style="font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.06em;color:#6E5A4E">{{ bagCount }}/60 · KETUK UNTUK PASANG</span></div>
+  <div style="flex:1;min-height:0;overflow-y:auto;margin:-4px -6px 0;padding:4px 6px 8px;scrollbar-width:none">
+    <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px">
+      <sc-for list="{{ bag }}" as="it" hint-placeholder-count="8">
+        <div onClick="{{ it.equip }}" style="position:relative;aspect-ratio:1;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid #2B1E18;border-radius:14px;background:{{ it.bg }};box-shadow:0 3px 0 #2B1E18;cursor:pointer" style-active="transform:translateY(2px);box-shadow:0 1px 0 #2B1E18">
+          <span style="font:28px/1 'Material Symbols Rounded';color:{{ it.fg }}">{{ it.icon }}</span>
+          <span style="position:absolute;right:5px;bottom:4px;font:500 9px/1 'DM Mono',monospace;color:{{ it.fg }}">{{ it.lvl }}</span>
+          <sc-if value="{{ it.better }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-6px;right:-6px;width:19px;height:19px;box-sizing:border-box;display:grid;place-items:center;border-radius:50%;border:2px solid #2B1E18;background:#4FAE72;color:#FFF8EC;font:13px/1 'Material Symbols Rounded'">arrow_upward</span></sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isMap }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;top:66px;left:0;right:0;bottom:84px;display:flex;flex-direction:column;gap:10px;padding:6px 14px 0">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:8px"><div style="font:28px/1 'Bagel Fat One',system-ui">Peta</div><div style="font:500 10px/1 'DM Mono',monospace;letter-spacing:.08em;color:#6E5A4E">{{ mapSummary }}</div></div>
+  <div style="flex:1;min-height:0;overflow-y:auto;margin:0 -14px;padding:6px 14px 22px;scrollbar-width:none">
+    <div style="position:relative;display:flex;flex-direction:column;gap:14px">
+      <div style="position:absolute;left:20px;top:24px;bottom:24px;border-left:3px dashed rgba(43,30,24,.32)"></div>
+      <sc-for list="{{ chapters }}" as="ch" hint-placeholder-count="5">
+        <div style="position:relative;display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:start">
+          <div style="position:relative;z-index:1;width:44px;height:44px;box-sizing:border-box;display:grid;place-items:center;margin-top:10px;border:2.5px solid #2B1E18;border-radius:50%;background:{{ ch.nodeBg }};color:{{ ch.nodeFg }};font:18px/1 'Bagel Fat One',system-ui;box-shadow:0 3px 0 #2B1E18">{{ ch.no }}</div>
+          <sc-if value="{{ ch.expanded }}" hint-placeholder-val="{{ false }}">
+            <div style="border:3px solid #2B1E18;border-radius:22px;background:#FFF8EC;box-shadow:0 5px 0 #2B1E18;overflow:hidden">
+              <div style="position:relative;height:124px;border-bottom:2.5px solid #2B1E18;background-color:#CFE6D6;background-image:radial-gradient(rgba(43,30,24,.12) 1.2px,transparent 1.5px);background-size:10px 10px">
+                <image-slot id="{{ ch.artId }}" shape="rect" placeholder="{{ ch.artLabel }}" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
+                <div style="position:absolute;top:10px;left:10px;padding:5px 8px;border-radius:8px;background:#D2532A;color:#FFF8EC;font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.08em;pointer-events:none">{{ ch.status }}</div>
+              </div>
+              <div style="padding:12px 14px 14px">
+                <div style="font:22px/1.1 'Bagel Fat One',system-ui">{{ ch.name }}</div>
+                <div style="font:500 13px/1.4 'Bricolage Grotesque';color:#5B4A40;margin-top:5px;text-wrap:pretty">{{ ch.desc }}</div>
+                <div style="font:500 10px/1 'DM Mono',monospace;letter-spacing:.06em;color:#6E5A4E;margin-top:10px">{{ ch.best }}</div>
+                <div style="position:relative;height:46px;margin:10px 16px 0 2px">
+                  <div style="position:absolute;left:0;right:0;top:11px;height:10px;box-sizing:border-box;border:2px solid #2B1E18;border-radius:6px;background:#EADBC5;overflow:hidden"><div style="height:100%;width:{{ ch.dayPct }};background:#D2532A"></div></div>
+                  <sc-for list="{{ ch.chests }}" as="c" hint-placeholder-count="3">
+                    <div onClick="{{ c.claim }}" style="position:absolute;top:0;left:{{ c.left }};transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer">
+                      <div style="width:32px;height:32px;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid #2B1E18;border-radius:10px;background:{{ c.bg }};color:{{ c.color }};font:18px/1 'Material Symbols Rounded';box-shadow:0 2px 0 #2B1E18">{{ c.icon }}</div>
+                      <div style="font:500 9px/1 'DM Mono',monospace">{{ c.label }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+                <button onClick="{{ ch.play }}" style="width:100%;height:52px;margin-top:10px;padding:0;border:3px solid #2B1E18;border-radius:17px;background:#D2532A;box-shadow:0 5px 0 #2B1E18;color:#FFF8EC;font:22px/1 'Bagel Fat One',system-ui;text-shadow:2px 0 0 #2B1E18,-2px 0 0 #2B1E18,0 2px 0 #2B1E18,0 -2px 0 #2B1E18,1.5px 1.5px 0 #2B1E18,-1.5px 1.5px 0 #2B1E18,1.5px -1.5px 0 #2B1E18,-1.5px -1.5px 0 #2B1E18,0 3px 0 #2B1E18;cursor:pointer" style-active="transform:translateY(3px);box-shadow:0 2px 0 #2B1E18">{{ ch.cta }}</button>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ ch.compact }}" hint-placeholder-val="{{ true }}">
+            <div onClick="{{ ch.select }}" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border:2.5px solid #2B1E18;border-radius:18px;background:{{ ch.cardBg }};box-shadow:0 3px 0 #2B1E18;opacity:{{ ch.opacity }};cursor:pointer">
+              <div style="width:52px;height:52px;flex:none;box-sizing:border-box;display:grid;place-items:center;border:2px solid #2B1E18;border-radius:14px;background:{{ ch.thumbBg }};color:#2B1E18;font:26px/1 'Material Symbols Rounded'">{{ ch.icon }}</div>
+              <div style="flex:1;min-width:0">
+                <div style="font:17px/1.15 'Bagel Fat One',system-ui">{{ ch.name }}</div>
+                <div style="font:600 12px/1.3 'Bricolage Grotesque';color:#6E5A4E;margin-top:3px">{{ ch.line }}</div>
+              </div>
+              <span style="font:22px/1 'Material Symbols Rounded';color:{{ ch.endFg }}">{{ ch.endIcon }}</span>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isShop }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;top:66px;left:0;right:0;bottom:84px;overflow-y:auto;padding:6px 14px 20px;scrollbar-width:none">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:8px"><div style="font:28px/1 'Bagel Fat One',system-ui">Toko</div><div style="font:500 10px/1 'DM Mono',monospace;letter-spacing:.08em;color:#6E5A4E">PERMATA DAN PENYESALAN</div></div>
+  <div style="margin-top:12px;border:3px solid #2B1E18;border-radius:24px;background:#FFF8EC;box-shadow:0 5px 0 #2B1E18;overflow:hidden">
+    <div style="position:relative;height:166px;border-bottom:2.5px solid #2B1E18;background-color:#2B1E18;background-image:radial-gradient(rgba(255,248,236,.1) 1.2px,transparent 1.5px);background-size:10px 10px;color:#FFF8EC">
+      <image-slot id="art-peti" shape="rect" placeholder="Banner undian — peti kayu berasap, sedikit mencurigakan" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
+      <div style="position:absolute;left:14px;bottom:12px;pointer-events:none"><div style="font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.1em;color:#F2B63C">UNDIAN EQUIPMENT</div><div style="font:25px/1.05 'Bagel Fat One',system-ui;margin-top:5px;text-shadow:2px 0 0 #2B1E18,-2px 0 0 #2B1E18,0 2px 0 #2B1E18,0 -2px 0 #2B1E18,1.5px 1.5px 0 #2B1E18,-1.5px 1.5px 0 #2B1E18,1.5px -1.5px 0 #2B1E18,-1.5px -1.5px 0 #2B1E18,0 3px 0 #2B1E18">Peti Kayu Misterius</div></div>
+      <div style="position:absolute;top:12px;right:12px;padding:6px 9px;border-radius:10px;border:2px solid #2B1E18;background:#F2B63C;color:#2B1E18;font:800 11px/1.2 'Bricolage Grotesque';text-align:right;pointer-events:none">Epik dijamin<br>dalam {{ pityLeft }}×</div>
+    </div>
+    <div style="padding:12px 14px 14px">
+      <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 2px;border-radius:10px;background:#E1E7D6"><span style="font:500 8.5px/1 'DM Mono',monospace;letter-spacing:.06em;color:#5E6E52">BIASA</span><span style="font:800 13px/1 'Bricolage Grotesque'">52%</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 2px;border-radius:10px;background:#D5E3F6"><span style="font:500 8.5px/1 'DM Mono',monospace;letter-spacing:.06em;color:#3166B0">LANGKA</span><span style="font:800 13px/1 'Bricolage Grotesque'">30%</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 2px;border-radius:10px;background:#E7D9F5"><span style="font:500 8.5px/1 'DM Mono',monospace;letter-spacing:.06em;color:#7E43B5">EPIK</span><span style="font:800 13px/1 'Bricolage Grotesque'">14%</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 2px;border-radius:10px;background:#FBE3B8"><span style="font:500 8.5px/1 'DM Mono',monospace;letter-spacing:.06em;color:#B0620A">LEGENDA</span><span style="font:800 13px/1 'Bricolage Grotesque'">4%</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:10px;margin-top:12px">
+        <button onClick="{{ pull1 }}" style="height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:0;border:2.5px solid #2B1E18;border-radius:16px;background:#FFF8EC;box-shadow:0 4px 0 #2B1E18;color:#2B1E18;cursor:pointer" style-active="transform:translateY(3px);box-shadow:0 1px 0 #2B1E18"><span style="font:18px/1 'Bagel Fat One',system-ui">Buka 1×</span><span style="display:flex;align-items:center;gap:3px;font:800 12px/1 'Bricolage Grotesque'"><span style="font:14px/1 'Material Symbols Rounded';color:#7E43B5">diamond</span>150</span></button>
+        <button onClick="{{ pull10 }}" style="position:relative;height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:0;border:2.5px solid #2B1E18;border-radius:16px;background:#F2B63C;box-shadow:0 4px 0 #2B1E18;color:#2B1E18;cursor:pointer" style-active="transform:translateY(3px);box-shadow:0 1px 0 #2B1E18"><span style="font:18px/1 'Bagel Fat One',system-ui">Buka 10×</span><span style="display:flex;align-items:center;gap:3px;font:800 12px/1 'Bricolage Grotesque'"><span style="font:14px/1 'Material Symbols Rounded';color:#7E43B5">diamond</span>1.350</span><span style="position:absolute;top:-11px;right:-6px;padding:3px 7px;border-radius:8px;border:2px solid #2B1E18;background:#D2532A;color:#FFF8EC;font:800 10px/1 'Bricolage Grotesque';transform:rotate(4deg)">Hemat 10%</span></button>
+      </div>
+      <div style="margin-top:11px;text-align:center;font:500 11.5px/1.3 'Bricolage Grotesque';color:#6E5A4E">Tidak ada jaminan kebahagiaan. Hanya peti.</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:20px"><span style="font:20px/1 'Bagel Fat One',system-ui">Toko Harian</span><span style="display:flex;align-items:center;gap:4px;font:500 10px/1 'DM Mono',monospace;letter-spacing:.06em;color:#6E5A4E"><span style="font:13px/1 'Material Symbols Rounded'">schedule</span>GANTI 05:42:10</span></div>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px">
+    <sc-for list="{{ offers }}" as="of" hint-placeholder-count="6">
+      <div style="display:flex;flex-direction:column;border:2.5px solid #2B1E18;border-radius:18px;background:#FFF8EC;box-shadow:0 3px 0 #2B1E18;overflow:hidden;opacity:{{ of.opacity }}">
+        <div style="height:70px;display:grid;place-items:center;background:{{ of.bg }};border-bottom:2px solid #2B1E18"><span style="font:34px/1 'Material Symbols Rounded';color:{{ of.fg }}">{{ of.icon }}</span></div>
+        <div style="display:flex;flex-direction:column;gap:7px;padding:7px 7px 8px">
+          <div style="min-height:29px;display:grid;place-items:center;text-align:center;font:800 11.5px/1.2 'Bricolage Grotesque'">{{ of.name }}</div>
+          <button onClick="{{ of.buy }}" disabled="{{ of.sold }}" style="height:30px;display:flex;align-items:center;justify-content:center;gap:3px;padding:0;border:2px solid #2B1E18;border-radius:10px;background:{{ of.btnBg }};color:#2B1E18;font:800 12px/1 'Bricolage Grotesque';cursor:pointer"><span style="font:14px/1 'Material Symbols Rounded'">{{ of.curIcon }}</span>{{ of.price }}</button>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ hasPull }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px 18px;background:rgba(32,22,17,.9);overflow:hidden">
+  {{ pullBurst }}
+  <div style="position:relative;font:34px/1 'Bagel Fat One',system-ui;color:#F2B63C;text-shadow:2px 0 0 #2B1E18,-2px 0 0 #2B1E18,0 2px 0 #2B1E18,0 -2px 0 #2B1E18,1.5px 1.5px 0 #2B1E18,-1.5px 1.5px 0 #2B1E18,1.5px -1.5px 0 #2B1E18,-1.5px -1.5px 0 #2B1E18,0 4px 0 #2B1E18">Peti terbuka.</div>
+  <div style="position:relative;max-width:300px;font:500 14px/1.4 'Bricolage Grotesque';color:#FFF8EC;text-align:center;text-wrap:pretty">{{ pullSub }}</div>
+  <div style="position:relative;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;max-width:340px">{{ pullCards }}</div>
+  <button onClick="{{ closePull }}" style="position:relative;height:52px;margin-top:6px;padding:0 36px;border:3px solid #2B1E18;border-radius:17px;background:#F2B63C;box-shadow:0 5px 0 #2B1E18;color:#2B1E18;font:20px/1 'Bagel Fat One',system-ui;cursor:pointer" style-active="transform:translateY(3px);box-shadow:0 2px 0 #2B1E18">Oke</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isResult }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:30px 18px 20px;overflow:hidden">
+  <div style="position:absolute;left:50%;top:250px;width:980px;height:980px;margin-left:-490px;margin-top:-490px;border-radius:50%;background:repeating-conic-gradient(rgba(210,83,42,.1) 0deg 8deg,transparent 8deg 16deg);pointer-events:none"></div>
+  <div style="position:relative;padding:7px 16px;border:2.5px solid #2B1E18;border-radius:12px;background:{{ resRibbonBg }};color:#FFF8EC;font:500 10.5px/1 'DM Mono',monospace;letter-spacing:.12em;transform:rotate(-2deg);box-shadow:0 3px 0 #2B1E18">{{ resRibbon }}</div>
+  <div style="position:relative;margin-top:14px;font:40px/1 'Bagel Fat One',system-ui;text-align:center">{{ resTitle }}</div>
+  <div style="position:relative;margin-top:8px;font:600 14px/1.3 'Bricolage Grotesque';color:#5B4A40;text-align:center">{{ resSub }}</div>
+  <div style="position:relative;width:300px;height:172px;margin-top:16px;border:2.5px solid #2B1E18;border-radius:26px;overflow:hidden;background-color:#F3B49A;background-image:radial-gradient(rgba(43,30,24,.13) 1.2px,transparent 1.5px);background-size:10px 10px;box-shadow:0 4px 0 #2B1E18">
+    <image-slot id="art-hasil" shape="rect" placeholder="Pandu duduk di atas tumpukan hadiah, wajah tetap datar" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
+  </div>
+  <div style="position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;width:100%;margin-top:16px;border:2.5px solid #2B1E18;border-radius:16px;background:#2B1E18;overflow:hidden;box-shadow:0 3px 0 #2B1E18">
+    <sc-for list="{{ resStats }}" as="rs" hint-placeholder-count="3">
+      <div style="padding:9px 6px 10px;background:#FFF8EC;text-align:center"><div style="font:22px/1 'Bagel Fat One',system-ui">{{ rs.value }}</div><div style="font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.08em;color:#6E5A4E;margin-top:5px">{{ rs.label }}</div></div>
+    </sc-for>
+  </div>
+  <div style="position:relative;align-self:stretch;display:flex;align-items:center;justify-content:space-between;margin-top:16px"><span style="font:18px/1 'Bagel Fat One',system-ui">Hadiah</span><sc-if value="{{ resRecord }}" hint-placeholder-val="{{ false }}"><span style="padding:4px 8px;border-radius:8px;background:#F2B63C;border:2px solid #2B1E18;font:500 9.5px/1 'DM Mono',monospace;letter-spacing:.08em">REKOR BARU</span></sc-if></div>
+  <div style="position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;width:100%;margin-top:10px">
+    <sc-for list="{{ resRewards }}" as="rw" hint-placeholder-count="4">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0">
+        <div style="width:100%;aspect-ratio:1;box-sizing:border-box;display:grid;place-items:center;border:2.5px solid #2B1E18;border-radius:16px;background:{{ rw.bg }};box-shadow:0 3px 0 #2B1E18"><span style="font:32px/1 'Material Symbols Rounded';color:{{ rw.fg }}">{{ rw.icon }}</span></div>
+        <div style="font:800 11.5px/1.2 'Bricolage Grotesque';text-align:center">{{ rw.label }}</div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="position:relative;margin-top:12px;padding:0 10px;font:italic 500 13px/1.4 'Bricolage Grotesque';color:#5B4A40;text-align:center;text-wrap:pretty">“{{ resQuote }}”</div>
+  <div style="flex:1"></div>
+  <button onClick="{{ claim2 }}" style="position:relative;width:100%;height:60px;display:flex;align-items:center;justify-content:center;gap:10px;padding:0;border:3px solid #2B1E18;border-radius:20px;background:#F2B63C;box-shadow:0 6px 0 #2B1E18;color:#2B1E18;font:24px/1 'Bagel Fat One',system-ui;cursor:pointer" style-active="transform:translateY(4px);box-shadow:0 2px 0 #2B1E18"><span style="font:24px/1 'Material Symbols Rounded'">smart_display</span>Klaim ×2</button>
+  <button onClick="{{ claim1 }}" style="position:relative;height:38px;margin-top:8px;padding:0 20px;border:0;background:transparent;color:#5B4A40;font:700 14px/1 'Bricolage Grotesque';text-decoration:underline;text-underline-offset:3px;cursor:pointer">Klaim biasa</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;left:0;right:0;bottom:0;z-index:6;height:84px;box-sizing:border-box;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:end;padding:0 6px 13px;background:#2B1E18">
+  <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+    <div onClick="{{ t.go }}" style="display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transform:translateY({{ t.lift }});transition:transform .15s">
+      <div style="width:{{ t.size }};height:{{ t.size }};box-sizing:border-box;display:grid;place-items:center;border:2.5px solid {{ t.border }};border-radius:16px;background:{{ t.bg }};color:{{ t.iconColor }};font:{{ t.iconSize }}/1 'Material Symbols Rounded';box-shadow:{{ t.shadow }}">{{ t.icon }}</div>
+      <div style="font:700 11px/1 'Bricolage Grotesque';color:{{ t.color }}">{{ t.label }}</div>
+    </div>
+  </sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:20px;right:20px;bottom:104px;z-index:40;padding:11px 14px;border:2.5px solid #FFF8EC;border-radius:16px;background:#2B1E18;color:#FFF8EC;font:600 13px/1.4 'Bricolage Grotesque';text-align:center;text-wrap:pretty;box-shadow:0 8px 22px rgba(43,30,24,.4);pointer-events:none">{{ toastText }}</div>
+</sc-if>
+
+<div style="position:absolute;inset:0;z-index:60;border:2.5px solid #2B1E18;border-radius:34px;pointer-events:none"></div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844},&quot;screen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;lobby&quot;,&quot;run&quot;,&quot;skill&quot;,&quot;battle&quot;,&quot;hero&quot;,&quot;map&quot;,&quot;shop&quot;,&quot;result&quot;,&quot;gertak&quot;],&quot;default&quot;:&quot;lobby&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Prototype&quot;},&quot;still&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Prototype&quot;},&quot;runDays&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;10&quot;,&quot;20&quot;,&quot;30&quot;],&quot;default&quot;:&quot;20&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Gameplay&quot;},&quot;gertak&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Gameplay&quot;}}">
+class Component extends DCLogic {
+  static OUT = '2px 0 0 #2B1E18,-2px 0 0 #2B1E18,0 2px 0 #2B1E18,0 -2px 0 #2B1E18,1.5px 1.5px 0 #2B1E18,-1.5px 1.5px 0 #2B1E18,1.5px -1.5px 0 #2B1E18,-1.5px -1.5px 0 #2B1E18,0 4px 0 #2B1E18';
+  static RAR = {
+    Biasa: { label: 'BIASA', fg: '#5E6E52', bg: '#E1E7D6', w: 52 },
+    Langka: { label: 'LANGKA', fg: '#3166B0', bg: '#D5E3F6', w: 30 },
+    Epik: { label: 'EPIK', fg: '#7E43B5', bg: '#E7D9F5', w: 14 },
+    Legendaris: { label: 'LEGENDARIS', fg: '#B0620A', bg: '#FBE3B8', w: 4 }
+  };
+  static SKILLS = [
+    { id: 'cakar', name: 'Cakar Bambu', rar: 'Biasa', icon: 'pets', desc: '+12% ATK. Bambu tidak terlibat.', learn: 'Kuku Pandu kini sedikit lebih serius.' },
+    { id: 'bulu', name: 'Bulu Tebal', rar: 'Biasa', icon: 'shield', desc: '+18% HP maks. Juga hangat.', learn: 'Pandu mengembang. Secara harfiah.' },
+    { id: 'kerupuk', name: 'Lempar Kerupuk', rar: 'Biasa', icon: 'cookie', desc: 'Serangan pertama tiap battle 160% ATK. Kerupuk tidak kembali.', learn: 'Pandu menyimpan kerupuk di tempat yang tidak perlu kita tahu.' },
+    { id: 'kipas', name: 'Ekor Kipas', rar: 'Langka', icon: 'air', desc: 'Tiap 3 serangan, ekor mengipas musuh: 80% ATK. Musuh jadi sejuk.', learn: 'Ekor Pandu bergerak sendiri. Pandu memutuskan tidak bertanya.' },
+    { id: 'gertak', name: 'Pose Seram', rar: 'Langka', icon: 'sports_martial_arts', desc: 'Musuh 20% melewatkan giliran. Peluang gertak +15%.', learn: 'Pandu berlatih berdiri dengan dua kaki. Cukup meyakinkan.' },
+    { id: 'kritis', name: 'Tatapan Kosong', rar: 'Langka', icon: 'visibility', desc: '+15% peluang kritis. Tidak ada yang tahu Pandu memikirkan apa.', learn: 'Pandu menatap jauh. Sangat jauh.' },
+    { id: 'ngemil', name: 'Ngemil', rar: 'Langka', icon: 'ramen_dining', desc: 'Pulihkan HP sebesar 15% kerusakan yang diberikan.', learn: 'Pandu kini bisa makan sambil bertarung. Dan sebaliknya.' },
+    { id: 'tidur', name: 'Tidur Ayam', rar: 'Epik', icon: 'bedtime', desc: 'Sekali per battle saat HP < 30%: pulihkan 35% HP. Musuh menunggu karena sungkan.', learn: 'Pandu menguasai seni tidur di mana saja.' },
+    { id: 'statis', name: 'Bulu Statis', rar: 'Epik', icon: 'bolt', desc: '25% peluang petir 70% ATK tiap serangan. Bulu makin mengembang.', learn: 'Pandu menggosok badan ke karpet. Sekarang Pandu berbahaya.' },
+    { id: 'belang', name: 'Sembilan Belang', rar: 'Legendaris', icon: 'auto_awesome', desc: 'Tiap serangan diikuti sabetan ekor 45% ATK. Ekornya tetap satu.', learn: 'Belang di ekor Pandu bersinar. Lalu berhenti. Malu.' }
+  ];
+  static ENEMIES = {
+    tikus: { name: 'Tikus Kantoran', icon: 'pest_control_rodent', hp: 300, atk: 62, def: 6, intro: 'Ia membawa map berisi laporan yang belum selesai.', hit: 'Tikus Kantoran melempar stapler.', lose: 'Ia pulang lebih awal. Pertama kalinya dalam enam tahun.' },
+    bebek: { name: 'Bebek Satpam', icon: 'flutter_dash', hp: 380, atk: 54, def: 14, intro: 'Ia meminta Pandu menitipkan KTP.', hit: 'Bebek Satpam meniup peluit tepat di telinga Pandu.', lose: 'Ia kembali ke pos. Pura-pura tidak terjadi apa-apa.' },
+    kumbang: { name: 'Kumbang Galau', icon: 'pest_control', hp: 260, atk: 72, def: 4, intro: 'Ia baru putus. Ia ingin seseorang ikut merasakan.', hit: 'Kumbang Galau curhat. Kerusakan emosional.', lose: 'Ia terbang, merasa sedikit lebih baik.' },
+    lele: { name: 'Lele Motivator', icon: 'set_meal', hp: 420, atk: 50, def: 10, intro: '"Kamu pasti bisa," katanya, lalu menyerang.', hit: 'Lele Motivator menampar dengan kumis dan kata-kata mutiara.', lose: '"Kegagalan adalah guru," katanya. Ia tampak tidak yakin.' },
+    kelinci: { name: 'Kelinci Penagih', icon: 'cruelty_free', hp: 340, atk: 64, def: 8, intro: 'Katanya Pandu punya utang. Pandu tidak ingat. Kelinci ingat.', hit: 'Kelinci Penagih menendang. Bunganya 2% per hari.', lose: 'Ia mencoret nama Pandu. Untuk sementara.' },
+    lebah: { name: 'Lebah Notaris', icon: 'emoji_nature', hp: 1300, atk: 72, def: 16, boss: true, intro: 'Semua perkelahian harus dilegalisir.', hit: 'Lebah Notaris menyengat lalu mencap.', lose: 'Ia mengesahkan kekalahannya sendiri. Rapi.', immune: 'Notaris tidak bisa digertak. Semua sudah tercatat.' },
+    angsa: { name: 'Angsa Pengacara', icon: 'gavel', hp: 2000, atk: 78, def: 20, boss: true, intro: 'Ia mewakili semua angsa yang pernah merasa dirugikan.', hit: 'Angsa Pengacara mengajukan keberatan. Dengan paruh.', lose: 'Ia mengajukan banding. Banding ditolak.', immune: 'Bos tidak bisa digertak. Bos punya pengacara. Bos adalah pengacara.' }
+  };
+  static COMMON = ['tikus', 'bebek', 'kumbang', 'lele', 'kelinci'];
+  static EVENTS = [
+    { id: 'batu', text: 'Seekor biawak menjual batu. Katanya batu itu bisa bicara. Batu itu diam saja.',
+      a: { label: 'Beli batunya', icon: 'paid', cost: 80, hint: '−80 koin', res: () => ({ t: 'Pandu membeli batu. Batu itu tetap diam, tapi Pandu merasa lebih kuat.', atk: 14 }) },
+      b: { label: 'Lanjut jalan', icon: 'directions_walk', hint: '—', res: () => ({ t: 'Pandu lanjut jalan. Biawak tidak tersinggung. Biawak memang begitu.' }) } },
+    { id: 'sumur', text: 'Ada sumur. Dari dalam sumur, seseorang berteriak, "Jangan lihat ke bawah."',
+      a: { label: 'Lihat ke bawah', icon: 'visibility', hint: '50 : 50', res: () => (Math.random() < 0.5 ? { t: 'Pandu melihat ke bawah. Isinya sup. Masih hangat.', hp: 220 } : { t: 'Pandu melihat ke bawah. Isinya lebah. Lebahnya juga kaget.', hp: -160 }) },
+      b: { label: 'Hormati permintaannya', icon: 'handshake', hint: '+XP', res: () => ({ t: 'Pandu tidak melihat. Pandu merasa dewasa.', xp: 45 }) } },
+    { id: 'asuransi', text: 'Seekor bebek menawarkan asuransi jiwa. Preminya satu bambu per hari.',
+      a: { label: 'Daftar', icon: 'verified_user', hint: 'HP maks ↑', res: () => ({ t: 'Pandu mendaftar asuransi. Polisnya berlaku sejak kemarin.', maxHp: 160 }) },
+      b: { label: 'Tolak dengan sopan', icon: 'block', hint: '—', res: () => ({ t: 'Pandu menolak asuransi. Bebek mengangguk. Bebek sudah terbiasa ditolak.' }) } },
+    { id: 'sandal', text: 'Pandu menemukan sandal. Hanya yang kiri.',
+      a: { label: 'Pakai', icon: 'checkroom', hint: 'DEF ↑', res: () => ({ t: 'Pandu memakai sandal kiri. Langkahnya kini asimetris.', def: 10 }) },
+      b: { label: 'Tinggalkan', icon: 'directions_walk', hint: '+koin', res: () => ({ t: 'Sandal itu menatap Pandu pergi. Di bawahnya ada koin.', coins: 40 }) } },
+    { id: 'hujan', text: 'Hujan turun. Ada daun talas lebar di dekat sini.',
+      a: { label: 'Berteduh', icon: 'umbrella', hint: '+HP', res: () => ({ t: 'Pandu berteduh di bawah daun talas. Pandu kering, daun basah.', hp: 140 }) },
+      b: { label: 'Hujan-hujanan', icon: 'water_drop', hint: 'ATK ↑', res: () => ({ t: 'Pandu basah kuyup, tapi bertekad. Tidak jelas bertekad apa.', atk: 10 }) } },
+    { id: 'katak', text: 'Seekor katak menantang Pandu lomba diam.',
+      a: { label: 'Terima', icon: 'sentiment_neutral', hint: '+XP', res: () => ({ t: 'Pandu menang lomba diam. Katak masih diam. Mungkin katak juga menang.', xp: 60 }) },
+      b: { label: 'Menolak dengan diam', icon: 'do_not_disturb_on', hint: '?', res: () => ({ t: 'Katak menganggap diam Pandu sebagai jawaban. Dan kemenangan.', xp: 20 }) } },
+    { id: 'tombol', text: 'Ada tombol merah di tengah jalan. Tidak ada tulisan apa-apa.',
+      a: { label: 'Tekan', icon: 'radio_button_checked', hint: 'skill?', res: () => ({ t: 'Pandu menekan tombol merah. Sesuatu berubah. Di dalam diri Pandu.', skill: true }) },
+      b: { label: 'Jangan', icon: 'pan_tool', hint: '+koin', res: () => ({ t: 'Pandu tidak menekan tombol. Tombol tampak kecewa. Pandu dapat koin entah dari mana.', coins: 60 }) } },
+    { id: 'kerupuk', text: 'Pedagang kerupuk keliling lewat. Kerupuknya melempem.',
+      a: { label: 'Beli satu', icon: 'cookie', cost: 30, hint: '−30 koin', res: () => ({ t: 'Pandu makan kerupuk melempem. Melempem, tapi jujur.', hp: 110 }) },
+      b: { label: 'Pura-pura tidak lihat', icon: 'visibility_off', hint: '—', res: () => ({ t: 'Pandu pura-pura tidak lihat. Pedagang juga. Semua lega.' }) } }
+  ];
+  static FLAVOR = [
+    { t: 'Pandu berjalan. Jalannya lurus. Pandu juga.' },
+    { t: 'Seekor kupu-kupu hinggap di kepala Pandu. Pandu membiarkannya.', hp: 30 },
+    { t: 'Pandu menemukan koin di bawah batu. Batunya tidak keberatan.', coins: 25 },
+    { t: 'Angin bertiup ke arah yang salah. Pandu tetap jalan.' },
+    { t: 'Pandu memikirkan bambu. Lalu memikirkan bambu lagi.', xp: 15 },
+    { t: 'Ada papan bertuliskan "Belok kiri". Pandu belok kanan. Tidak terjadi apa-apa.' },
+    { t: 'Pandu tidur siang empat jam. Dunia tidak menunggu.', hp: 90 },
+    { t: 'Seekor siput menyalip Pandu. Pandu tidak mengejar.' },
+    { t: 'Pandu bertemu bayangannya sendiri. Mereka saling mengangguk.', xp: 10 },
+    { t: 'Seseorang menjatuhkan dompet. Isinya struk belanja dan 12 koin.', coins: 12 }
+  ];
+  static ITEMS = {
+    sumpit: { name: 'Sumpit Bambu', type: 'senjata', rar: 'Langka', stat: 'ATK', val: 36, lvl: 12, icon: 'ramen_dining', desc: 'Dua batang. Satu untuk menyerang, satu cadangan.' },
+    payung: { name: 'Payung Lipat', type: 'senjata', rar: 'Biasa', stat: 'ATK', val: 22, lvl: 8, icon: 'beach_access', desc: 'Bisa untuk menyerang. Bisa untuk hujan. Jarang keduanya.' },
+    centong: { name: 'Centong Nasi Kuno', type: 'senjata', rar: 'Epik', stat: 'ATK', val: 58, lvl: 1, icon: 'restaurant', desc: 'Pernah dipakai di tiga kenduri. Aura nasinya masih terasa.' },
+    panci: { name: 'Panci Antik', type: 'topi', rar: 'Epik', stat: 'HP', val: 260, lvl: 10, icon: 'soup_kitchen', desc: 'Dipakai di kepala. Masih bisa untuk merebus.' },
+    pramuka: { name: 'Topi Pramuka', type: 'topi', rar: 'Biasa', stat: 'HP', val: 120, lvl: 5, icon: 'school', desc: 'Siap sedia. Tidak jelas untuk apa.' },
+    helm: { name: 'Helm Proyek', type: 'topi', rar: 'Langka', stat: 'HP', val: 190, lvl: 4, icon: 'engineering', desc: 'Kuning. Membuat Pandu tampak bertanggung jawab.' },
+    syal: { name: 'Syal Rajut Nenek', type: 'baju', rar: 'Langka', stat: 'DEF', val: 14, lvl: 9, icon: 'checkroom', desc: 'Panjangnya empat meter. Nenek tidak tahu kapan berhenti.' },
+    jashujan: { name: 'Jas Hujan Plastik', type: 'baju', rar: 'Biasa', stat: 'DEF', val: 8, lvl: 6, icon: 'water_drop', desc: 'Berbunyi kresek setiap Pandu bergerak.' },
+    tutup: { name: 'Kalung Tutup Botol', type: 'kalung', rar: 'Langka', stat: 'ATK', val: 18, lvl: 7, icon: 'trip_origin', desc: 'Tutup botol limun. Dikoleksi dengan serius.' },
+    cincin: { name: 'Cincin Karet', type: 'kalung', rar: 'Biasa', stat: 'ATK', val: 10, lvl: 4, icon: 'radio_button_unchecked', desc: 'Bekas ikat bungkus nasi. Elastis secara emosional.' },
+    rafia: { name: 'Tali Rafia', type: 'sabuk', rar: 'Biasa', stat: 'HP', val: 90, lvl: 6, icon: 'cable', desc: 'Merah muda. Kuat menahan apa saja kecuali angin.' },
+    gesper: { name: 'Gesper Raksasa', type: 'sabuk', rar: 'Epik', stat: 'HP', val: 180, lvl: 2, icon: 'link', desc: 'Beratnya dua kilo. Gaya tetap nomor satu.' },
+    sandal: { name: 'Sandal Kiri', type: 'sepatu', rar: 'Legendaris', stat: 'DEF', val: 22, lvl: 15, icon: 'directions_walk', desc: 'Hanya yang kiri. Ternyata cukup.' },
+    kaoskaki: { name: 'Kaus Kaki Ganjil', type: 'sepatu', rar: 'Biasa', stat: 'DEF', val: 9, lvl: 3, icon: 'nordic_walking', desc: 'Satu motif bebek, satu motif galaksi.' }
+  };
+  static CHAPTERS = [
+    { name: 'Kebun Bambu Tetangga', icon: 'forest', desc: 'Tetangga belum tahu.' },
+    { name: 'Pasar Subuh', icon: 'storefront', desc: 'Buka jam tiga pagi. Pandu bangun jam tiga sore.' },
+    { name: 'Rawa Kerupuk', icon: 'water', desc: 'Rawanya renyah. Jangan tanya kenapa.' },
+    { name: 'Gunung Kasur', icon: 'landscape', desc: 'Sangat empuk. Banyak yang tidak kembali karena ketiduran.' },
+    { name: 'Gua Wi-Fi Lemah', icon: 'wifi_off', desc: 'Satu bar. Kadang nol. Bosnya selalu buffering.' },
+    { name: 'Kantor Pajak Hutan', icon: 'account_balance', desc: 'Antrean nomor 4.891. Bawa fotokopi KTP.' }
+  ];
+  static OFFERS = [
+    { id: 'energi', name: 'Energi ×10', icon: 'bolt', rar: 'Langka', cur: 'gem', price: 50, give: { energy: 10 }, msg: 'Energi +10. Pandu tetap mengantuk.' },
+    { id: 'koin', name: 'Sekantong Koin', icon: 'toll', rar: 'Legendaris', cur: 'gem', price: 80, give: { coins: 6000 }, msg: '+6.000 koin. Kantongnya ikut.' },
+    { id: 'kerupuk', name: 'Kerupuk Gratis', icon: 'cookie', rar: 'Biasa', cur: 'ad', price: 'Gratis', give: { energy: 3 }, msg: 'Kerupuk dimakan. Energi +3. Iklannya dilewati.' },
+    { id: 'permata', name: 'Permata Receh', icon: 'diamond', rar: 'Epik', cur: 'coin', price: 9000, give: { gems: 50 }, msg: '+50 permata. Recehnya berkilau.' },
+    { id: 'asah', name: 'Batu Asah', icon: 'hardware', rar: 'Biasa', cur: 'coin', price: 2500, give: {}, msg: 'Batu asah dibeli. Belum ada yang diasah.' },
+    { id: 'misteri', name: 'Item Misteri', icon: 'help', rar: 'Epik', cur: 'gem', price: 120, give: { item: true }, msg: '' }
+  ];
+  static QUOTES = ['Pandu tidak sampai ujung. Tapi Pandu sampai di suatu tempat.', 'Perjalanan ini mengajarkan sesuatu. Pandu lupa apa.', 'Pandu pulang dengan tas penuh dan ekspresi yang sama.'];
+  static QUOTES_WIN = ['Bab selesai. Pandu mengangguk sekali. Itu sudah perayaan.', 'Angsa Pengacara kalah. Pandu tidak menyewa pengacara. Tidak perlu.'];
+  static BUBBLES = ['Hari ini saya pergi. Mungkin besok juga.', 'Saya tidak marah. Wajah saya memang begini.', 'Ransel sudah siap. Saya belum.', 'Rawanya renyah, katanya. Kita lihat saja.', 'Ketuk saya lagi. Tidak akan terjadi apa-apa.'];
+
+  constructor(...a) {
+    super(...a);
+    const p = a[0] || this.props || {};
+    this._uid = 1000; this._acc = 0;
+    this.logRef = el => { this._logEl = el; if (el) this.scrollLog(); };
+    this.rootRef = el => { this._root = el; if (el) this._rootSeen = true; };
+    this._init = p.screen || 'lobby'; this._initDays = this.days(p);
+    this.state = this.initial(this._init, p);
+  }
+  uid() { this._uid = (this._uid || 1000) + 1; return this._uid; }
+  days(p) { const d = parseInt((p || this.props || {}).runDays, 10); return d === 10 || d === 30 ? d : 20; }
+  marks(days) { return [Math.round(days * 0.35), Math.round(days * 0.7), days]; }
+  pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+
+  initial(screen, p) {
+    const C = this.constructor, days = this.days(p);
+    const s = {
+      screen: 'lobby', coins: 12480, gems: 1480, energy: 25, chapter: 2,
+      best: [days, days, Math.round(days * 0.7), 0, 0, 0],
+      chests: { '0-0': 1, '0-1': 1, '0-2': 1, '1-0': 1, '1-1': 1, '1-2': 1, '2-0': 1 },
+      equipped: { senjata: 'sumpit', topi: 'panci', baju: 'syal', kalung: 'tutup', sabuk: 'rafia', sepatu: 'sandal' },
+      bag: ['centong', 'helm', 'gesper', 'payung', 'pramuka', 'jashujan', 'cincin', 'kaoskaki', 'payung', 'cincin'],
+      pity: 2, sold: {}, bubble: 0, speed: 1, daily: false,
+      run: null, offer: null, battle: null, result: null, pull: null, toast: null, shake: null
+    };
+    const d = Math.max(6, Math.round(days * 0.75));
+    const mkRun = () => ({
+      chapter: 2, day: d, maxDay: days, hp: 868, maxHp: 1310, atk: 172, def: 66, lvl: 5, xp: 70, xpNext: 160,
+      skills: ['kipas', 'cakar', 'bulu', 'kipas'], coins: 340, kills: 5, used: ['sandal', 'katak', 'tombol'], auto: true, event: null, queue: null,
+      log: [
+        { id: 1, day: d - 5, text: 'Kumbang Galau kalah. Ia terbang, merasa sedikit lebih baik.', fx: [{ k: 'coins', v: 62 }, { k: 'xp', v: 45 }], tone: 'win' },
+        { id: 2, day: d - 4, text: 'Pandu memakai sandal kiri. Langkahnya kini asimetris.', fx: [{ k: 'def', v: 10 }], tone: 'plain' },
+        { id: 3, day: d - 3, text: 'Seekor siput menyalip Pandu. Pandu tidak mengejar.', fx: [], tone: 'plain' },
+        { id: 4, day: d - 2, text: 'Pandu berdiri dengan dua kaki. Bebek Satpam memutuskan punya urusan lain.', fx: [{ k: 'coins', v: 59 }, { k: 'xp', v: 25 }], tone: 'win' },
+        { id: 5, day: d - 1, text: 'Pandu tidur siang empat jam. Dunia tidak menunggu.', fx: [{ k: 'hp', v: 90 }], tone: 'plain' }
+      ]
+    });
+    if (screen === 'run' || screen === 'skill' || screen === 'gertak') {
+      s.screen = 'run'; s.run = mkRun();
+      if (screen === 'run') s.run.event = { kind: 'choice', id: 'tombol' };
+      if (screen === 'gertak') s.run.event = { kind: 'enemy', enemy: 'kelinci' };
+      if (screen === 'skill') { s.run.day = d - 1; s.offer = { kind: 'lvl', from: 5, to: 6, ids: ['kipas', 'tidur', 'statis'], rerolls: 1 }; }
+    } else if (screen === 'battle') {
+      s.screen = 'battle'; s.run = mkRun(); s.run.day = days; s.run.hp = 640;
+      const en = this.makeEnemy('angsa', days); en.hp = Math.round(en.maxHp * 0.54);
+      s.battle = {
+        enemy: en, turn: 7, heroTurn: true, hits: 6, firstDone: true, napUsed: false, over: null, proc: 'kipas',
+        log: [
+          { id: 11, text: 'Angsa Pengacara menghadang. Ia mewakili semua angsa yang pernah merasa dirugikan.', tone: 'enemy' },
+          { id: 12, text: 'Angsa Pengacara mengajukan keberatan. Dengan paruh. 148.', tone: 'enemy' },
+          { id: 13, text: 'Pandu menatap kosong, lalu memukul. Kritis. 412.', tone: 'crit' },
+          { id: 14, text: 'Ekor Pandu mengipas. Angsa Pengacara jadi sejuk. 275.', tone: 'skill' }
+        ],
+        pops: [{ id: 21, t: 0, side: 'enemy', text: 'KRITIS 412', kind: 'crit', dx: -24, dy: 0 }, { id: 22, t: 0, side: 'enemy', text: '−275', kind: 'skill', dx: 46, dy: 40 }],
+        banner: { id: 31, text: 'Ekor Kipas!' }
+      };
+    } else if (screen === 'result') {
+      s.screen = 'result';
+      s.result = { win: false, day: Math.round(days * 0.8), maxDay: days, kills: 6, skills: 4, coins: 3420, gems: 40, xp: 312, item: 'centong', record: true, chapter: 2, quote: C.QUOTES[0] };
+    } else if (screen === 'hero' || screen === 'map' || screen === 'shop') s.screen = screen;
+    return s;
+  }
+
+  componentDidMount() {
+    const p = this.props || {};
+    if ((p.screen || 'lobby') !== this._init || this.days(p) !== this._initDays) {
+      this._init = p.screen || 'lobby'; this._initDays = this.days(p);
+      this.setState(this.initial(this._init, p));
+    }
+    if (!p.still && !this._iv) this._iv = setInterval(() => this.loop(), 100);
+    this.scrollLog();
+  }
+  componentWillUnmount() { clearInterval(this._iv); this._iv = null; }
+  componentDidUpdate(pp, ps) {
+    const p = this.props || {};
+    pp = pp || {};
+    if ((p.screen || 'lobby') !== this._init || this.days(p) !== this._initDays) {
+      this._init = p.screen || 'lobby'; this._initDays = this.days(p);
+      this.setState(this.initial(this._init, p));
+    }
+    const a = ps && ps.run ? ps.run.log.length : -1, b = this.state.run ? this.state.run.log.length : -1;
+    if (a !== b || (ps && ps.screen !== this.state.screen) || (ps && !!ps.offer !== !!this.state.offer)) this.scrollLog();
+  }
+  scrollLog() { requestAnimationFrame(() => { const el = this._logEl; if (el) el.scrollTop = el.scrollHeight; }); }
+
+  loop() {
+    const s = this.state, p = this.props || {};
+    if (p.still) return;
+    this._tick = Date.now();
+    if (this._rootSeen && !this._root) { clearInterval(this._iv); this._iv = null; return; }
+    const ln = s.run ? s.run.log.length : 0;
+    if (ln !== this._logN) { this._logN = ln; this.scrollLog(); }
+    if (s.shake) this.setState({ shake: null });
+    if (s.toast && Date.now() > s.toast.until) this.setState({ toast: null });
+    const step = 100 * (s.speed || 1);
+    if (s.screen === 'run' && s.run && !s.run.event && !s.offer && s.run.auto) {
+      this._acc += step;
+      if (this._acc >= 1400) { this._acc = 0; this.advanceDay(); }
+    } else if (s.screen === 'battle' && s.battle) {
+      this._acc += step;
+      if (s.battle.over) { if (this._acc >= 1300) { this._acc = 0; this.endBattle(); } }
+      else if (this._acc >= 650) { this._acc = 0; this.battleStep(); }
+    } else this._acc = 0;
+  }
+
+  heroBase(eq) {
+    const C = this.constructor; let atk = 100, hp = 800, def = 20;
+    Object.values(eq).forEach(id => { const it = C.ITEMS[id]; if (!it) return; if (it.stat === 'ATK') atk += it.val; else if (it.stat === 'HP') hp += it.val; else def += it.val; });
+    return { atk, hp, def };
+  }
+  power(st) { return st.atk * 40 + st.hp * 4 + st.def * 60; }
+  itemScore(id) { const it = this.constructor.ITEMS[id]; return !it ? 0 : it.stat === 'HP' ? it.val / 6 : it.stat === 'DEF' ? it.val * 1.6 : it.val; }
+  makeEnemy(key, day) {
+    const e = this.constructor.ENEMIES[key], f = 1 + day * 0.06, hp = Math.round(e.hp * f);
+    return { key, name: e.name, icon: e.icon, boss: !!e.boss, lvl: Math.max(1, Math.round(day * 1.1) + (e.boss ? 4 : 0)), hp, maxHp: hp, atk: Math.round(e.atk * f), def: Math.round(e.def * f) };
+  }
+  rollSkills(n) {
+    const C = this.constructor, pool = C.SKILLS.slice(), out = [];
+    while (out.length < n && pool.length) {
+      const tot = pool.reduce((a, k) => a + C.RAR[k.rar].w, 0); let x = Math.random() * tot, i = 0;
+      for (; i < pool.length; i++) { x -= C.RAR[pool[i].rar].w; if (x <= 0) break; }
+      out.push(pool.splice(Math.min(i, pool.length - 1), 1)[0].id);
+    }
+    return out;
+  }
+  rollItem(good) {
+    const C = this.constructor, ids = Object.keys(C.ITEMS).filter(id => !good || C.ITEMS[id].rar !== 'Biasa');
+    const tot = ids.reduce((a, id) => a + C.RAR[C.ITEMS[id].rar].w, 0); let x = Math.random() * tot;
+    for (const id of ids) { x -= C.RAR[C.ITEMS[id].rar].w; if (x <= 0) return id; }
+    return ids[ids.length - 1];
+  }
+  bluffChance(r) { return Math.min(0.9, 0.55 + 0.15 * r.skills.filter(k => k === 'gertak').length); }
+
+  go(key) { this.setState({ screen: key, pull: null }); }
+  toast(text) { this.setState({ toast: { id: this.uid(), text, until: Date.now() + 2800 } }); }
+  shiftChapter(dir) {
+    const days = this.days(), n = this.state.chapter + dir;
+    if (n < 0 || n > 5) return;
+    if (n > 0 && this.state.best[n - 1] < days) return this.toast('Bab berikutnya masih terkunci. Gemboknya serius.');
+    this.setState({ chapter: n });
+  }
+  selectChapter(i) {
+    if (i > 0 && this.state.best[i - 1] < this.days()) return this.toast(`Selesaikan Bab ${i} dulu. Gemboknya serius.`);
+    this.setState({ chapter: i });
+  }
+  tapDaily() {
+    if (this.state.daily) return this.toast('Sudah diambil. Kembali besok. Pandu juga.');
+    this.setState({ daily: true, gems: this.state.gems + 50 });
+    this.toast('Login hari ke-4: +50 permata. Pandu datang lagi besok. Mungkin.');
+  }
+  claimChest(ci, mi) {
+    const s = this.state, m = this.marks(this.days())[mi], key = `${ci}-${mi}`;
+    if (s.chests[key]) return this.toast('Peti ini sudah kosong. Pandu sudah memeriksa dua kali.');
+    if (s.best[ci] < m) return this.toast(`Capai Hari ${m} untuk membuka. Petinya sabar.`);
+    const gems = 30 * (mi + 1);
+    this.setState({ chests: Object.assign({}, s.chests, { [key]: 1 }), gems: s.gems + gems });
+    this.toast(`Peti dibuka: +${gems} permata.`);
+  }
+
+  startRun() {
+    const C = this.constructor, s = this.state;
+    if (s.energy < 5) return this.toast('Energi habis. Pandu juga.');
+    const st = this.heroBase(s.equipped), ch = C.CHAPTERS[s.chapter];
+    const run = { chapter: s.chapter, day: 0, maxDay: this.days(), hp: st.hp, maxHp: st.hp, atk: st.atk, def: st.def, lvl: 1, xp: 0, xpNext: 70, skills: [], coins: 100, kills: 0, used: [], auto: true, event: null, queue: null,
+      log: [{ id: this.uid(), day: 0, text: `Pandu berangkat ke ${ch.name}. Tidak ada yang mengantar.`, fx: [], tone: 'plain' }] };
+    this._acc = 0;
+    this.setState({ energy: s.energy - 5, screen: 'run', run, battle: null, result: null, pull: null, offer: { kind: 'start', ids: this.rollSkills(3), rerolls: 1 } });
+  }
+  toggleAuto() { const r = this.state.run; if (r) this.setState({ run: Object.assign({}, r, { auto: !r.auto }) }); }
+  quitRun() { const r = this.state.run; if (r) this.finishRun(Object.assign({}, r), false); }
+  pickSkill(id) {
+    const C = this.constructor, s = this.state; if (!s.run) return;
+    const r = Object.assign({}, s.run, { skills: s.run.skills.concat(id) }), k = C.SKILLS.find(x => x.id === id), fx = [];
+    if (id === 'cakar') { const d = Math.round(r.atk * 0.12); r.atk += d; fx.push({ k: 'atk', v: d }); }
+    if (id === 'bulu') { const d = Math.round(r.maxHp * 0.18); r.maxHp += d; r.hp += d; fx.push({ k: 'maxHp', v: d }); }
+    r.log = r.log.concat({ id: this.uid(), day: r.day, text: `Pandu mempelajari ${k.name}. ${k.learn}`, fx, tone: 'skill' });
+    const next = r.queue || null; r.queue = null; this._acc = 0;
+    this.setState({ run: r, offer: next });
+  }
+  reroll() { const o = this.state.offer; if (!o || o.rerolls < 1) return; this.setState({ offer: Object.assign({}, o, { ids: this.rollSkills(3), rerolls: o.rerolls - 1 }) }); }
+
+  advanceDay() {
+    const C = this.constructor, s = this.state; if (!s.run) return;
+    const r = Object.assign({}, s.run, { day: s.run.day + 1 });
+    if (r.day >= r.maxDay) { r.day = r.maxDay; r.event = { kind: 'enemy', enemy: 'angsa' }; return this.setState({ run: r }); }
+    if (r.day === Math.round(r.maxDay / 2)) { r.event = { kind: 'enemy', enemy: 'lebah' }; return this.setState({ run: r }); }
+    const x = Math.random();
+    if (x < 0.27) { r.event = { kind: 'enemy', enemy: this.pick(C.COMMON) }; return this.setState({ run: r }); }
+    if (x < 0.6) {
+      const left = C.EVENTS.filter(e => r.used.indexOf(e.id) < 0);
+      if (left.length) { const ev = this.pick(left); r.used = r.used.concat(ev.id); r.event = { kind: 'choice', id: ev.id }; return this.setState({ run: r }); }
+    }
+    const fl = this.pick(C.FLAVOR);
+    this.applyOutcome(r, fl, fl.t);
+  }
+  applyOutcome(r, o, text, opts) {
+    opts = opts || {};
+    const fx = [];
+    if (o.maxHp) { r.maxHp += o.maxHp; r.hp += o.maxHp; fx.push({ k: 'maxHp', v: o.maxHp }); }
+    if (o.hp) { r.hp = Math.max(0, Math.min(r.maxHp, r.hp + o.hp)); fx.push({ k: 'hp', v: o.hp }); }
+    if (o.atk) { r.atk += o.atk; fx.push({ k: 'atk', v: o.atk }); }
+    if (o.def) { r.def += o.def; fx.push({ k: 'def', v: o.def }); }
+    if (o.coins) { r.coins = Math.max(0, r.coins + o.coins); fx.push({ k: 'coins', v: o.coins }); }
+    if (o.xp) fx.push({ k: 'xp', v: o.xp });
+    r.xp += (o.xp || 0) + (opts.noDaily ? 0 : 12 + Math.floor(Math.random() * 10));
+    r.log = r.log.concat({ id: this.uid(), day: r.day, text, fx, tone: opts.tone || ((o.hp || 0) < 0 ? 'bad' : 'plain') });
+    r.event = null;
+    if (r.hp <= 0) return this.finishRun(r, false);
+    let offer = o.skill ? { kind: 'bonus', ids: this.rollSkills(3), rerolls: 0 } : null;
+    if (r.xp >= r.xpNext) {
+      const from = r.lvl; r.xp -= r.xpNext; r.lvl += 1; r.xpNext = Math.round(r.xpNext * 1.3);
+      r.atk = Math.round(r.atk * 1.05); r.hp = Math.min(r.maxHp, r.hp + Math.round(r.maxHp * 0.15));
+      const lv = { kind: 'lvl', from, to: r.lvl, ids: this.rollSkills(3), rerolls: 1 };
+      if (offer) r.queue = lv; else offer = lv;
+    }
+    this._acc = 0;
+    this.setState(offer ? { run: r, offer } : { run: r });
+  }
+  choose(which) {
+    const C = this.constructor, s = this.state; if (!s.run || !s.run.event) return;
+    const r = Object.assign({}, s.run), ev = r.event;
+    if (ev.kind === 'choice') {
+      const opt = C.EVENTS.find(e => e.id === ev.id)[which];
+      if (opt.cost && r.coins < opt.cost) return this.toast('Koin perjalanan kurang. Tidak ada yang memberi kredit di sini.');
+      const o = Object.assign({}, opt.res());
+      if (opt.cost) o.coins = (o.coins || 0) - opt.cost;
+      return this.applyOutcome(r, o, o.t, { tone: o.skill ? 'skill' : undefined });
+    }
+    const e = C.ENEMIES[ev.enemy];
+    if (which === 'a') return this.startBattle(r, ev.enemy, false);
+    if (e.boss || (this.props || {}).gertak === false) return;
+    if (Math.random() < this.bluffChance(r)) return this.applyOutcome(r, { coins: 20 + r.day * 3, xp: 25 }, `Pandu berdiri dengan dua kaki. ${e.name} memutuskan punya urusan lain.`, { tone: 'win' });
+    this.startBattle(r, ev.enemy, true);
+  }
+  startBattle(r, key, offended) {
+    const e = this.constructor.ENEMIES[key], en = this.makeEnemy(key, r.day);
+    const log = [{ id: this.uid(), text: `${e.name} menghadang. ${e.intro}`, tone: 'enemy' }];
+    if (offended) { en.atk = Math.round(en.atk * 1.2); log.push({ id: this.uid(), text: `Pandu berdiri dengan dua kaki. ${e.name} tidak terkesan. ATK musuh +20%.`, tone: 'bad' }); }
+    this._acc = 0;
+    this.setState({ run: Object.assign({}, r, { event: null }), screen: 'battle', shake: null,
+      battle: { enemy: en, turn: 1, heroTurn: !offended, hits: 0, firstDone: false, napUsed: false, over: null, log, pops: [], banner: null, proc: null } });
+  }
+  battleStep() {
+    const C = this.constructor, s = this.state; if (!s.battle || s.battle.over) return;
+    const b = Object.assign({}, s.battle, { enemy: Object.assign({}, s.battle.enemy) }), r = Object.assign({}, s.run);
+    const e = C.ENEMIES[b.enemy.key], n = id => r.skills.filter(k => k === id).length, now = Date.now();
+    const log = b.log.slice(), pops = b.pops.filter(x => now - x.t < 1100);
+    const push = (side, text, kind) => pops.push({ id: this.uid(), t: now, side, text, kind, dx: Math.round(Math.random() * 70 - 35), dy: pops.filter(x => x.side === side).length * 30 });
+    const say = (text, tone) => log.push({ id: this.uid(), text, tone });
+    const hit = d => { b.enemy.hp = Math.max(0, b.enemy.hp - d); };
+    let shake = null, banner = b.banner, proc = null;
+    if (b.heroTurn) {
+      b.hits += 1;
+      const crit = Math.random() < 0.08 + 0.15 * n('kritis');
+      let mult = (0.9 + Math.random() * 0.2) * (crit ? 2 : 1);
+      if (!b.firstDone && n('kerupuk')) { mult *= 1 + 0.6 * n('kerupuk'); banner = { id: this.uid(), text: 'Lempar Kerupuk!' }; proc = 'kerupuk'; }
+      b.firstDone = true;
+      let total = 0;
+      const dmg = Math.max(1, Math.round(r.atk * mult - b.enemy.def * 0.5)); hit(dmg); total += dmg;
+      push('enemy', crit ? `KRITIS ${dmg}` : `−${dmg}`, crit ? 'crit' : 'hit');
+      say(crit ? `Pandu menatap kosong, lalu memukul. Kritis. ${dmg}.` : `Pandu memukul ${b.enemy.name}. ${dmg}.`, crit ? 'crit' : 'plain');
+      if (n('kipas') && b.hits % 3 === 0 && b.enemy.hp > 0) { const d = Math.round(r.atk * 0.8 * n('kipas')); hit(d); total += d; push('enemy', `−${d}`, 'skill'); banner = { id: this.uid(), text: 'Ekor Kipas!' }; proc = 'kipas'; say(`Ekor Pandu mengipas. ${b.enemy.name} jadi sejuk. ${d}.`, 'skill'); }
+      if (n('statis') && Math.random() < 0.25 && b.enemy.hp > 0) { const d = Math.round(r.atk * 0.7 * n('statis')); hit(d); total += d; push('enemy', `−${d}`, 'skill'); banner = { id: this.uid(), text: 'Bulu Statis!' }; proc = 'statis'; say(`Bulu Pandu menyetrum. ${d}.`, 'skill'); }
+      if (n('belang') && b.enemy.hp > 0) { const d = Math.round(r.atk * 0.45 * n('belang')); hit(d); total += d; push('enemy', `−${d}`, 'skill'); proc = proc || 'belang'; }
+      if (n('ngemil') && r.hp < r.maxHp) { const h = Math.round(total * 0.15 * n('ngemil')); if (h > 0) { r.hp = Math.min(r.maxHp, r.hp + h); push('hero', `+${h}`, 'heal'); proc = proc || 'ngemil'; } }
+      shake = 'enemy';
+    } else {
+      if (n('gertak') && Math.random() < 0.2 * n('gertak')) {
+        push('enemy', 'BINGUNG', 'miss'); proc = 'gertak';
+        say(`${b.enemy.name} melihat Pandu berdiri dengan dua kaki. ${b.enemy.name} lupa mau apa.`, 'skill');
+      } else {
+        const dmg = Math.max(1, Math.round(b.enemy.atk * (0.9 + Math.random() * 0.2) - r.def * 0.5));
+        r.hp = Math.max(0, r.hp - dmg); push('hero', `−${dmg}`, 'hurt'); shake = 'hero';
+        say(Math.random() < 0.5 ? `${e.hit} ${dmg}.` : `${b.enemy.name} menyerang. ${dmg}.`, 'enemy');
+      }
+      if (n('tidur') && !b.napUsed && r.hp > 0 && r.hp < r.maxHp * 0.3) {
+        const h = Math.round(r.maxHp * 0.35); r.hp = Math.min(r.maxHp, r.hp + h); b.napUsed = true;
+        push('hero', `+${h}`, 'heal'); banner = { id: this.uid(), text: 'Tidur Ayam!' }; proc = 'tidur';
+        say(`Pandu tidur sebentar. ${b.enemy.name} menunggu karena sungkan. +${h} HP.`, 'skill');
+      }
+      b.turn += 1;
+    }
+    b.heroTurn = !b.heroTurn;
+    if (b.enemy.hp <= 0) { b.over = 'win'; say(`${b.enemy.name} kalah. ${e.lose}`, 'win'); }
+    else if (r.hp <= 0) { b.over = 'lose'; say('Pandu terjatuh. Pandu memutuskan ini cukup.', 'bad'); }
+    b.log = log.slice(-5); b.pops = pops.slice(-8); b.banner = banner; b.proc = proc || b.proc;
+    this.setState({ battle: b, run: r, shake });
+  }
+  endBattle() {
+    const C = this.constructor, s = this.state, b = s.battle; if (!b) return;
+    const r = Object.assign({}, s.run);
+    if (b.over === 'lose') return this.finishRun(r, false);
+    r.kills += 1;
+    const e = C.ENEMIES[b.enemy.key];
+    if (b.enemy.key === 'angsa') return this.finishRun(r, true);
+    this.setState({ screen: 'run', battle: null, shake: null });
+    this.applyOutcome(r, { coins: Math.round((e.boss ? 160 : 40) + r.day * 4), xp: e.boss ? 90 : 30 + r.day * 2 }, `${b.enemy.name} kalah. ${e.lose}`, { tone: 'win', noDaily: true });
+  }
+  finishRun(r, win) {
+    const C = this.constructor, s = this.state;
+    const best = s.best.slice(), record = r.day > best[r.chapter];
+    best[r.chapter] = Math.max(best[r.chapter], r.day);
+    this.setState({ screen: 'result', battle: null, offer: null, shake: null, best, run: Object.assign({}, r, { event: null }),
+      result: { win, day: r.day, maxDay: r.maxDay, kills: r.kills, skills: r.skills.length, coins: r.coins + r.day * 90 + r.kills * 60 + (win ? 1500 : 0), gems: win ? 120 : Math.floor(r.day / 4) * 10, xp: r.day * 12 + r.kills * 20,
+        item: win ? this.rollItem(true) : r.day >= 5 ? this.rollItem(false) : null, record, chapter: r.chapter, quote: this.pick(win ? C.QUOTES_WIN : C.QUOTES) } });
+  }
+  claim(m) {
+    const s = this.state, rs = s.result; if (!rs) return;
+    this.setState({ coins: s.coins + rs.coins * m, gems: s.gems + rs.gems * m, bag: rs.item ? s.bag.concat(rs.item) : s.bag, screen: 'lobby', result: null, run: null, battle: null, offer: null });
+    this.toast(m === 2 ? 'Iklan ditonton. Hadiah ×2. Pandu ikut menonton.' : 'Hadiah masuk. Pandu tidak berkomentar.');
+  }
+
+  equip(id) {
+    const C = this.constructor, s = this.state, it = C.ITEMS[id], eq = Object.assign({}, s.equipped), bag = s.bag.slice(), i = bag.indexOf(id);
+    if (i < 0) return;
+    bag.splice(i, 1);
+    if (eq[it.type]) bag.push(eq[it.type]);
+    eq[it.type] = id;
+    this.setState({ equipped: eq, bag });
+    this.toast(`${it.name} dipasang. ${it.desc}`);
+  }
+  autoEquip() {
+    const C = this.constructor, s = this.state, all = s.bag.concat(Object.values(s.equipped)), eq = {};
+    ['senjata', 'topi', 'baju', 'kalung', 'sabuk', 'sepatu'].forEach(t => {
+      const c = all.filter(id => C.ITEMS[id].type === t).sort((x, y) => this.itemScore(y) - this.itemScore(x));
+      if (c[0]) eq[t] = c[0];
+    });
+    const bag = all.slice(); Object.values(eq).forEach(id => bag.splice(bag.indexOf(id), 1));
+    const changed = Object.keys(eq).some(t => eq[t] !== s.equipped[t]);
+    this.setState({ equipped: eq, bag });
+    this.toast(changed ? 'Yang terbaik sudah dipasang. Ekspresi Pandu tetap sama.' : 'Sudah yang terbaik. Pandu sudah tahu.');
+  }
+  pull(n) {
+    const C = this.constructor, s = this.state, cost = n === 1 ? 150 : 1350;
+    if (s.gems < cost) return this.toast('Permata kurang. Pandu juga kurang tidur.');
+    const hiIds = Object.keys(C.ITEMS).filter(k => C.ITEMS[k].rar === 'Epik' || C.ITEMS[k].rar === 'Legendaris');
+    let pity = s.pity; const items = [];
+    for (let i = 0; i < n; i++) {
+      pity += 1;
+      let id = this.rollItem(false);
+      if (pity >= 10 && hiIds.indexOf(id) < 0) id = this.pick(hiIds);
+      if (hiIds.indexOf(id) >= 0) pity = 0;
+      items.push(id);
+    }
+    this.setState({ gems: s.gems - cost, pity, bag: s.bag.concat(items), pull: { id: this.uid(), items } });
+  }
+  buy(id) {
+    const C = this.constructor, s = this.state, of = C.OFFERS.find(x => x.id === id);
+    if (!of || s.sold[id]) return;
+    const patch = { sold: Object.assign({}, s.sold, { [id]: 1 }) };
+    if (of.cur === 'gem') { if (s.gems < of.price) return this.toast('Permata kurang. Pandu juga kurang tidur.'); patch.gems = s.gems - of.price; }
+    if (of.cur === 'coin') { if (s.coins < of.price) return this.toast('Koin kurang. Pandu memeriksa saku. Kosong.'); patch.coins = s.coins - of.price; }
+    const gv = of.give || {};
+    if (gv.energy) patch.energy = s.energy + gv.energy;
+    if (gv.coins) patch.coins = (patch.coins != null ? patch.coins : s.coins) + gv.coins;
+    if (gv.gems) patch.gems = (patch.gems != null ? patch.gems : s.gems) + gv.gems;
+    let msg = of.msg;
+    if (gv.item) { const it = this.rollItem(true); patch.bag = s.bag.concat(it); msg = `Isinya: ${C.ITEMS[it].name}. ${C.ITEMS[it].desc}`; }
+    this.setState(patch);
+    this.toast(msg);
+  }
+
+  popEl(x, still) {
+    const col = { hit: '#FFF8EC', crit: '#F2B63C', skill: '#C9A8F0', heal: '#8FD6A8', hurt: '#FF9C8A', miss: '#B9C4BE' }[x.kind] || '#FFF8EC';
+    return React.createElement('div', { key: x.id, style: { position: 'absolute', left: `calc(50% + ${x.dx}px)`, top: `${34 + x.dy}px`, transform: 'translate(-50%,0)', font: `${x.kind === 'crit' ? 32 : 25}px/1 'Bagel Fat One', system-ui`, color: col, textShadow: this.constructor.OUT, whiteSpace: 'nowrap', pointerEvents: 'none', animation: still ? 'none' : 'panduPop 1.05s ease-out forwards' } }, x.text);
+  }
+  bannerEl(bn, still) {
+    return React.createElement('div', { key: bn.id, style: { position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%) rotate(-3deg)', padding: '10px 22px 12px', border: '3px solid #2B1E18', borderRadius: '16px', background: '#F2B63C', color: '#2B1E18', font: "24px/1 'Bagel Fat One', system-ui", whiteSpace: 'nowrap', boxShadow: '0 5px 0 #2B1E18', pointerEvents: 'none', animation: still ? 'none' : 'panduBanner 1.2s ease-out forwards' } }, bn.text);
+  }
+  burstEl(key, top) {
+    return React.createElement('div', { key, style: { position: 'absolute', left: '50%', top: `${top}px`, width: '640px', height: '640px', marginLeft: '-320px', marginTop: '-320px', borderRadius: '50%', background: 'repeating-conic-gradient(rgba(242,182,60,.2) 0deg 9deg, transparent 9deg 18deg)', WebkitMaskImage: 'radial-gradient(circle, #000 18%, transparent 60%)', maskImage: 'radial-gradient(circle, #000 18%, transparent 60%)', animation: 'panduSpin 30s linear infinite', pointerEvents: 'none' } });
+  }
+  pullCardsEl(pull) {
+    const C = this.constructor, one = pull.items.length === 1;
+    return pull.items.map((id, i) => {
+      const it = C.ITEMS[id], rr = C.RAR[it.rar];
+      return React.createElement('div', { key: `${pull.id}-${i}`, style: { width: one ? '170px' : '58px', height: one ? '208px' : '76px', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: one ? '10px' : '4px', border: '3px solid #2B1E18', borderRadius: one ? '22px' : '14px', background: rr.bg, boxShadow: '0 4px 0 #2B1E18', animation: `panduFlip .45s ${i * 0.09}s both cubic-bezier(.2,1.4,.4,1)` } },
+        React.createElement('span', { style: { font: `${one ? 64 : 28}px/1 'Material Symbols Rounded'`, color: rr.fg } }, it.icon),
+        one ? React.createElement('span', { style: { font: "18px/1.1 'Bagel Fat One', system-ui", color: '#2B1E18', textAlign: 'center', padding: '0 10px' } }, it.name) : null,
+        React.createElement('span', { style: { padding: '2px 5px', borderRadius: '6px', background: rr.fg, color: '#FFF8EC', font: `500 ${one ? 10 : 7}px/1.2 'DM Mono', monospace`, letterSpacing: '.04em' } }, one ? rr.label : rr.label.slice(0, 4)));
+    });
+  }
+
+  renderVals() {
+    const C = this.constructor, s = this.state, p = this.props || {}, R = C.RAR;
+    const still = !!p.still, days = this.days(p), scr = s.screen;
+    if (!still && (!this._iv || Date.now() - (this._tick || 0) > 1000)) { clearInterval(this._iv); this._tick = Date.now(); this._iv = setInterval(() => this.loop(), 100); }
+    if (still && this._iv) { clearInterval(this._iv); this._iv = null; }
+    if ((p.screen || 'lobby') !== this._init || days !== this._initDays) {
+      this._init = p.screen || 'lobby'; this._initDays = days;
+      const ns = this.initial(this._init, p);
+      setTimeout(() => this.setState(ns), 0);
+    }
+    const fmt = n => Math.round(n).toLocaleString('id-ID');
+    const g = fn => (still ? () => {} : fn);
+    const pct = (a, b) => `${Math.max(0, Math.min(1, b ? a / b : 0)) * 100}%`;
+    const base = this.heroBase(s.equipped), marks = this.marks(days), ch = C.CHAPTERS[s.chapter];
+    const unlocked = i => i === 0 || s.best[i - 1] >= days;
+    const r = s.run, b = s.battle, o = s.offer, rs = s.result;
+    const counts = {};
+    (r ? r.skills : []).forEach(k => { counts[k] = (counts[k] || 0) + 1; });
+    const skillTiles = Object.keys(counts).map(id => {
+      const k = C.SKILLS.find(x => x.id === id), rr = R[k.rar], on = !!b && b.proc === id;
+      return { id, icon: k.icon, bg: rr.bg, fg: rr.fg, count: counts[id], multi: counts[id] > 1, ring: on ? '#F2B63C' : '#2B1E18', glow: on ? '0 0 0 3px #F2B63C' : 'none' };
+    });
+    const chestFor = ci => marks.map((m, mi) => {
+      const claimed = !!s.chests[`${ci}-${mi}`], ready = !claimed && s.best[ci] >= m;
+      return { left: `${(m / days) * 100}%`, label: `H${m}`, icon: claimed ? 'check' : ready ? 'redeem' : 'lock', bg: claimed ? '#CFE6D6' : ready ? '#F2B63C' : '#EADBC5', color: claimed ? '#2F7A5C' : '#2B1E18', claim: g(() => this.claimChest(ci, mi)) };
+    });
+    const toneLight = { plain: '#6E5A4E', win: '#2F7A5C', bad: '#C2412A', skill: '#7E43B5', enemy: '#C2412A' };
+    const toneDark = { plain: '#FFF8EC', crit: '#F2B63C', skill: '#C9A8F0', enemy: '#FF9C8A', win: '#8FD6A8', bad: '#FF9C8A' };
+    const FX = { hp: ['favorite', 'HP'], maxHp: ['favorite', 'HP maks'], atk: ['swords', 'ATK'], def: ['shield', 'DEF'], coins: ['toll', 'koin'], xp: ['star', 'XP'] };
+    const labels = { lobby: 'Lobby', run: 'Petualangan', battle: 'Battle', hero: 'Hero', map: 'Peta', shop: 'Toko', result: 'Hasil' };
+    const hudScreens = ['lobby', 'hero', 'map', 'shop'];
+    const v = {
+      screenLabel: o && scr === 'run' ? 'Pilih skill' : labels[scr],
+      isLobby: scr === 'lobby', isRun: scr === 'run', isBattle: scr === 'battle', isHero: scr === 'hero', isMap: scr === 'map', isShop: scr === 'shop', isResult: scr === 'result',
+      showHud: hudScreens.indexOf(scr) >= 0, showNav: hudScreens.indexOf(scr) >= 0,
+      energyLabel: `${s.energy}/30`, coinsLabel: fmt(s.coins), gemsLabel: fmt(s.gems), goShop: g(() => this.go('shop')),
+      power: fmt(this.power(base)),
+      chapterNo: s.chapter + 1, chapterName: ch.name, chapterBest: Math.min(s.best[s.chapter], days), daysTotal: days,
+      prevOpacity: s.chapter > 0 ? 1 : 0.35, nextOpacity: s.chapter < 5 && unlocked(s.chapter + 1) ? 1 : 0.35,
+      prevChapter: g(() => this.shiftChapter(-1)), nextChapter: g(() => this.shiftChapter(1)),
+      bubbleText: C.BUBBLES[s.bubble % C.BUBBLES.length], nextBubble: g(() => this.setState({ bubble: s.bubble + 1 })),
+      dailyDot: !s.daily, tapDaily: g(() => this.tapDaily()),
+      tapMail: g(() => this.toast('Dua surat. Satu dari bebek asuransi. Satu lagi juga.')),
+      tapFest: g(() => this.toast('Festival Bambu mulai tiga hari lagi. Bambunya sudah datang duluan.')),
+      tapPass: g(() => this.toast('Kartu Musim: hadiah lebih banyak untuk jalan yang sama.')),
+      chests: chestFor(s.chapter), chestPct: pct(s.best[s.chapter], days), goRun: g(() => this.startRun()),
+      toggleAuto: g(() => this.toggleAuto()), pauseIcon: 'pause', runChapterNo: 1, runChapterUpper: '', day: 0, maxDay: days, runCoins: '0', dayPct: '0%',
+      weatherIcon: 'wb_sunny', weather: '', walkStatus: '', lvl: 1, hpPct: '100%', hpLabel: '', xpPct: '0%', xpLabel: '', atk: '0', def: '0',
+      logCount: 0, logRef: this.logRef, log: [], hasEvent: false, evTagBg: '#2B1E18', evTag: '', evIsEnemy: false, evIcon: 'help', evName: '', evSub: '', evText: '', evChoices: [], hasEvFoot: false, evFoot: '',
+      noSkills: skillTiles.length === 0, ownedSkills: skillTiles, cycleSpeed: g(() => this.setState({ speed: (s.speed % 3) + 1 })), speedLabel: `×${s.speed}`, quitRun: g(() => this.quitRun()),
+      hasOffer: false, burst: null, offerTitle: '', offerHasLvl: false, offerFrom: 0, offerTo: 0, offerSub: '', offerCards: [], reroll: g(() => this.reroll()), rerollDisabled: true, rerollOpacity: 0.4, rerollLeft: 0,
+      bTurn: 1, bBoss: false, speeds: [1, 2, 3].map(n => ({ n, set: g(() => this.setState({ speed: n })), bg: s.speed === n ? '#F2B63C' : 'transparent', fg: s.speed === n ? '#2B1E18' : '#FFF8EC' })),
+      eIcon: 'help', eName: '', eLvl: 1, eHpPct: '100%', eHpLabel: '', eTf: 'none', hTf: 'none', eArtId: 'art-musuh', eArtLabel: '', enemyPops: null, heroPops: null, banner: null, battleSkills: skillTiles, bLog: [], bOver: false, bOverColor: '#F2B63C', bOverText: '',
+      slotsL: [], slotsR: [], heroStats: [], autoEquip: g(() => this.autoEquip()), mergeItems: g(() => this.toast('Butuh tiga item kembar. Pandu cuma punya satu dari hampir semuanya.')), bagCount: s.bag.length, bag: [],
+      mapSummary: `${s.best.filter(x => x >= days).length} DARI 6 SELESAI`, chapters: [],
+      pityLeft: Math.max(1, 10 - s.pity), pull1: g(() => this.pull(1)), pull10: g(() => this.pull(10)), offers: [], hasPull: !!s.pull, pullBurst: null, pullSub: '', pullCards: null, closePull: g(() => this.setState({ pull: null })),
+      resRibbonBg: '#D2532A', resRibbon: '', resTitle: '', resSub: '', resStats: [], resRecord: false, resRewards: [], resQuote: '', claim1: g(() => this.claim(1)), claim2: g(() => this.claim(2)),
+      tabs: [], hasToast: !!s.toast, toastText: s.toast ? s.toast.text : ''
+    };
+
+    if (r) {
+      const W = [['wb_sunny', 'Cerah, agak ambigu'], ['cloud', 'Berawan. Awannya diam.'], ['water_drop', 'Gerimis tipis'], ['air', 'Berangin, arah salah']][Math.floor(r.day / 4) % 4];
+      Object.assign(v, {
+        pauseIcon: r.auto ? 'pause' : 'play_arrow', runChapterNo: r.chapter + 1, runChapterUpper: C.CHAPTERS[r.chapter].name.toUpperCase(),
+        day: r.day, maxDay: r.maxDay, runCoins: fmt(r.coins), dayPct: pct(r.day, r.maxDay), weatherIcon: W[0], weather: W[1],
+        walkStatus: r.event ? 'BERHENTI' : o ? 'MENUNGGU' : r.auto ? 'BERJALAN…' : 'JEDA',
+        lvl: r.lvl, hpPct: pct(r.hp, r.maxHp), hpLabel: `${fmt(r.hp)} / ${fmt(r.maxHp)}`, xpPct: pct(r.xp, r.xpNext), xpLabel: `${r.xp}/${r.xpNext}`, atk: fmt(r.atk), def: fmt(r.def),
+        logCount: r.log.length,
+        log: r.log.map(e => ({ id: e.id, text: e.text, stamp: `H${e.day}`, stampColor: toneLight[e.tone] || toneLight.plain, hasFx: e.fx.length > 0,
+          fx: e.fx.map(f => ({ icon: FX[f.k][0], label: `${f.v > 0 ? '+' : '−'}${fmt(Math.abs(f.v))} ${FX[f.k][1]}`, bg: f.v < 0 ? '#F6C9BD' : f.k === 'coins' ? '#FBE6B4' : f.k === 'xp' ? '#E7D9F5' : '#CFE6D6' })) }))
+      });
+      const ev = r.event;
+      if (ev && ev.kind === 'choice') {
+        const d = C.EVENTS.find(x => x.id === ev.id);
+        Object.assign(v, { hasEvent: true, evTag: 'SESUATU TERJADI', evTagBg: '#2B1E18', evText: d.text,
+          evChoices: ['a', 'b'].map((w, i) => { const c = d[w], poor = !!c.cost && r.coins < c.cost; return { label: c.label, icon: c.icon, hint: poor ? 'koin kurang' : c.hint, bg: i === 0 ? '#F2B63C' : '#FFF8EC', opacity: poor ? 0.5 : 1, onClick: g(() => this.choose(w)) }; }) });
+      } else if (ev && ev.kind === 'enemy') {
+        const e = C.ENEMIES[ev.enemy], en = this.makeEnemy(ev.enemy, r.day), gOn = p.gertak !== false;
+        const choices = [{ label: 'Lawan', icon: 'swords', hint: 'auto-battle', bg: '#F2B63C', opacity: 1, onClick: g(() => this.choose('a')) }];
+        if (gOn) choices.push(e.boss
+          ? { label: 'Pose Seram', icon: 'sports_martial_arts', hint: 'bos kebal', bg: '#EADBC5', opacity: 0.55, onClick: g(() => this.toast(e.immune)) }
+          : { label: 'Pose Seram', icon: 'sports_martial_arts', hint: `${Math.round(this.bluffChance(r) * 100)}% kabur`, bg: '#FFF8EC', opacity: 1, onClick: g(() => this.choose('b')) });
+        Object.assign(v, { hasEvent: true, evTag: e.boss ? 'BOS MENGHADANG' : 'ADA YANG MENGHADANG', evTagBg: '#D2532A', evIsEnemy: true, evIcon: e.icon, evName: e.name,
+          evSub: `LV ${en.lvl} · HP ${fmt(en.maxHp)} · ATK ${fmt(en.atk)}`, evText: e.intro, evChoices: choices, hasEvFoot: gOn,
+          evFoot: e.boss ? e.immune : 'Pose Seram: Pandu berdiri dengan dua kaki. Kalau gagal, musuh tersinggung — menyerang duluan dengan ATK +20%.' });
+      }
+    }
+    if (o && scr === 'run') {
+      const T = { start: ['BEKAL AWAL', 'Pilih satu untuk dibawa. Ransel Pandu kecil.'], bonus: ['SESUATU BERUBAH', 'Tombol merah memberi pilihan. Tombol merah tidak menjelaskan.'], lvl: ['NAIK LEVEL!', 'Pilih satu. Dua lainnya akan baik-baik saja. Mungkin.'] }[o.kind];
+      Object.assign(v, { hasOffer: true, burst: this.burstEl('b1', 120), offerTitle: T[0], offerSub: T[1], offerHasLvl: o.kind === 'lvl', offerFrom: o.from || 0, offerTo: o.to || 0,
+        offerCards: o.ids.map(id => { const k = C.SKILLS.find(x => x.id === id), rr = R[k.rar], have = counts[id] || 0;
+          return { id, name: k.name, icon: k.icon, desc: k.desc, rarity: rr.label, bg: rr.bg, fg: rr.fg, tag: have ? `LV ${have} → ${have + 1}` : 'BARU', pick: g(() => this.pickSkill(id)) }; }),
+        rerollDisabled: o.rerolls < 1, rerollOpacity: o.rerolls > 0 ? 1 : 0.4, rerollLeft: o.rerolls });
+    }
+    if (b) {
+      const en = b.enemy;
+      Object.assign(v, { bTurn: b.turn, bBoss: en.boss, eIcon: en.icon, eName: en.name, eLvl: en.lvl, eHpPct: pct(en.hp, en.maxHp), eHpLabel: `${fmt(en.hp)} / ${fmt(en.maxHp)}`,
+        eTf: s.shake === 'enemy' ? 'translate(10px,-4px) rotate(4deg)' : 'none', hTf: s.shake === 'hero' ? 'translate(-10px,4px) rotate(-4deg)' : 'none',
+        eArtId: `art-musuh-${en.key}`, eArtLabel: `Ilustrasi musuh — ${en.name}`,
+        enemyPops: b.pops.filter(x => x.side === 'enemy').map(x => this.popEl(x, still)), heroPops: b.pops.filter(x => x.side === 'hero').map(x => this.popEl(x, still)),
+        banner: b.banner ? this.bannerEl(b.banner, still) : null,
+        bLog: b.log.map((l, i, a) => ({ id: l.id, text: l.text, color: toneDark[l.tone] || toneDark.plain, opacity: i === a.length - 1 ? 1 : 0.5 })),
+        bOver: !!b.over, bOverText: b.over === 'win' ? 'MENANG' : 'KALAH', bOverColor: b.over === 'win' ? '#F2B63C' : '#E0503A' });
+    }
+    if (scr === 'hero') {
+      const TL = { senjata: 'SENJATA', topi: 'TOPI', baju: 'BAJU', kalung: 'KALUNG', sabuk: 'SABUK', sepatu: 'SEPATU' };
+      const order = { Legendaris: 0, Epik: 1, Langka: 2, Biasa: 3 };
+      const slot = t => {
+        const it = C.ITEMS[s.equipped[t]];
+        if (!it) return { icon: 'add', bg: '#EADBC5', fg: '#6E5A4E', lvl: '—', type: TL[t], tap: g(() => {}) };
+        const rr = R[it.rar];
+        return { icon: it.icon, bg: rr.bg, fg: rr.fg, lvl: it.lvl, type: TL[t], tap: g(() => this.toast(`${it.name} · ${it.stat} +${it.val}. ${it.desc}`)) };
+      };
+      Object.assign(v, { slotsL: ['senjata', 'topi', 'baju'].map(slot), slotsR: ['kalung', 'sabuk', 'sepatu'].map(slot),
+        heroStats: [{ icon: 'swords', label: 'ATK', value: fmt(base.atk) }, { icon: 'favorite', label: 'HP', value: fmt(base.hp) }, { icon: 'shield', label: 'DEF', value: fmt(base.def) }, { icon: 'bolt', label: 'KRIT', value: '8%' }],
+        bag: s.bag.map((id, i) => ({ id, i })).sort((x, y) => order[C.ITEMS[x.id].rar] - order[C.ITEMS[y.id].rar]).map(({ id, i }) => {
+          const it = C.ITEMS[id], rr = R[it.rar], cur = s.equipped[it.type];
+          return { key: `${id}-${i}`, icon: it.icon, bg: rr.bg, fg: rr.fg, lvl: it.lvl, better: !cur || this.itemScore(id) > this.itemScore(cur), equip: g(() => this.equip(id)) };
+        }) });
+    }
+    if (scr === 'map') {
+      v.chapters = C.CHAPTERS.map((c, i) => {
+        const un = unlocked(i), done = s.best[i] >= days, cur = i === s.chapter;
+        return { no: i + 1, name: c.name, desc: c.desc, icon: c.icon, expanded: cur, compact: !cur,
+          nodeBg: cur ? '#D2532A' : done ? '#2F7A5C' : un ? '#FFF8EC' : '#E2D5C3', nodeFg: cur || done ? '#FFF8EC' : un ? '#2B1E18' : '#8A776A',
+          status: done ? 'SELESAI · MAIN LAGI?' : 'SEDANG DITEMPUH', artId: `art-bab-${i + 1}`, artLabel: `Banner bab — ${c.name}`,
+          best: `REKOR: HARI ${Math.min(s.best[i], days)} / ${days}`,
+          line: done ? `Selesai · ${days}/${days} hari` : un ? `Rekor: Hari ${s.best[i]} / ${days}` : `Selesaikan Bab ${i} dulu`,
+          endIcon: done ? 'check_circle' : un ? 'chevron_right' : 'lock', endFg: done ? '#2F7A5C' : '#6E5A4E',
+          cardBg: un ? '#FFF8EC' : '#EDE2D2', opacity: un ? 1 : 0.62, thumbBg: un ? (done ? '#CFE6D6' : '#FBE6B4') : '#E2D5C3',
+          select: g(() => this.selectChapter(i)), dayPct: pct(s.best[i], days), chests: chestFor(i), cta: done ? 'MAIN LAGI' : 'LANJUTKAN', play: g(() => this.startRun()) };
+      });
+    }
+    if (scr === 'shop') {
+      v.offers = C.OFFERS.map(of => {
+        const sold = !!s.sold[of.id], rr = R[of.rar];
+        return { id: of.id, name: of.name, icon: of.icon, bg: rr.bg, fg: rr.fg, curIcon: of.cur === 'gem' ? 'diamond' : of.cur === 'coin' ? 'toll' : 'smart_display',
+          price: sold ? 'Terjual' : typeof of.price === 'number' ? fmt(of.price) : of.price, btnBg: sold ? '#EADBC5' : of.cur === 'ad' ? '#CFE6D6' : '#F2B63C', opacity: sold ? 0.55 : 1, sold, buy: g(() => this.buy(of.id)) };
+      });
+    }
+    if (s.pull) {
+      const items = s.pull.items, hi = items.filter(id => C.ITEMS[id].rar === 'Epik' || C.ITEMS[id].rar === 'Legendaris').length, it0 = C.ITEMS[items[0]];
+      Object.assign(v, { pullBurst: this.burstEl('b2', 300), pullCards: this.pullCardsEl(s.pull),
+        pullSub: items.length === 1 ? `${it0.name}. ${it0.desc}` : hi ? `${hi} item Epik ke atas. Sisanya tetap teman.` : 'Tidak ada yang Epik. Petinya minta maaf.' });
+    }
+    if (rs) {
+      const it = rs.item ? C.ITEMS[rs.item] : null, rr = it ? R[it.rar] : null;
+      Object.assign(v, { resRibbonBg: rs.win ? '#2F7A5C' : '#D2532A', resRibbon: rs.win ? 'BAB SELESAI' : 'PERJALANAN BERAKHIR', resTitle: rs.win ? 'PANDU MENANG.' : 'PANDU PULANG.',
+        resSub: `${C.CHAPTERS[rs.chapter].name} · Hari ${rs.day} dari ${rs.maxDay}`,
+        resStats: [{ value: rs.day, label: 'HARI' }, { value: rs.kills, label: 'MUSUH' }, { value: rs.skills, label: 'SKILL' }], resRecord: rs.record,
+        resRewards: [{ icon: 'toll', label: `+${fmt(rs.coins)}`, bg: '#FBE6B4', fg: '#B0620A' }, { icon: 'diamond', label: `+${fmt(rs.gems)}`, bg: '#E7D9F5', fg: '#7E43B5' }, { icon: 'star', label: `+${fmt(rs.xp)} XP`, bg: '#CFE6D6', fg: '#2F7A5C' },
+          it ? { icon: it.icon, label: it.name, bg: rr.bg, fg: rr.fg } : { icon: 'sentiment_neutral', label: 'Tanpa item', bg: '#EADBC5', fg: '#6E5A4E' }],
+        resQuote: rs.quote });
+    }
+    v.tabs = [['shop', 'Toko', 'storefront'], ['hero', 'Hero', 'pets'], ['lobby', 'Jalan', 'hiking'], ['map', 'Peta', 'map'], ['misi', 'Misi', 'task_alt']].map(([key, label, icon]) => {
+      const on = scr === key, center = key === 'lobby';
+      return { key, label, icon, go: g(() => (key === 'misi' ? this.toast('Misi: belum ada. Seperti rencana hidup Pandu.') : this.go(key))),
+        size: center ? '58px' : '44px', iconSize: center ? '30px' : '24px', lift: center ? '-16px' : on ? '-6px' : '0px',
+        bg: on ? '#F2B63C' : center ? '#D2532A' : 'transparent', border: on || center ? '#FFF8EC' : 'transparent', iconColor: on ? '#2B1E18' : '#FFF8EC',
+        color: on ? '#F2B63C' : 'rgba(255,248,236,.72)', shadow: on || center ? '0 4px 0 #120C09' : 'none' };
+    });
+    return v;
+  }
+}
+</script>
+</body>
+</html>

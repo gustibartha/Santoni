@@ -1,0 +1,29 @@
+import Santoni from '../characters/Santoni.jsx';
+
+export default function Hud({ v }) {
+  return (
+    <div style={{ position: "absolute", top: "0", left: "0", right: "0", zIndex: "5", display: "flex", alignItems: "center", gap: "8px", padding: "14px 12px 8px" }}>
+      <div style={{ position: "relative", width: "42px", height: "42px", flex: "none", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "50%", background: "#F7D9BF", boxShadow: "0 2px 0 #2B1E18", boxSizing: "border-box" }}>
+        <div style={{ position: "absolute", inset: "0", borderRadius: "50%", overflow: "hidden" }}><div style={{ position: "absolute", left: "-13px", top: "-2px", width: "62px", height: "68px" }}><Santoni pose={"idle"} still={true} /></div></div>
+        <span style={{ position: "absolute", right: "-7px", bottom: "-5px", padding: "2px 5px", borderRadius: "7px", border: "2px solid #2B1E18", background: "#F2B63C", color: "#2B1E18", font: "800 9px/1 'Bricolage Grotesque'" }}>23</span>
+      </div>
+      <div style={{ minWidth: "0" }}>
+        <div style={{ font: "800 14px/1.1 'Bricolage Grotesque'" }}>Santoni</div>
+        <div style={{ font: "500 9.5px/1.2 'DM Mono',monospace", color: "#6E5A4E", marginTop: "2px" }}>AKUN LV 23</div>
+      </div>
+      <div style={{ flex: "1" }} />
+      <div onClick={v.goShop} style={{ display: "flex", alignItems: "center", gap: "5px", height: "28px", padding: "0 9px 0 3px", borderRadius: "14px", background: "#2B1E18", color: "#FFF8EC", font: "700 12.5px/1 'Bricolage Grotesque'", cursor: "pointer" }}>
+        <span style={{ width: "22px", height: "22px", display: "grid", placeItems: "center", borderRadius: "50%", background: "#3C78C8", color: "#FFF8EC", font: "15px/1 'Material Symbols Rounded'" }}>bolt</span>
+        {v.energyLabel}
+      </div>
+      <div onClick={v.goShop} style={{ display: "flex", alignItems: "center", gap: "5px", height: "28px", padding: "0 9px 0 4px", borderRadius: "14px", background: "#2B1E18", color: "#FFF8EC", font: "700 12.5px/1 'Bricolage Grotesque'", cursor: "pointer" }}>
+        <span style={{ width: "20px", height: "20px", borderRadius: "50%", background: "#F2B63C", boxShadow: "inset 0 0 0 2px #C28A16,inset 0 0 0 5px #F2B63C,inset 0 0 0 6.5px #C28A16" }} />
+        {v.coinsLabel}
+      </div>
+      <div onClick={v.goShop} style={{ display: "flex", alignItems: "center", gap: "5px", height: "28px", padding: "0 9px 0 3px", borderRadius: "14px", background: "#2B1E18", color: "#FFF8EC", font: "700 12.5px/1 'Bricolage Grotesque'", cursor: "pointer" }}>
+        <span style={{ width: "22px", height: "22px", display: "grid", placeItems: "center", borderRadius: "50%", background: "#7E43B5", color: "#FFF8EC", font: "14px/1 'Material Symbols Rounded'" }}>diamond</span>
+        {v.gemsLabel}
+      </div>
+    </div>
+  );
+}
