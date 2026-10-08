@@ -57,7 +57,7 @@ export default function Lobby({ v }) {
           <div onClick={v.tapMisi} style={{ position: "relative", width: "54px", height: "58px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "4px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", cursor: "pointer" }}>
             <span style={{ font: "24px/1 'Material Symbols Rounded'", color: "#7E43B5" }}>task_alt</span>
             <span style={{ font: "700 10px/1 'Bricolage Grotesque'" }}>Misi</span>
-            <span style={{ position: "absolute", top: "-7px", right: "-9px", height: "18px", boxSizing: "border-box", padding: "0 5px", borderRadius: "9px", border: "2px solid #2B1E18", background: "#F2B63C", color: "#2B1E18", font: "800 9.5px/14px 'Bricolage Grotesque'" }}>2/5</span>
+            <span style={{ position: "absolute", top: "-7px", right: "-9px", height: "18px", boxSizing: "border-box", padding: "0 5px", borderRadius: "9px", border: "2px solid #2B1E18", background: v.misiReady ? "#D2532A" : "#F2B63C", color: v.misiReady ? "#FFF8EC" : "#2B1E18", font: "800 9.5px/14px 'Bricolage Grotesque'" }}>{v.misiBadge}</span>
           </div>
           <div onClick={v.tapTeman} style={{ position: "relative", width: "54px", height: "58px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "4px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", cursor: "pointer" }}>
             <span style={{ font: "24px/1 'Material Symbols Rounded'", color: "#2F7A5C" }}>group</span>

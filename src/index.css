@@ -66,6 +66,12 @@ button:disabled { cursor: default !important; }
 @keyframes itemHalo { to { transform: rotate(360deg) } }
 @keyframes itemTwinkle { 0%, 100% { opacity: 0; transform: scale(.3) rotate(0) } 50% { opacity: 1; transform: scale(1) rotate(45deg) } }
 
+/* Shop banner: glowing chest, wobbling lid, drifting smoke */
+@keyframes bnGlow { 0%, 100% { opacity: .75 } 50% { opacity: 1 } }
+@keyframes bnLid { 0%, 70%, 100% { transform: rotate(0) } 76% { transform: rotate(-5deg) } 82% { transform: rotate(1deg) } 88% { transform: rotate(-3deg) } }
+@keyframes bnFloat { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
+@keyframes bnSmoke { 0% { opacity: 0; transform: translateY(8px) scale(.7) } 30% { opacity: 1 } 100% { opacity: 0; transform: translateY(-34px) scale(1.25) } }
+
 /* Weapon ultimate cinematic */
 @keyframes ultBackdrop { 0% { opacity: 0 } 12% { opacity: 1 } 80% { opacity: 1 } 100% { opacity: 0 } }
 @keyframes ultRays { from { transform: rotate(0) scale(.6) } to { transform: rotate(80deg) scale(1.15) } }

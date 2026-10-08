@@ -53,7 +53,11 @@ export default function Battle({ v }) {
         {v.bBoss && (
           <div style={{ padding: "8px 10px", borderRadius: "12px", border: "2px solid #0F1411", background: "#D2532A", font: "500 10.5px/1 'DM Mono',monospace", letterSpacing: ".08em" }}>BOS</div>
         )}
+        {v.bFloor > 0 && (
+          <div style={{ padding: "8px 10px", borderRadius: "12px", border: "2px solid #0F1411", background: "#7E43B5", font: "500 10.5px/1 'DM Mono',monospace", letterSpacing: ".08em" }}>LANTAI {v.bFloor}</div>
+        )}
         <div style={{ flex: "1" }} />
+        <button onClick={v.askQuit} aria-label="Kabur dari battle" style={{ width: "36px", height: "36px", flex: "none", display: "grid", placeItems: "center", padding: "0", boxSizing: "border-box", border: "2px solid #0F1411", borderRadius: "10px", background: "#2E3A34", color: "#FF9C8A", font: "19px/1 'Material Symbols Rounded'", cursor: "pointer" }}>logout</button>
         <MusicButton v={v} dark size={36} />
         <div style={{ display: "flex", gap: "3px", padding: "3px", borderRadius: "14px", background: "#0F1411" }}>
           {v.speeds.map((sp, i) => (

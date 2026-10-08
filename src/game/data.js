@@ -153,6 +153,37 @@ export const ITEMS = {
   karate: { name: 'Sabuk Karate Pinjaman', type: 'sabuk', rar: 'Epik', stat: 'HP', val: 210, lvl: 14, icon: 'sports_martial_arts', desc: 'Sabuk hitam. Pemiliknya sabuk kuning. Jangan tanya.' },
   sepaturoda: { name: 'Sepatu Roda Bekas', type: 'sepatu', rar: 'Langka', stat: 'DEF', val: 17, lvl: 11, icon: 'roller_skating', desc: 'Satu rodanya macet. Santoni berbelok ke kiri terus.' }
 };
+// Missions. `stat` is a counter tracked by Game.track(); daily ones reset at local midnight.
+// Rewards: coins, gems, energy, or an item id.
+export const DAILY_QUESTS = [
+  { id: 'jalan', stat: 'days', target: 15, icon: 'hiking', title: 'Jalan-jalan Santai', desc: 'Tempuh 15 hari perjalanan. Santoni bilang ini olahraga.', reward: { coins: 800 } },
+  { id: 'musuh', stat: 'kills', target: 8, icon: 'swords', title: 'Bersih-bersih Jalan', desc: 'Kalahkan 8 musuh. Mereka akan baik-baik saja. Mungkin.', reward: { gems: 30 } },
+  { id: 'skill', stat: 'skills', target: 6, icon: 'school', title: 'Belajar Hal Baru', desc: 'Pelajari 6 skill. Santoni tidak menjanjikan akan mengingatnya.', reward: { energy: 5 } },
+  { id: 'peti', stat: 'pulls', target: 1, icon: 'redeem', title: 'Penasaran Peti', desc: 'Buka peti kayu misterius sekali. Asapnya wangi kayu.', reward: { coins: 500 } },
+  { id: 'jurus', stat: 'ults', target: 2, icon: 'bolt', title: 'Jurus Andalan', desc: 'Keluarkan jurus pamungkas 2 kali.', reward: { gems: 25 } },
+  { id: 'gertak', stat: 'bluffs', target: 2, icon: 'sports_martial_arts', title: 'Berdiri Dua Kaki', desc: 'Usir 2 musuh dengan Pose Seram.', reward: { coins: 600 } }
+];
+export const QUESTS = [
+  { id: 'bab1', stat: 'chapters', target: 1, icon: 'flag', title: 'Langkah Pertama', desc: 'Selesaikan satu bab sampai bos terakhir.', reward: { gems: 100 } },
+  { id: 'bab5', stat: 'chapters', target: 5, icon: 'map', title: 'Penjelajah Sejati', desc: 'Selesaikan 5 bab. Peta mulai terlihat penuh coretan.', reward: { gems: 300 } },
+  { id: 'bab14', stat: 'chapters', target: 14, icon: 'emoji_events', title: 'Tamat, Katanya', desc: 'Selesaikan ke-14 bab. Gajah Komisaris menutup rapat.', reward: { item: 'mahkota' } },
+  { id: 'bos10', stat: 'bosses', target: 10, icon: 'local_police', title: 'Pemburu Bos', desc: 'Kalahkan 10 bos. Mereka mulai membicarakan Santoni.', reward: { gems: 150 } },
+  { id: 'musuh100', stat: 'kills', target: 100, icon: 'military_tech', title: 'Seratus Urusan', desc: 'Kalahkan 100 musuh sepanjang masa.', reward: { item: 'gitar' } },
+  { id: 'hari300', stat: 'days', target: 300, icon: 'directions_walk', title: 'Kaki Seribu Hari', desc: 'Tempuh total 300 hari. Sandal kiri sudah tipis.', reward: { energy: 20 } },
+  { id: 'kombo', stat: 'combos', target: 3, icon: 'auto_awesome', title: 'Ahli Elemen', desc: 'Buka kombo elemen 3 kali.', reward: { gems: 120 } },
+  { id: 'jurus20', stat: 'ults', target: 20, icon: 'bolt', title: 'Pamungkas Sejati', desc: 'Keluarkan jurus pamungkas 20 kali.', reward: { coins: 5000 } },
+  { id: 'menara10', stat: 'tower', target: 10, icon: 'apartment', title: 'Tangga Darurat', desc: 'Capai lantai 10 Menara Tanpa Lift.', reward: { gems: 200 } },
+  { id: 'menara25', stat: 'tower', target: 25, icon: 'domain', title: 'Puncak Menara', desc: 'Capai lantai 25. Udaranya tipis, rapatnya tebal.', reward: { item: 'ulekan' } }
+];
+
+// Menara Tanpa Lift: endless battle stages. Every 5th floor is a boss; enemies scale per floor.
+export const TOWER = {
+  name: 'Menara Tanpa Lift', cost: 3,
+  desc: 'Lantai demi lantai, satu musuh per lantai. Liftnya rusak sejak menara dibangun.',
+  bosses: ['lebah', 'angsa', 'buaya', 'gajah'],
+  pool: ['tikus', 'bebek', 'kumbang', 'lele', 'kelinci', 'kucing', 'kura', 'kambing', 'cumi', 'kodok']
+};
+
 // Given once to existing saves so returning players get to try the new gear.
 export const GEAR_GIFTS = [
   { id: 'perlengkapan-baru-1', items: ['raket', 'caping'] },

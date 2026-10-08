@@ -1,4 +1,4 @@
-import ImageSlot from '../components/ImageSlot.jsx';
+import ShopBanner from '../components/ShopBanner.jsx';
 
 export default function Shop({ v }) {
   return (
@@ -9,7 +9,7 @@ export default function Shop({ v }) {
       </div>
       <div style={{ marginTop: "12px", border: "3px solid #2B1E18", borderRadius: "24px", background: "#FFF8EC", boxShadow: "0 5px 0 #2B1E18", overflow: "hidden" }}>
         <div style={{ position: "relative", height: "166px", borderBottom: "2.5px solid #2B1E18", backgroundColor: "#2B1E18", backgroundImage: "radial-gradient(rgba(255,248,236,.1) 1.2px,transparent 1.5px)", backgroundSize: "10px 10px", color: "#FFF8EC" }}>
-          <ImageSlot id={"art-peti"} shape={"rect"} placeholder={"Banner undian — peti kayu berasap, sedikit mencurigakan"} style={{ position: "absolute", inset: "0", width: "100%", height: "100%" }} />
+          <ShopBanner still={v.still} />
           <div style={{ position: "absolute", left: "14px", bottom: "12px", pointerEvents: "none" }}>
             <div style={{ font: "500 9.5px/1 'DM Mono',monospace", letterSpacing: ".1em", color: "#F2B63C" }}>UNDIAN EQUIPMENT</div>
             <div style={{ font: "25px/1.05 'Bagel Fat One',system-ui", marginTop: "5px", textShadow: "2px 0 0 #2B1E18,-2px 0 0 #2B1E18,0 2px 0 #2B1E18,0 -2px 0 #2B1E18,1.5px 1.5px 0 #2B1E18,-1.5px 1.5px 0 #2B1E18,1.5px -1.5px 0 #2B1E18,-1.5px -1.5px 0 #2B1E18,0 3px 0 #2B1E18" }}>Peti Kayu Misterius</div>

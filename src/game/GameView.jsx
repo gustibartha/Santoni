@@ -11,6 +11,8 @@ import Result from '../screens/Result.jsx';
 import Journal from '../screens/Journal.jsx';
 import NavBar from '../screens/NavBar.jsx';
 import Toast from '../screens/Toast.jsx';
+import MisiScreen from '../screens/MisiScreen.jsx';
+import ConfirmDialog from '../screens/ConfirmDialog.jsx';
 
 // The 390×844 phone frame. Layer order matters: offers, pulls and toasts sit above screens.
 export default function GameView({ v }) {
@@ -27,7 +29,9 @@ export default function GameView({ v }) {
       {v.hasPull && <PullReveal v={v} />}
       {v.isResult && <Result v={v} />}
       {v.isJournal && <Journal v={v} />}
+      {v.isMisi && <MisiScreen v={v} />}
       {v.showNav && <NavBar v={v} />}
+      {v.confirm && <ConfirmDialog c={v.confirm} />}
       {v.hasToast && <Toast v={v} />}
       <div className="phone-rim" />
     </div>

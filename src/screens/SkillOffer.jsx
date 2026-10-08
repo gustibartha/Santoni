@@ -33,6 +33,7 @@ export default function SkillOffer({ v }) {
         <span style={{ font: "20px/1 'Material Symbols Rounded'" }}>casino</span>
         Acak ulang · {v.rerollLeft}
       </button>
+      <button onClick={v.askQuit} style={{ position: "relative", marginTop: "10px", display: "flex", alignItems: "center", gap: "5px", padding: "6px 10px", border: "0", background: "transparent", color: "rgba(255,248,236,.75)", font: "700 12.5px/1 'Bricolage Grotesque'", textDecoration: "underline", textUnderlineOffset: "3px", cursor: "pointer" }}><span style={{ font: "16px/1 'Material Symbols Rounded'" }}>home</span>Pulang saja</button>
     </div>
   );
 }

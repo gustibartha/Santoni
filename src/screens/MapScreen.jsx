@@ -1,5 +1,34 @@
-import ImageSlot from '../components/ImageSlot.jsx';
+import ChapterBanner from '../components/ChapterBanner.jsx';
 import Musuh from '../characters/Musuh.jsx';
+
+// Endless challenge stage, pinned above the chapter list.
+function TowerCard({ t }) {
+  const floors = [t.floor + 2, t.floor + 1, t.floor];
+  return (
+    <div style={{ display: "flex", gap: "12px", padding: "12px", border: "3px solid #2B1E18", borderRadius: "22px", background: "#2E2440", color: "#FFF8EC", boxShadow: "0 5px 0 #2B1E18" }}>
+      <div style={{ width: "62px", flex: "none", display: "flex", flexDirection: "column", gap: "3px" }}>
+        {floors.map((f, i) => (
+          <div key={f} style={{ height: "26px", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2px solid #120C09", borderRadius: "7px", background: i === 2 ? "#F2B63C" : f % 5 === 0 ? "#D2532A" : "#4A3D66", color: i === 2 ? "#2B1E18" : "#FFF8EC", font: "500 9.5px/1 'DM Mono',monospace" }}>
+            {f % 5 === 0 ? `BOS ${f}` : `LT ${f}`}
+          </div>
+        ))}
+        <div style={{ height: "6px", borderRadius: "3px", background: "#120C09" }} />
+      </div>
+      <div style={{ flex: "1", minWidth: "0" }}>
+        <div style={{ font: "500 9px/1 'DM Mono',monospace", letterSpacing: ".1em", color: "#C9A8F0" }}>STAGE TANTANGAN</div>
+        <div style={{ font: "20px/1.1 'Bagel Fat One',system-ui", marginTop: "4px" }}>{t.name}</div>
+        <div style={{ font: "500 11.5px/1.35 'Bricolage Grotesque'", color: "#D9CFE8", marginTop: "4px", textWrap: "pretty" }}>{t.desc}</div>
+        <div style={{ font: "500 9.5px/1.3 'DM Mono',monospace", color: "#F2B63C", marginTop: "6px" }}>
+          {t.bossNext ? `LANTAI INI: ${t.nextBoss.toUpperCase()}` : `BOS DALAM ${t.bossIn} LANTAI · REKOR ${t.best}`}
+        </div>
+        <button onClick={t.play} className="dc-press" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", width: "100%", height: "40px", marginTop: "9px", padding: "0", border: "2.5px solid #120C09", borderRadius: "13px", background: "#F2B63C", boxShadow: "0 4px 0 #120C09", color: "#2B1E18", font: "18px/1 'Bagel Fat One',system-ui", cursor: "pointer", '--press-tf': "translateY(3px)", '--press-sh': "0 1px 0 #120C09" }}>
+          Naik ke Lantai {t.floor}
+          <span style={{ display: "flex", alignItems: "center", gap: "2px", padding: "3px 7px 3px 4px", borderRadius: "9px", background: "#2B1E18", color: "#FFF8EC", font: "800 12px/1 'Bricolage Grotesque'" }}><span style={{ font: "15px/1 'Material Symbols Rounded'", color: "#F2B63C" }}>bolt</span>{t.cost}</span>
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function MapScreen({ v }) {
   return (
@@ -9,6 +38,8 @@ export default function MapScreen({ v }) {
         <div style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#6E5A4E" }}>{v.mapSummary}</div>
       </div>
       <div style={{ flex: "1", minHeight: "0", overflowY: "auto", margin: "0 -14px", padding: "6px 14px 22px", scrollbarWidth: "none" }}>
+        <TowerCard t={v.tower} />
+        <div style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".1em", color: "#6E5A4E", margin: "16px 0 10px" }}>PERJALANAN</div>
         <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: "14px" }}>
           <div style={{ position: "absolute", left: "20px", top: "24px", bottom: "24px", borderLeft: "3px dashed rgba(43,30,24,.32)" }} />
           {v.chapters.map((ch, i) => (
@@ -17,7 +48,7 @@ export default function MapScreen({ v }) {
                 {ch.expanded && (
                   <div style={{ border: "3px solid #2B1E18", borderRadius: "22px", background: "#FFF8EC", boxShadow: "0 5px 0 #2B1E18", overflow: "hidden" }}>
                     <div style={{ position: "relative", height: "124px", borderBottom: "2.5px solid #2B1E18", backgroundColor: "#CFE6D6", backgroundImage: "radial-gradient(rgba(43,30,24,.12) 1.2px,transparent 1.5px)", backgroundSize: "10px 10px" }}>
-                      <ImageSlot id={ch.artId} shape={"rect"} placeholder={ch.artLabel} style={{ position: "absolute", inset: "0", width: "100%", height: "100%" }} />
+                      <ChapterBanner theme={ch.theme} boss={ch.boss} still={v.still} />
                       <div style={{ position: "absolute", top: "10px", left: "10px", padding: "5px 8px", borderRadius: "8px", background: "#D2532A", color: "#FFF8EC", font: "500 9.5px/1 'DM Mono',monospace", letterSpacing: ".08em", pointerEvents: "none" }}>{ch.status}</div>
                     </div>
                     <div style={{ padding: "12px 14px 14px" }}>

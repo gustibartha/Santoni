@@ -5,6 +5,9 @@ import GameView from './GameView.jsx';
 import { loadSave, writeSave } from './save.js';
 import { music } from './music.js';
 
+// Local calendar day, used to reset daily missions at midnight.
+const todayKey = () => { const d = new Date(); return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`; };
+
 // Petualangan Santoni — game state + rules. `buildView()` turns state into the flat
 // view model that the screen components in src/screens render.
 export default class Game extends Component {
@@ -59,6 +62,92 @@ export default class Game extends Component {
       ? 'Energi penuh. Santoni tidak punya alasan untuk tidak pergi.'
       : `Energi +1 tiap 5 menit, juga saat game ditutup. Penuh dalam ${this.fmtWait(w.full)}.`);
   }
+  // --- Missions -------------------------------------------------------------------------
+  // Adds to lifetime stats and today's mission counters. `tower` records the highest floor.
+  track(delta) {
+    this.setState(st => {
+      const day = todayKey(), stats = { ...(st.stats || {}) };
+      const base = st.misi || { aClaimed: {} };
+      const misi = base.date === day ? base : { ...base, date: day, counts: {}, dClaimed: {} };
+      const counts = { ...misi.counts };
+      for (const [k, v] of Object.entries(delta)) {
+        if (!v) continue;
+        if (k === 'tower') { stats.tower = Math.max(stats.tower || 0, v); continue; }
+        stats[k] = (stats[k] || 0) + v; counts[k] = (counts[k] || 0) + v;
+      }
+      return { stats, misi: { ...misi, counts } };
+    });
+  }
+  questProgress(q, daily, s = this.state) {
+    if (daily) return (s.misi && s.misi.date === todayKey() ? s.misi.counts[q.stat] : 0) || 0;
+    if (q.stat === 'chapters') return s.best.filter(x => x >= this.days()).length;
+    return (s.stats || {})[q.stat] || 0;
+  }
+  questClaimed(q, daily, s = this.state) {
+    const m = s.misi || {};
+    return daily ? m.date === todayKey() && !!(m.dClaimed || {})[q.id] : !!(m.aClaimed || {})[q.id];
+  }
+  claimQuest(id, daily) {
+    const s = this.state, q = (daily ? C.DAILY_QUESTS : C.QUESTS).find(x => x.id === id);
+    if (!q || this.questClaimed(q, daily)) return;
+    if (this.questProgress(q, daily) < q.target) return this.toast('Belum selesai. Santoni sudah mencoba, sedikit.');
+    const day = todayKey(), base = s.misi || {};
+    const misi = base.date === day ? { ...base } : { ...base, date: day, counts: {}, dClaimed: {} };
+    if (daily) misi.dClaimed = { ...misi.dClaimed, [id]: 1 }; else misi.aClaimed = { ...(misi.aClaimed || {}), [id]: 1 };
+    const rw = q.reward, patch = { misi };
+    if (rw.coins) patch.coins = s.coins + rw.coins;
+    if (rw.gems) patch.gems = s.gems + rw.gems;
+    if (rw.energy) patch.energy = s.energy + rw.energy;
+    if (rw.item) patch.bag = s.bag.concat(rw.item);
+    this.setState(patch);
+    this.toast(`Misi "${q.title}" selesai: ${this.rewardLabel(rw)}.`);
+  }
+  rewardLabel(rw) {
+    const fmt = n => n.toLocaleString('id-ID');
+    return rw.coins ? `+${fmt(rw.coins)} koin` : rw.gems ? `+${rw.gems} permata` : rw.energy ? `+${rw.energy} energi` : C.ITEMS[rw.item].name;
+  }
+
+  // --- Leaving a run or the tower ---------------------------------------------------------
+  askQuit() { if (this.state.run) this.setState({ confirm: { kind: this.state.run.tower ? 'tower' : 'run' } }); }
+  closeConfirm() { this.setState({ confirm: null }); }
+
+  // --- Menara Tanpa Lift ------------------------------------------------------------------
+  applySkillStats(r, id) {
+    const fx = [];
+    if (id === 'cakar') { const d = Math.round(r.atk * 0.12); r.atk += d; fx.push({ k: 'atk', v: d }); }
+    if (id === 'bulu') { const d = Math.round(r.maxHp * 0.18); r.maxHp += d; r.hp += d; fx.push({ k: 'maxHp', v: d }); }
+    if (id === 'kardus') { const d = Math.max(1, Math.round(r.def * 0.15)); r.def += d; fx.push({ k: 'def', v: d }); }
+    return fx;
+  }
+  startTower() {
+    const s = this.state, T = C.TOWER, floor = (s.tower || {}).floor || 1;
+    if (s.energy < T.cost) return this.toast(`Butuh ${T.cost} energi. Tangganya panjang.`);
+    const st = this.heroBase(s.equipped), boss = floor % 5 === 0;
+    const key = boss ? T.bosses[(floor / 5 - 1) % T.bosses.length] : this.pick(T.pool);
+    const chapter = Math.min(C.CHAPTERS.length - 1, Math.floor((floor - 1) / 2)), lvl = 1 + Math.floor(floor / 2);
+    // A tower climb comes with a random kit of skills that grows every 3 floors.
+    const skills = this.rollSkills(3 + Math.min(4, Math.floor(floor / 3)));
+    const r = { tower: floor, weapon: s.equipped.senjata || 'none', chapter, day: Math.min(30, 4 + floor), maxDay: 20, hp: st.hp, maxHp: st.hp,
+      atk: Math.round(st.atk * (1 + 0.05 * lvl)), def: st.def, lvl, xp: 0, xpNext: 100, skills, coins: 0, kills: 0, used: [], auto: true, event: null, queue: null, log: [] };
+    skills.forEach(id => this.applySkillStats(r, id));
+    const e = C.ENEMIES[key], en = this.makeEnemy(key, r.day, chapter);
+    const grow = 1 + floor * 0.05; en.hp = en.maxHp = Math.round(en.maxHp * grow); en.atk = Math.round(en.atk * (1 + floor * 0.03));
+    this._acc = 0;
+    this.setState({ energy: s.energy - T.cost, screen: 'battle', run: r, offer: null, result: null, pull: null, shake: null,
+      battle: { enemy: en, final: true, tower: floor, turn: 1, heroTurn: true, hits: 0, firstDone: false, napUsed: false, over: null, pops: [], proc: null,
+        banner: { id: this.uid(), text: `Lantai ${floor}` },
+        log: [{ id: this.uid(), text: `Lantai ${floor}. ${e.name} menghadang. ${e.intro}`, tone: 'enemy' }] } });
+  }
+  finishTower(r, win) {
+    const s = this.state, floor = r.tower, boss = floor % 5 === 0, prev = s.tower || { floor: 1, best: 0 };
+    if (win) this.track({ tower: floor });
+    this.setState({ screen: 'result', battle: null, offer: null, shake: null, confirm: null, run: { ...r, event: null },
+      tower: win ? { floor: floor + 1, best: Math.max(prev.best, floor) } : prev,
+      result: { tower: floor, win, day: floor, maxDay: floor, kills: win ? 1 : 0, skills: r.skills.length, xp: 0, chapter: r.chapter, record: win && floor > prev.best,
+        coins: win ? 250 * floor * (boss ? 2 : 1) : 0, gems: win ? (boss ? 40 + 4 * floor : 5 + floor) : 0, item: win && boss ? this.rollItem(true) : null,
+        quote: win ? 'Satu lantai lagi. Tangganya tidak berkurang.' : 'Santoni turun lewat tangga darurat. Pelan-pelan.' } });
+  }
+
   // Number of copies of a skill the current run has learned (stacks scale most effects).
   stacks(r, id) { return r ? r.skills.filter(k => k === id).length : 0; }
   weaponOf(r) { return (r && r.weapon) || this.state.equipped.senjata || 'none'; }
@@ -102,7 +191,8 @@ export default class Game extends Component {
       equipped: { senjata: 'sumpit', topi: 'panci', baju: 'syal', kalung: 'tutup', sabuk: 'rafia', sepatu: 'sandal' },
       bag: ['centong', 'raket', 'helm', 'caping', 'gesper', 'payung', 'pramuka', 'jashujan', 'cincin', 'kaoskaki', 'payung', 'cincin', 'kipasangin', 'bawang'], gifts: C.GEAR_GIFTS.map(g => g.id),
       pity: 2, sold: {}, bubble: 0, speed: 1, daily: false, act: null, heroPoseIdx: 0, openJ: null, tick: 0, journal: this.seedJournal(days),
-      run: null, offer: null, battle: null, result: null, pull: null, toast: null, shake: null
+      run: null, offer: null, battle: null, result: null, pull: null, toast: null, shake: null,
+      stats: {}, misi: { date: todayKey(), counts: {}, dClaimed: {}, aClaimed: {} }, misiTab: 'harian', tower: { floor: 1, best: 0 }, confirm: null
     };
     const d = Math.max(6, Math.round(days * 0.75));
     const mkRun = () => ({
@@ -202,7 +292,7 @@ export default class Game extends Component {
 
   loop() {
     const s = this.state, p = this.props || {};
-    if (p.still) return;
+    if (p.still || s.confirm) return;
     if (s.shake) this.setState({ shake: null });
     if (s.act && Date.now() - s.act.t > 380) this.setState({ act: null });
     if (s.screen === 'lobby') { this._tk = (this._tk || 0) + 1; if (this._tk % 35 === 0) this.setState({ tick: (s.tick || 0) + 1 }); }
@@ -286,16 +376,19 @@ export default class Game extends Component {
     this.setState({ energy: s.energy - cost, screen: 'run', run, battle: null, result: null, pull: null, offer: { kind: 'start', ids: this.rollSkills(3), rerolls: 1 } });
   }
   toggleAuto() { const r = this.state.run; if (r) this.setState({ run: Object.assign({}, r, { auto: !r.auto }) }); }
-  quitRun() { const r = this.state.run; if (r) this.finishRun(Object.assign({}, r), false); }
+  quitRun() {
+    const r = this.state.run; if (!r) return;
+    this.setState({ confirm: null });
+    if (r.tower) this.finishTower({ ...r }, false); else this.finishRun({ ...r }, false);
+  }
   pickSkill(id) {
     const s = this.state; if (!s.run) return;
     const r = Object.assign({}, s.run, { skills: s.run.skills.concat(id) }), k = C.SKILLS.find(x => x.id === id), fx = [];
-    if (id === 'cakar') { const d = Math.round(r.atk * 0.12); r.atk += d; fx.push({ k: 'atk', v: d }); }
-    if (id === 'bulu') { const d = Math.round(r.maxHp * 0.18); r.maxHp += d; r.hp += d; fx.push({ k: 'maxHp', v: d }); }
-    if (id === 'kardus') { const d = Math.max(1, Math.round(r.def * 0.15)); r.def += d; fx.push({ k: 'def', v: d }); }
+    fx.push(...this.applySkillStats(r, id));
     r.log = r.log.concat({ id: this.uid(), day: r.day, text: `Santoni mempelajari ${k.name}. ${k.learn}`, fx, tone: 'skill' });
     const newCombos = C.COMBOS.filter(c => this.hasCombo(r, c.id) && !this.hasCombo(s.run, c.id));
     for (const c of newCombos) r.log = r.log.concat({ id: this.uid(), day: r.day, text: `Kombo elemen terbuka: ${c.name}. ${c.desc}`, fx: [], tone: 'skill' });
+    this.track({ skills: 1, combos: newCombos.length });
     if (newCombos.length) this.toast(`Kombo ${newCombos.map(c => c.name).join(' + ')}! ${newCombos[0].desc}`);
     const next = r.queue || null; r.queue = null; this._acc = 0;
     this.setState({ run: r, offer: next });
@@ -305,6 +398,7 @@ export default class Game extends Component {
   advanceDay() {
     const s = this.state; if (!s.run) return;
     const r = Object.assign({}, s.run, { day: s.run.day + 1 });
+    this.track({ days: 1 });
     const ch = C.CHAPTERS[r.chapter];
     if (r.day >= r.maxDay) { r.day = r.maxDay; r.event = { kind: 'enemy', enemy: ch.boss, final: true }; return this.setState({ run: r }); }
     if (r.day === Math.round(r.maxDay / 2)) { r.event = { kind: 'enemy', enemy: ch.mid }; return this.setState({ run: r }); }
@@ -357,7 +451,7 @@ export default class Game extends Component {
     const e = C.ENEMIES[ev.enemy];
     if (which === 'a') return this.startBattle(r, ev.enemy, false, ev.final);
     if (e.boss || (this.props || {}).gertak === false) return;
-    if (Math.random() < this.bluffChance(r)) return this.applyOutcome(r, { coins: 20 + r.day * 3, xp: 25 }, `Santoni berdiri dengan dua kaki. ${e.name} memutuskan punya urusan lain.`, { tone: 'win' });
+    if (Math.random() < this.bluffChance(r)) { this.track({ bluffs: 1 }); return this.applyOutcome(r, { coins: 20 + r.day * 3, xp: 25 }, `Santoni berdiri dengan dua kaki. ${e.name} memutuskan punya urusan lain.`, { tone: 'win' }); }
     this.startBattle(r, ev.enemy, true, ev.final);
   }
   startBattle(r, key, offended, final = false) {
@@ -582,14 +676,16 @@ export default class Game extends Component {
     b.log = log.slice(-5); b.pops = pops.slice(-8); b.banner = banner; b.proc = proc || b.proc; b.efx = efx;
     this.setState({ battle: b, run: r, shake, act });
     // Hold the next turn so the ultimate cinematic (~1.3 s) plays out at any battle speed.
-    if (ultFired) this._acc = -1200 * (s.speed || 1);
+    if (ultFired) { this._acc = -1200 * (s.speed || 1); this.track({ ults: 1 }); }
   }
   endBattle() {
     const s = this.state, b = s.battle; if (!b) return;
     const r = Object.assign({}, s.run);
+    const e = C.ENEMIES[b.enemy.key];
+    if (b.over === 'win') this.track({ kills: 1, bosses: e.boss ? 1 : 0 });
+    if (r.tower) return this.finishTower(r, b.over === 'win');
     if (b.over === 'lose') return this.finishRun(r, false);
     r.kills += 1;
-    const e = C.ENEMIES[b.enemy.key];
     if (b.final) return this.finishRun(r, true);
     this.setState({ screen: 'run', battle: null, shake: null });
     this.applyOutcome(r, { coins: Math.round(((e.boss ? 160 : 40) + r.day * 4) * (1 + 0.15 * r.chapter)), xp: e.boss ? 90 : 30 + r.day * 2 }, `${b.enemy.name} kalah. ${e.lose}`, { tone: 'win', noDaily: true });
@@ -641,6 +737,7 @@ export default class Game extends Component {
       items.push(id);
     }
     this.setState({ gems: s.gems - cost, pity, bag: s.bag.concat(items), pull: { id: this.uid(), items } });
+    this.track({ pulls: 1 });
   }
   buy(id) {
     const s = this.state, of = C.OFFERS.find(x => x.id === id);
@@ -683,8 +780,8 @@ export default class Game extends Component {
     const toneLight = { plain: '#6E5A4E', win: '#2F7A5C', bad: '#C2412A', skill: '#7E43B5', enemy: '#C2412A' };
     const toneDark = { plain: '#FFF8EC', crit: '#F2B63C', skill: '#C9A8F0', enemy: '#FF9C8A', win: '#8FD6A8', bad: '#FF9C8A' };
     const FX = { hp: ['favorite', 'HP'], maxHp: ['favorite', 'HP maks'], atk: ['swords', 'ATK'], def: ['shield', 'DEF'], coins: ['toll', 'koin'], xp: ['star', 'XP'] };
-    const labels = { lobby: 'Lobby', run: 'Petualangan', battle: 'Battle', hero: 'Hero', map: 'Peta', shop: 'Toko', result: 'Hasil', journal: 'Jurnal' };
-    const hudScreens = ['lobby', 'hero', 'map', 'shop', 'journal'];
+    const labels = { lobby: 'Lobby', run: 'Petualangan', battle: 'Battle', hero: 'Hero', map: 'Peta', shop: 'Toko', result: 'Hasil', misi: 'Misi', journal: 'Jurnal' };
+    const hudScreens = ['lobby', 'hero', 'map', 'shop', 'journal', 'misi'];
     const v = {
       screenLabel: o && scr === 'run' ? 'Pilih skill' : labels[scr],
       isLobby: scr === 'lobby', isRun: scr === 'run', isBattle: scr === 'battle', isHero: scr === 'hero', isMap: scr === 'map', isShop: scr === 'shop', isResult: scr === 'result',
@@ -705,7 +802,7 @@ export default class Game extends Component {
       toggleAuto: g(() => this.toggleAuto()), pauseIcon: 'pause', runChapterNo: 1, runChapterUpper: '', day: 0, maxDay: days, runCoins: '0', dayPct: '0%',
       weatherIcon: 'wb_sunny', weather: '', walkStatus: '', lvl: 1, hpPct: '100%', hpLabel: '', xpPct: '0%', xpLabel: '', atk: '0', def: '0',
       logCount: 0, logRef: this.logRef, log: [], evTrait: null, hasEvent: false, evTagBg: '#2B1E18', evTag: '', evIsEnemy: false, evIcon: 'help', evName: '', evSub: '', evText: '', evChoices: [], hasEvFoot: false, evFoot: '',
-      noSkills: skillTiles.length === 0, ownedSkills: skillTiles, cycleSpeed: g(() => this.setState({ speed: (s.speed % 3) + 1 })), speedLabel: `×${s.speed}`, quitRun: g(() => this.quitRun()),
+      noSkills: skillTiles.length === 0, ownedSkills: skillTiles, cycleSpeed: g(() => this.setState({ speed: (s.speed % 3) + 1 })), speedLabel: `×${s.speed}`, quitRun: g(() => this.askQuit()),
       hasOffer: false, burst: null, offerTitle: '', offerHasLvl: false, offerFrom: 0, offerTo: 0, offerSub: '', offerCards: [], reroll: g(() => this.reroll()), rerollDisabled: true, rerollOpacity: 0.4, rerollLeft: 0,
       bTurn: 1, bBoss: false, speeds: [1, 2, 3].map(n => ({ n, set: g(() => this.setState({ speed: n })), bg: s.speed === n ? '#F2B63C' : 'transparent', fg: s.speed === n ? '#2B1E18' : '#FFF8EC' })),
       eIcon: 'help', eName: '', eLvl: 1, eHpPct: '100%', eHpLabel: '', eTf: 'none', hTf: 'none', eArtId: 'art-musuh', eArtLabel: '', enemyPops: null, heroPops: null, banner: null, battleSkills: skillTiles, bTile,bLog: [], bOver: false, bOverColor: '#F2B63C', bOverText: '',
@@ -791,7 +888,7 @@ export default class Game extends Component {
       if (b.parry) hStatus.unshift({ icon: 'beach_access', label: `TANGKIS ×${b.parry}`, bg: '#3C78C8' });
       Object.assign(v, { ultWeapon: wid, ultName: ult.name, ultPct: pct(b.ult || 0, 100), ultReady: (b.ult || 0) >= 100,
         ultCine: b.ultFx && !still ? { ...b.ultFx, chips: b.ultFx.els.map(el => C.ELEMENTS[el]) } : null });
-      Object.assign(v, { bTurn: b.turn, bBoss: en.boss, eIcon: en.icon, eName: en.name, eLvl: en.lvl, eHpPct: pct(en.hp, en.maxHp), eHpLabel: `${fmt(en.hp)} / ${fmt(en.maxHp)}`,
+      Object.assign(v, { bTurn: b.turn, bFloor: b.tower || 0, askQuit: g(() => this.askQuit()), bBoss: en.boss, eIcon: en.icon, eName: en.name, eLvl: en.lvl, eHpPct: pct(en.hp, en.maxHp), eHpLabel: `${fmt(en.hp)} / ${fmt(en.maxHp)}`,
         eTf: s.shake === 'enemy' ? 'translate(10px,-4px) rotate(4deg)' : 'none', hTf: s.shake === 'hero' ? 'translate(-10px,4px) rotate(-4deg)' : 'none',
         eArtId: `art-musuh-${en.key}`, eArtLabel: `Ilustrasi musuh — ${en.name}`,
         enemyPops: b.pops.filter(x => x.side === 'enemy').map(x => popEl(x, still)), heroPops: b.pops.filter(x => x.side === 'hero').map(x => popEl(x, still)),
@@ -822,7 +919,7 @@ export default class Game extends Component {
         const un = unlocked(i), done = s.best[i] >= days, cur = i === s.chapter;
         return { no: i + 1, name: c.name, desc: c.desc, icon: c.icon, expanded: cur, compact: !cur,
           nodeBg: cur ? '#D2532A' : done ? '#2F7A5C' : un ? '#FFF8EC' : '#E2D5C3', nodeFg: cur || done ? '#FFF8EC' : un ? '#2B1E18' : '#8A776A',
-          status: done ? 'SELESAI · MAIN LAGI?' : 'SEDANG DITEMPUH', artId: `art-bab-${i + 1}`, artLabel: `Banner bab — ${c.name}`,
+          status: done ? 'SELESAI · MAIN LAGI?' : 'SEDANG DITEMPUH', theme: c.theme, boss: c.boss,
           best: `REKOR: HARI ${Math.min(s.best[i], days)} / ${days}`,
           line: done ? `Selesai · ${days}/${days} hari` : un ? `Rekor: Hari ${s.best[i]} / ${days}` : `Selesaikan Bab ${i} dulu`,
           endIcon: done ? 'check_circle' : un ? 'chevron_right' : 'lock', endFg: done ? '#2F7A5C' : '#6E5A4E',
@@ -846,9 +943,13 @@ export default class Game extends Component {
     }
     if (rs) {
       const it = rs.item ? C.ITEMS[rs.item] : null, rr = it ? R[it.rar] : null;
-      Object.assign(v, { resRibbonBg: rs.win ? '#2F7A5C' : '#D2532A', resRibbon: rs.win ? 'BAB SELESAI' : 'PERJALANAN BERAKHIR', resTitle: rs.win ? 'SANTONI MENANG.' : 'SANTONI PULANG.',
-        resSub: `${C.CHAPTERS[rs.chapter].name} · Hari ${rs.day} dari ${rs.maxDay}`,
-        resStats: [{ value: rs.day, label: 'HARI' }, { value: rs.kills, label: 'MUSUH' }, { value: rs.skills, label: 'SKILL' }], resRecord: rs.record,
+      const tw = rs.tower;
+      Object.assign(v, { resRibbonBg: rs.win ? '#2F7A5C' : '#D2532A',
+        resRibbon: tw ? (rs.win ? `LANTAI ${tw} DITAKLUKKAN` : 'MENARA MENANG KALI INI') : rs.win ? 'BAB SELESAI' : 'PERJALANAN BERAKHIR',
+        resTitle: tw ? (rs.win ? 'SANTONI NAIK.' : 'SANTONI TURUN.') : rs.win ? 'SANTONI MENANG.' : 'SANTONI PULANG.',
+        resSub: tw ? `${C.TOWER.name} · Lantai ${tw}` : `${C.CHAPTERS[rs.chapter].name} · Hari ${rs.day} dari ${rs.maxDay}`,
+        resStats: tw ? [{ value: tw, label: 'LANTAI' }, { value: (s.tower || {}).best || 0, label: 'REKOR' }, { value: rs.skills, label: 'SKILL' }]
+          : [{ value: rs.day, label: 'HARI' }, { value: rs.kills, label: 'MUSUH' }, { value: rs.skills, label: 'SKILL' }], resRecord: rs.record,
         resRewards: [{ icon: 'toll', label: `+${fmt(rs.coins)}`, bg: '#FBE6B4', fg: '#B0620A' }, { icon: 'diamond', label: `+${fmt(rs.gems)}`, bg: '#E7D9F5', fg: '#7E43B5' }, { icon: 'star', label: `+${fmt(rs.xp)} XP`, bg: '#CFE6D6', fg: '#2F7A5C' },
           it ? { item: rs.item, icon: it.icon, label: it.name, bg: rr.bg, fg: rr.fg } : { icon: 'sentiment_neutral', label: 'Tanpa item', bg: '#EADBC5', fg: '#6E5A4E' }],
         resQuote: rs.quote });
@@ -863,12 +964,37 @@ export default class Game extends Component {
       tapBebek: g(() => this.toast('Bebek Satpam: "KTP-nya, Mas." Santoni tidak punya KTP.')),
       tapKelinci: g(() => this.toast('Kelinci Penagih mengintip. Ia mencatat sesuatu. Santoni pura-pura tidak lihat.')),
       tapLebah: g(() => this.toast('Lebah Notaris lewat. Kunjungan ini sudah dilegalisir.')),
-      tapMisi: g(() => this.toast('Misi harian 2/5: jalan 3 hari ✓, buka peti ✓, kalahkan 5 musuh (3/5).')),
+      tapMisi: g(() => this.go('misi')),
       tapTeman: g(() => this.toast('Teman: 0. Santoni bilang itu pilihan.')),
       journal: J.map(j => { const open = s.openJ === j.id, ents = open ? j.entries : j.entries.slice(-4);
         return { title: C.CHAPTERS[j.chapter].name, sub: `HARI ${j.day} / ${j.maxDay} · ${j.entries.length} CATATAN`, badge: j.win ? 'MENANG' : 'PULANG', headBg: j.win ? '#CFE6D6' : '#F7D9BF', icon: C.CHAPTERS[j.chapter].icon,
           entries: ents.map(mapEntry), more: j.entries.length > 4, moreLabel: open ? 'Ringkas' : `Lihat semua ${j.entries.length} catatan`, toggle: g(() => this.setState({ openJ: open ? null : j.id })) }; })
     });
+    const qv = (q, daily) => {
+      const p = Math.min(q.target, this.questProgress(q, daily, s)), done = p >= q.target, claimed = this.questClaimed(q, daily, s), rw = q.reward;
+      return { id: q.id, icon: q.icon, title: q.title, desc: q.desc, progress: `${fmt(p)}/${fmt(q.target)}`, pct: pct(p, q.target), done, claimed,
+        reward: this.rewardLabel(rw), rewardIcon: rw.coins ? 'toll' : rw.gems ? 'diamond' : rw.energy ? 'bolt' : null, rewardItem: rw.item || null,
+        claim: g(() => this.claimQuest(q.id, daily)) };
+    };
+    const dq = C.DAILY_QUESTS.map(q => qv(q, true)), aq = C.QUESTS.map(q => qv(q, false));
+    const ready = dq.concat(aq).filter(q => q.done && !q.claimed).length;
+    const tab = s.misiTab === 'petualangan' ? 'petualangan' : 'harian';
+    Object.assign(v, {
+      isMisi: scr === 'misi', misiTab: tab, quests: tab === 'harian' ? dq : aq,
+      misiTabs: [['harian', 'Harian', dq], ['petualangan', 'Petualangan', aq]].map(([key, label, list]) => ({ key, label, count: list.filter(q => q.done && !q.claimed).length, on: tab === key, pick: g(() => this.setState({ misiTab: key })) })),
+      misiBadge: ready ? `${ready}!` : `${dq.filter(q => q.claimed).length}/${dq.length}`, misiReady: ready > 0,
+      misiSummary: `${dq.filter(q => q.done).length} DARI ${dq.length} HARI INI`
+    });
+    const tw = s.tower || { floor: 1, best: 0 };
+    v.tower = { name: C.TOWER.name, desc: C.TOWER.desc, floor: tw.floor, best: tw.best, cost: C.TOWER.cost, bossNext: tw.floor % 5 === 0,
+      nextBoss: C.ENEMIES[C.TOWER.bosses[(Math.ceil(tw.floor / 5) - 1) % C.TOWER.bosses.length]].name, bossIn: (5 - (tw.floor % 5)) % 5, play: g(() => this.startTower()) };
+    const cf = s.confirm;
+    v.confirm = cf ? {
+      title: cf.kind === 'tower' ? 'Menyerah di lantai ini?' : 'Pulang sekarang?',
+      text: cf.kind === 'tower' ? 'Lantai ini tidak dihitung. Energi yang dipakai tidak kembali, tapi tangganya tetap ada besok.' : 'Perjalanan berakhir di sini. Hadiah dihitung sampai hari ini, dan rekor tetap dicatat.',
+      yesLabel: cf.kind === 'tower' ? 'Menyerah' : 'Pulang', yes: g(() => this.quitRun()), no: g(() => this.closeConfirm())
+    } : null;
+    v.askQuit = g(() => this.askQuit());
     v.tabs = [['shop', 'Toko', 'storefront'], ['hero', 'Hero', 'pets'], ['lobby', 'Jalan', 'hiking'], ['map', 'Peta', 'map'], ['journal', 'Jurnal', 'menu_book']].map(([key, label, icon]) => {
       const on = scr === key, center = key === 'lobby';
       return { key, label, icon, go: g(() => (key === 'misi' ? this.toast('Misi: belum ada. Seperti rencana hidup Santoni.') : this.go(key))),
