@@ -79,6 +79,24 @@ export function authMessage(err) {
   if (m.includes('already registered') || m.includes('already been registered')) return 'Email ini sudah terdaftar. Pilih Masuk.';
   if (m.includes('at least 6') || m.includes('password should')) return 'Sandi minimal 6 karakter.';
   if (m.includes('rate limit') || m.includes('too many')) return 'Terlalu banyak percobaan. Tunggu sebentar, lalu coba lagi.';
+  if (m.includes('different from the old')) return 'Sandi baru harus berbeda dari sandi lama.';
   if (m.includes('fetch') || m.includes('network')) return 'Tidak bisa terhubung ke server. Periksa internet.';
   return 'Gagal: ' + ((err && err.message) || 'kesalahan tidak dikenal') + '.';
 }
+
+// Password reset: the email link returns to the game with a recovery session in the URL.
+export async function sendReset(email) {
+  const sb = await client();
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin });
+  if (error) throw error;
+}
+export async function setPassword(password) {
+  const sb = await client();
+  const { data, error } = await sb.auth.updateUser({ password });
+  if (error) throw error;
+  return who(data.user);
+}
+// Read before the client clears the URL: did this page load come from an email link?
+const hash = typeof location === 'undefined' ? '' : location.hash + location.search;
+export const cameFromReset = /type=recovery/.test(hash);
+export const linkError = /error_code=|error=access_denied/.test(hash);

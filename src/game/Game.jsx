@@ -1160,7 +1160,8 @@ export default class Game extends Component {
       const fx = b.fx || {}, dash = Math.min(0.46, 0.62 / (s.speed || 1));
       Object.assign(v, { heroAct: fx.dash === 'hero' ? fx.t : 0, enemyAct: fx.dash === 'enemy' ? fx.t : 0,
         enemyHit: fx.hit === 'enemy', heroHit: fx.hit === 'hero', hitKey: fx.t || 0, critShake: fx.hit === 'enemy' && !!fx.crit,
-        dashTime: `${dash.toFixed(2)}s`, hitDelay: `${(dash * 0.3).toFixed(2)}s`, stageTheme: (r ? C.CHAPTERS[r.chapter] : ch).theme });
+        dashTime: `${dash.toFixed(2)}s`, hitDelay: `${(dash * 0.3).toFixed(2)}s`, stageTheme: (r ? C.CHAPTERS[r.chapter] : ch).theme,
+        lowHp: !b.over && r.hp > 0 && r.hp < r.maxHp * 0.3 });
       const wid = this.weaponOf(r), ult = C.ULTIMATES[wid] || C.ULTIMATES.none;
       if (b.parry) hStatus.unshift({ icon: 'beach_access', label: `TANGKIS ×${b.parry}`, bg: '#3C78C8' });
       Object.assign(v, { ultWeapon: wid, ultName: ult.name, ultPct: pct(b.ult || 0, 100), ultReady: (b.ult || 0) >= 100,

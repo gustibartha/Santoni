@@ -34,6 +34,11 @@ export default function Run({ v }) {
         {v.treeStrip}
         <div style={{ position: "absolute", left: "0", right: "0", bottom: "0", height: "40px", background: v.sceneGround, borderTop: "2.5px solid #2B1E18" }} />
         {v.groundStrip}
+        {v.walkPose === 'walk' && !v.still && (
+          <div style={{ position: "absolute", left: "96px", bottom: "12px", width: "0", height: "0", pointerEvents: "none" }}>
+            {[0, 1, 2].map(i => <span key={i} style={{ position: "absolute", left: "-8px", top: "-8px", width: "16px", height: "16px", borderRadius: "50%", background: "rgba(255,248,236,.9)", border: "2px solid rgba(43,30,24,.3)", animation: `dustTrail .78s ${i * 0.26}s ease-out infinite` }} />)}
+          </div>
+        )}
         <div style={{ position: "absolute", left: "52px", bottom: "8px", width: "122px", height: "134px" }}><Santoni side pose={v.walkPose} still={v.still} /></div>
         {v.activePet && <div style={{ position: "absolute", left: "12px", bottom: "10px", pointerEvents: "none" }}><PetArt id={v.activePet} size={46} hop={v.walkPose === 'walk'} still={v.still} /></div>}
         {v.sceneEnemy && (

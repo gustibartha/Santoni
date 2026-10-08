@@ -17,13 +17,20 @@ function Eye({ x, y, r = 6.5 }) {
   );
 }
 const Blush = ({ at }) => <g stroke="none" fill={BLUSH}>{at.map(([x, y], i) => <ellipse key={i} cx={x} cy={y} rx="9" ry="5.5" />)}</g>;
-// Fills `d` and adds a darker crescent along its bottom for volume.
+// Fills `d`, then layers a feathered shade along its bottom, a soft vertical falloff and a
+// gloss highlight (shared gradients from SvgDefs) before redrawing the outline on top.
 function Shaded({ id, d, fill, shade = 'rgba(43,30,24,.14)', cy = 200, rx = 80, ry = 40 }) {
   return (
     <>
       <clipPath id={id}><path d={d} /></clipPath>
+      <radialGradient id={`${id}-f`}>
+        <stop offset=".62" stopColor={shade} />
+        <stop offset="1" stopColor={shade} stopOpacity="0" />
+      </radialGradient>
       <path d={d} fill={fill} />
-      <ellipse cx="100" cy={cy} rx={rx} ry={ry} fill={shade} stroke="none" clipPath={`url(#${id})`} />
+      <ellipse cx="100" cy={cy} rx={rx * 1.08} ry={ry * 1.25} fill={`url(#${id}-f)`} stroke="none" clipPath={`url(#${id})`} />
+      <path d={d} fill="url(#g-shade)" stroke="none" />
+      <path d={d} fill="url(#g-sheen)" stroke="none" />
       <path d={d} fill="none" />
     </>
   );
@@ -619,7 +626,7 @@ export default function Musuh({ kind = 'tikus', flip = false, still = false, moo
   return (
     <div className={still ? 'ms-still' : undefined} style={{ position: 'relative', width: '100%', height: '100%' }}>
       <svg viewBox="0 0 200 200" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'visible', display: 'block' }}>
-        <ellipse cx="100" cy="194" rx="58" ry="7" style={{ fill: 'rgba(43,30,24,.16)' }} />
+        <ellipse cx="100" cy="194" rx="70" ry="10" style={{ fill: 'url(#g-shadow)' }} />
         <g style={{ transform: flip ? 'scaleX(-1)' : 'none', transformOrigin: '100px 100px' }}>
           <g style={{ animation: anim.bob, transformOrigin: '100px 192px' }}>
             <g key={mood ? `${mood}-${moodKey}` : 'calm'} style={{ animation: still || !mood ? 'none' : mood === 'hurt' ? 'msHurt .34s ease-out' : 'msAttack .38s ease-out', transformOrigin: '100px 192px' }}>

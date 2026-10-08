@@ -140,7 +140,7 @@ export default function PetArt({ id, size = 48, hop = false, still = false }) {
   const anim = still ? 'none' : hop ? 'petHop .52s ease-in-out infinite' : 'petBob 1.8s ease-in-out infinite';
   return (
     <svg viewBox="0 0 100 100" width={size} height={size} style={{ display: 'block', overflow: 'visible' }} aria-hidden="true">
-      <ellipse cx="50" cy="95" rx="26" ry="4" fill="rgba(43,30,24,.16)" />
+      <ellipse cx="50" cy="95" rx="32" ry="6" fill="url(#g-shadow)" />
       <g style={{ animation: anim, transformOrigin: '50px 95px' }}>
         <g stroke={O} strokeWidth="3" strokeLinejoin="round" strokeLinecap="round"><Art /></g>
       </g>

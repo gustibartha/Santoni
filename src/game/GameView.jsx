@@ -20,11 +20,13 @@ import TambangScreen from '../screens/TambangScreen.jsx';
 import BengkelScreen from '../screens/BengkelScreen.jsx';
 import RekanScreen from '../screens/RekanScreen.jsx';
 import PetScreen from '../screens/PetScreen.jsx';
+import SvgDefs from '../components/SvgDefs.jsx';
 
 // The 390×844 phone frame. Layer order matters: offers, pulls and toasts sit above screens.
 export default function GameView({ v }) {
   return (
     <div className="phone" data-screen-label={v.screenLabel}>
+      <SvgDefs />
       {v.showHud && <Hud v={v} />}
       <div key={v.screenKey} className="screen-in">
         {v.isLobby && <Lobby v={v} />}

@@ -109,22 +109,75 @@ function Impact({ still, delay }) {
 }
 
 // Scenic stage behind the fighters, coloured by the chapter theme.
-function Stage({ theme }) {
+function Stage({ theme, still }) {
   return (
     <svg viewBox="0 0 390 440" preserveAspectRatio="xMidYMax slice" style={{ position: "absolute", inset: "0", width: "100%", height: "100%", display: "block" }} aria-hidden="true">
+      <defs>
+        <linearGradient id="st-haze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFFFFF" stopOpacity="0" /><stop offset="1" stopColor="#FFFFFF" stopOpacity=".5" /></linearGradient>
+        <linearGradient id="st-lit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFFFFF" stopOpacity=".3" /><stop offset=".55" stopColor="#FFFFFF" stopOpacity="0" /></linearGradient>
+        <linearGradient id="st-ground" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFFFFF" stopOpacity=".22" /><stop offset=".2" stopColor="#FFFFFF" stopOpacity="0" /><stop offset="1" stopColor="#2B1E18" stopOpacity=".2" /></linearGradient>
+      </defs>
       <rect width="390" height="440" fill={theme.sky} />
-      <g fill="rgba(255,255,255,.55)" stroke="#2B1E18" strokeWidth="2.5">
-        <path d="M30 70q0-14 16-14q6-12 20-8q14-4 18 10q12 0 12 12z" />
-        <path d="M250 44q0-11 13-11q5-9 16-6q12 0 12 10q9 0 9 7z" />
+      <rect width="390" height="332" fill="url(#st-haze)" />
+      <circle cx="320" cy="96" r="58" fill="url(#g-glow)" />
+      <circle cx="320" cy="96" r="21" fill="#FFE27A" stroke="#2B1E18" strokeWidth="2.5" />
+      <path d="M309 88q6-6 14-5" fill="none" stroke="rgba(255,255,255,.8)" strokeWidth="3" strokeLinecap="round" />
+      <g style={{ animation: still ? "none" : "cloudDrift 70s linear infinite" }}>
+        {[0, 390].map(x => (
+          <g key={x} transform={`translate(${x} 0)`} fill="rgba(255,255,255,.72)" stroke="#2B1E18" strokeWidth="2.5" strokeLinejoin="round">
+            <path d="M30 74q0-14 16-14q6-12 20-8q14-4 18 10q12 0 12 12z" />
+            <path d="M226 44q0-11 13-11q5-9 16-6q12 0 12 10q9 0 9 7z" />
+            <path d="M150 112q0-8 10-8q4-7 12-5q9 0 9 7q6 0 6 6z" />
+          </g>
+        ))}
       </g>
       <path d="M0 250Q40 196 92 226Q140 180 196 222Q250 186 300 220Q350 190 390 214V440H0Z" fill={theme.hill} stroke="#2B1E18" strokeWidth="2.5" />
-      <path d="M0 290Q60 262 130 282Q210 258 280 280Q340 266 390 276V440H0Z" fill={theme.lHill} opacity=".8" />
+      <path d="M0 250Q40 196 92 226Q140 180 196 222Q250 186 300 220Q350 190 390 214V440H0Z" fill="url(#st-lit)" />
+      <path d="M0 290Q60 262 130 282Q210 258 280 280Q340 266 390 276V440H0Z" fill={theme.lHill} opacity=".85" />
+      <path d="M0 290Q60 262 130 282Q210 258 280 280Q340 266 390 276V440H0Z" fill="url(#st-lit)" />
       <rect x="0" y="332" width="390" height="108" fill={theme.ground} />
+      <rect x="0" y="332" width="390" height="108" fill="url(#st-ground)" />
       <path d="M0 332H390" stroke="#2B1E18" strokeWidth="2.5" />
-      <g stroke="rgba(43,30,24,.22)" strokeWidth="3" strokeLinecap="round">
-        <path d="M24 360h22M110 372h16M200 358h26M300 368h18M60 404h20M250 410h24M350 396h16" />
+      <g stroke="rgba(43,30,24,.24)" strokeWidth="2.6" strokeLinecap="round" fill="none">
+        <path d="M24 360l4-7 4 7M110 374l3-6 3 6M204 358l4-8 4 8M302 370l3-6 3 6M62 406l4-7 4 7M252 412l4-7 4 7M352 398l3-6 3 6M156 392l3-6 3 6" />
+      </g>
+      <g fill="rgba(255,255,255,.55)">
+        <circle cx="86" cy="384" r="2.6" /><circle cx="236" cy="372" r="2" /><circle cx="330" cy="420" r="2.6" /><circle cx="180" cy="424" r="2" />
       </g>
     </svg>
+  );
+}
+
+// Light motes drifting up through the stage.
+const MOTES = [[30, 300, 7], [92, 380, 9.5], [150, 330, 8], [214, 400, 10.5], [268, 310, 7.5], [330, 370, 9], [360, 260, 11]];
+function Motes() {
+  return MOTES.map(([x, y, t], i) => (
+    <span key={i} style={{ position: "absolute", left: `${x}px`, top: `${y}px`, width: `${i % 3 ? 5 : 7}px`, height: `${i % 3 ? 5 : 7}px`, borderRadius: "50%", background: "rgba(255,252,230,.95)", boxShadow: "0 0 6px rgba(255,240,180,.9)", pointerEvents: "none", '--mx': `${i % 2 ? 26 : -22}px`, animation: `moteDrift ${t}s ${-i * 1.3}s ease-in-out infinite` }} />
+  ));
+}
+
+// Burst of little sparks flying out from a hit.
+function Sparks({ delay, color, big }) {
+  const n = big ? 12 : 8, dist = big ? 92 : 66;
+  return (
+    <div style={{ position: "absolute", left: "50%", top: "46%", width: "0", height: "0", pointerEvents: "none" }}>
+      {Array.from({ length: n }, (_, i) => {
+        const ang = (i / n) * Math.PI * 2 + 0.35, d = dist * (i % 2 ? 0.68 : 1), sz = i % 3 === 0 ? 11 : 8;
+        return <span key={i} style={{ position: "absolute", left: `${-sz / 2}px`, top: `${-sz / 2}px`, width: `${sz}px`, height: `${sz}px`, boxSizing: "border-box", borderRadius: i % 2 ? "50%" : "2px", border: "2px solid #2B1E18", background: i % 3 === 0 ? "#FFFFFF" : color, '--sx': `${Math.round(Math.cos(ang) * d)}px`, '--sy': `${Math.round(Math.sin(ang) * d)}px`, animation: `sparkFly .5s ${delay} ease-out both` }} />;
+      })}
+    </div>
+  );
+}
+
+// Coins bursting out of a defeated enemy.
+const COIN_X = [-120, -80, -46, -16, 14, 40, 70, 100, -100, 54];
+function Coins() {
+  return (
+    <div style={{ position: "absolute", left: "293px", top: "300px", width: "0", height: "0", zIndex: "5", pointerEvents: "none" }}>
+      {COIN_X.map((x, i) => (
+        <span key={i} style={{ position: "absolute", left: "-11px", top: "-11px", width: "22px", height: "22px", boxSizing: "border-box", borderRadius: "50%", border: "2.5px solid #2B1E18", background: "radial-gradient(circle at 35% 30%, #FFF3B0 0 22%, #F2B63C 24% 100%)", boxShadow: "inset 0 0 0 3px #C28A16", '--cx': `${x}px`, '--cy': `${-150 - (i % 3) * 40}px`, animation: `coinBurst ${0.9 + (i % 4) * 0.12}s ${0.25 + i * 0.04}s cubic-bezier(.2,.7,.4,1) both` }} />
+      ))}
+    </div>
   );
 }
 
@@ -133,8 +186,9 @@ export default function Battle({ v }) {
   return (
     <div style={{ position: "absolute", inset: "0", backgroundColor: v.battleBg, backgroundImage: "radial-gradient(rgba(255,248,236,.06) 1.2px,transparent 1.5px)", backgroundSize: "10px 10px", color: "#FFF8EC" }}>
       {/* Stage: scenery, fighters, effects */}
-      <div style={{ position: "absolute", top: "58px", left: "0", right: "0", height: "440px", overflow: "hidden", borderTop: "2.5px solid #2B1E18", borderBottom: "2.5px solid #2B1E18", animation: [v.quakeAnim !== 'none' ? v.quakeAnim : null, v.critShake && !v.still ? `stageShake .34s ${v.hitDelay} ease-out` : null].filter(Boolean).join(', ') || "none" }}>
-        <Stage theme={v.stageTheme} />
+      <div style={{ position: "absolute", top: "58px", left: "0", right: "0", height: "440px", overflow: "hidden", borderTop: "2.5px solid #2B1E18", borderBottom: "2.5px solid #2B1E18", animation: [v.quakeAnim !== 'none' ? v.quakeAnim : null, v.critShake && !v.still ? `stageCrit .42s ${v.hitDelay} ease-out` : null].filter(Boolean).join(', ') || "none" }}>
+        <Stage theme={v.stageTheme} still={v.still} />
+        {!v.still && <Motes />}
 
         {v.leaderKind && (
           <div key={v.assist ? v.assistKey : 'leader'} style={{ position: "absolute", left: "2px", top: "262px", width: "84px", height: "84px", pointerEvents: "none", animation: v.assist && !v.still ? "assistRun .5s ease-in-out" : "none" }}>
@@ -143,7 +197,7 @@ export default function Battle({ v }) {
         )}
 
         {/* Santoni */}
-        <div style={{ position: "absolute", left: "26px", top: "172px", width: "150px", height: "170px", animation: v.koHero && !v.still ? "koHero .9s .15s ease-out forwards" : "none" }}>
+        <div style={{ position: "absolute", left: "26px", top: "172px", width: "150px", height: "170px", animation: v.still ? "none" : ["heroEnter .8s ease-out both", v.koHero ? "koHero .9s .15s ease-out forwards" : null].filter(Boolean).join(", ") }}>
           <div key={`hd${v.heroAct}`} style={{ position: "absolute", inset: "0", animation: v.heroAct && !v.still ? `heroDash ${v.dashTime} ease-in-out` : "none" }}>
             <div key={`hk${v.hitKey}`} style={{ position: "absolute", inset: "0", animation: v.heroHit && !v.still ? `knockL .36s ${v.hitDelay} ease-out` : "none" }}>
               {v.hShield && (
@@ -154,6 +208,7 @@ export default function Battle({ v }) {
               )}
               <Santoni side pose={v.heroPose} still={v.still} />
               {v.heroHit && <Impact key={v.hitKey} still={v.still} delay={v.hitDelay} />}
+              {v.heroHit && !v.still && <Sparks key={`hs${v.hitKey}`} delay={v.hitDelay} color="#FF9C8A" />}
             </div>
           </div>
           <div style={{ position: "absolute", inset: "0", pointerEvents: "none" }}>{v.heroPops}</div>
@@ -161,7 +216,8 @@ export default function Battle({ v }) {
         {v.activePet && <div style={{ position: "absolute", left: "150px", top: "292px", pointerEvents: "none" }}><PetArt id={v.activePet} size={50} still={v.still} /></div>}
 
         {/* Enemy */}
-        <div style={{ position: "absolute", right: "14px", top: `${342 - enemySize}px`, width: `${enemySize}px`, height: `${enemySize}px`, animation: v.koEnemy && !v.still ? "koEnemy 1s .15s ease-in forwards" : "none" }}>
+        <div style={{ position: "absolute", right: "14px", top: `${342 - enemySize}px`, width: `${enemySize}px`, height: `${enemySize}px`, animation: v.still ? "none" : ["enemyEnter .85s .1s ease-out both", v.koEnemy ? "koEnemy 1s .15s ease-in forwards" : null].filter(Boolean).join(", ") }}>
+          {!v.still && <div style={{ position: "absolute", left: "50%", bottom: "6px", width: "0", height: "0", pointerEvents: "none" }}>{[-70, -40, 40, 70].map((dx, i) => <span key={i} style={{ position: "absolute", left: "-12px", top: "-12px", width: "24px", height: "24px", borderRadius: "50%", background: "rgba(255,248,236,.92)", border: "2px solid rgba(43,30,24,.35)", "--dx": `${dx}px`, animation: `dustPuff .7s ${0.56 + i * 0.03}s ease-out both` }} />)}</div>}
           <div key={`ed${v.enemyAct}`} style={{ position: "absolute", inset: "0", animation: v.enemyAct && !v.still ? `enemyDash ${v.dashTime} ease-in-out` : "none" }}>
             <div key={`ek${v.hitKey}`} style={{ position: "absolute", inset: "0", animation: v.enemyHit && !v.still ? `knockR .38s ${v.hitDelay} ease-out` : "none", filter: v.eFilter, transition: "filter .3s" }}>
               <Musuh kind={v.eKind} still={v.still} flip={true} mood={v.eMood} moodKey={v.eMoodKey} />
@@ -169,6 +225,7 @@ export default function Battle({ v }) {
           </div>
           <div style={{ position: "absolute", inset: "0", pointerEvents: "none" }}>{v.eAura}{v.efx}</div>
           {v.enemyHit && <Slash key={v.hitKey} big={v.critShake} still={v.still} delay={v.hitDelay} />}
+          {v.enemyHit && !v.still && <Sparks key={`es${v.hitKey}`} delay={v.hitDelay} color="#FFE45C" big={v.critShake} />}
           <div style={{ position: "absolute", inset: "0", pointerEvents: "none" }}>{v.enemyPops}</div>
           {v.koEnemy && !v.still && <div style={{ position: "absolute", top: "0", left: "50%", transform: "translateX(-50%)", font: "24px/1 'Material Symbols Rounded'", color: "#FFE45C", textShadow: "0 0 8px rgba(255,228,92,.8)", animation: "koStars 1.2s .3s ease-in-out infinite", whiteSpace: "nowrap" }}>star star star</div>}
         </div>
@@ -181,6 +238,7 @@ export default function Battle({ v }) {
           <Nameplate name={v.eName} lvl={v.eLvl} pct={v.eHpPct} label={v.eHpLabel} color="#E0503A" chips={v.eStatus} width={`${enemySize}px`} />
         </div>
 
+        {v.lowHp && !v.still && <div style={{ position: "absolute", inset: "0", zIndex: "3", pointerEvents: "none", boxShadow: "inset 0 0 70px 16px rgba(214,40,40,.62)", animation: "lowHp 1.2s ease-in-out infinite" }} />}
         <div style={{ position: "absolute", left: "0", right: "0", top: "70px", height: "44px", zIndex: "4", pointerEvents: "none" }}>{v.banner}</div>
       </div>
 
@@ -221,6 +279,7 @@ export default function Battle({ v }) {
         <div style={{ width: "20px", height: "20px", flex: "none" }}><WeaponArt id={v.ultWeapon} size={20} /></div>
         <div style={{ position: "relative", flex: "1", height: "16px", boxSizing: "border-box", border: "2px solid #0F1411", borderRadius: "8px", background: "#0F1411", overflow: "hidden", animation: v.ultReady && !v.still ? "ultReady 1s ease-in-out infinite" : "none" }}>
           <div style={{ height: "100%", width: v.ultPct, background: v.ultReady ? "linear-gradient(90deg,#F2B63C,#FFE45C,#F2B63C)" : "linear-gradient(90deg,#B0620A,#F2B63C)", transition: "width .3s" }} />
+          {v.ultReady && !v.still && <div style={{ position: "absolute", top: "0", bottom: "0", left: "0", width: "38%", background: "linear-gradient(100deg,transparent,rgba(255,255,255,.75),transparent)", animation: "shineSweep 1.6s ease-in-out infinite" }} />}
           <div style={{ position: "absolute", inset: "0", display: "flex", alignItems: "center", justifyContent: "center", font: "500 9.5px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#FFF8EC", textShadow: "0 1px 0 #0F1411,1px 0 0 #0F1411,-1px 0 0 #0F1411" }}>{v.ultReady ? `SIAP · ${v.ultName.toUpperCase()}` : `PAMUNGKAS · ${v.ultName.toUpperCase()}`}</div>
         </div>
       </div>
@@ -241,6 +300,7 @@ export default function Battle({ v }) {
           ))}
         </div>
       )}
+      {v.koEnemy && !v.still && <Coins />}
       {v.bSummary && <BattleSummary s={v.bSummary} still={v.still} />}
       {v.bOver && (
         <div style={{ position: "absolute", left: "50%", top: "250px", zIndex: "6", transform: "translate(-50%,-50%) rotate(-6deg)", padding: "10px 26px 12px", border: "3.5px solid #2B1E18", borderRadius: "18px", background: v.bOverColor, color: "#2B1E18", font: "40px/1 'Bagel Fat One',system-ui", boxShadow: "0 6px 0 #2B1E18", pointerEvents: "none" }}>{v.bOverText}</div>

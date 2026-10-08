@@ -3,7 +3,7 @@
 import * as cloud from './cloud.js';
 import { snapshot, storeSave } from './save.js';
 
-const ACCT0 = { user: null, email: '', password: '', mode: 'masuk', busy: false, checking: false, status: '', note: '' };
+const ACCT0 = { user: null, email: '', password: '', password2: '', mode: 'masuk', busy: false, checking: false, status: '', note: '' };
 const PUSH_EVERY = 30000;
 const hhmm = () => new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 
@@ -17,18 +17,35 @@ export const accountMethods = {
     try {
       this._unwatch = await cloud.watchAuth((event, user) => {
         if (event === 'SIGNED_OUT') { this._cloudReady = false; this.setAcct({ user: null, status: '' }); }
+        if (event === 'PASSWORD_RECOVERY' && user) this.startRecovery(user);
       });
       const user = await cloud.currentUser();
       this.setAcct({ checking: false, user });
+      if (cloud.linkError && !user) {
+        this.go('journal');
+        return this.setAcct({ note: 'Tautan dari email sudah kedaluwarsa atau sudah dipakai. Minta tautan baru di sini.' });
+      }
+      if (user && cloud.cameFromReset) return this.startRecovery(user);
       if (user) await this.cloudReconcile(user);
     } catch {
       this.setAcct({ checking: false, status: 'Server akun tidak terjangkau. Progres tetap tersimpan di perangkat ini.' });
     }
   },
 
+  // Opened from the reset email: ask for a new password before anything else.
+  startRecovery(user) {
+    if (this._recovery) return;
+    this._recovery = true; this._cloudReady = false;
+    this.setAcct({ checking: false, user, mode: 'reset', password: '', password2: '', note: '' });
+    this.go('journal');
+    this.toast('Buat sandi baru untuk akunmu di kartu Akun online.');
+  },
+
   async acctSubmit() {
     const a = { ...ACCT0, ...this.state.acct }, email = a.email.trim();
     if (a.busy) return;
+    if (a.mode === 'reset') return this.acctNewPassword(a);
+    if (a.mode === 'lupa') return this.acctSendReset(email);
     if (!/^\S+@\S+\.\S+$/.test(email)) return this.setAcct({ note: 'Tulis email yang lengkap, misalnya nama@gmail.com.' });
     if (a.password.length < 6) return this.setAcct({ note: 'Sandi minimal 6 karakter.' });
     this.setAcct({ busy: true, note: '' });
@@ -42,6 +59,30 @@ export const accountMethods = {
       } else {
         await this.afterLogin(await cloud.signIn(email, a.password));
       }
+    } catch (e) {
+      this.setAcct({ busy: false, note: cloud.authMessage(e) });
+    }
+  },
+  async acctSendReset(email) {
+    if (!/^\S+@\S+\.\S+$/.test(email)) return this.setAcct({ note: 'Tulis email akunmu dulu, misalnya nama@gmail.com.' });
+    this.setAcct({ busy: true, note: '' });
+    try {
+      await cloud.sendReset(email);
+      this.setAcct({ busy: false, mode: 'masuk', note: `Tautan atur ulang sandi dikirim ke ${email}. Buka email itu (cek juga Spam), ketuk tautannya, lalu buat sandi baru.` });
+    } catch (e) {
+      this.setAcct({ busy: false, note: cloud.authMessage(e) });
+    }
+  },
+  async acctNewPassword(a) {
+    if (a.password.length < 6) return this.setAcct({ note: 'Sandi baru minimal 6 karakter.' });
+    if (a.password !== a.password2) return this.setAcct({ note: 'Kedua sandi belum sama. Ketik ulang.' });
+    this.setAcct({ busy: true, note: '' });
+    try {
+      const user = await cloud.setPassword(a.password);
+      this._recovery = false;
+      this.setAcct({ busy: false, mode: 'masuk', password: '', password2: '', user });
+      this.toast('Sandi baru tersimpan. Santoni tidak akan memberi tahu siapa pun.');
+      await this.cloudReconcile(user);
     } catch (e) {
       this.setAcct({ busy: false, note: cloud.authMessage(e) });
     }
@@ -108,8 +149,8 @@ export const accountMethods = {
     if (this._cloudReady) await this.cloudPush();
     try { await cloud.signOut(); } catch { /* already signed out */ }
     cloud.clearSyncMark();
-    this._cloudReady = false; this._lastBody = null;
-    this.setAcct({ user: null, status: '', note: '' });
+    this._cloudReady = false; this._lastBody = null; this._recovery = false;
+    this.setAcct({ user: null, status: '', note: '', mode: 'masuk', password: '', password2: '' });
     this.toast('Keluar dari akun. Progres tetap ada di perangkat ini.');
   },
 
@@ -123,6 +164,7 @@ export const accountMethods = {
         status: a.status || (a.user ? 'Menyambungkan…' : ''), online: !!this.props.persist,
         setEmail: g(e => this.setAcct({ email: e.target.value, note: '' })),
         setPassword: g(e => this.setAcct({ password: e.target.value, note: '' })),
+        setPassword2: g(e => this.setAcct({ password2: e.target.value, note: '' })), password2: a.password2,
         setMode: g(mode => this.setAcct({ mode, note: '' })),
         submit: g(e => { if (e && e.preventDefault) e.preventDefault(); this.acctSubmit(); }),
         // If the first sync never finished (offline), check the server copy before overwriting it.

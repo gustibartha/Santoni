@@ -141,6 +141,7 @@ local_fire_department
 local_parking
 local_police
 lock
+lock_reset
 login
 logout
 loop
@@ -216,6 +217,7 @@ security
 select
 self_improvement
 sell
+send
 sentiment_dissatisfied
 sentiment_neutral
 serif
@@ -278,6 +280,7 @@ try
 two_wheeler
 umbrella
 unsubscribe
+update
 upgrade
 upload
 verified_user

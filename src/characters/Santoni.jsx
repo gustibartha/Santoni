@@ -38,7 +38,7 @@ function SantoniSide({ pose, flip, still }) {
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
       <svg viewBox="0 0 200 220" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'visible', display: 'block' }}>
-        <ellipse cx="102" cy="211" rx="50" ry="7" style={{ fill: 'rgba(43,30,24,.16)' }} />
+        <ellipse cx="102" cy="211" rx="62" ry="10" style={{ fill: 'url(#g-shadow)' }} />
         <g style={{ transform: flip ? 'scaleX(-1)' : N, transformOrigin: '100px 110px' }}>
           <g style={{ animation: a(p.body), transformOrigin: '100px 210px' }}>
             <g style={{ transform: p.tBody || N, transformOrigin: '100px 210px', transition: 'transform .16s ease-out' }}>
@@ -61,6 +61,8 @@ function SantoniSide({ pose, flip, still }) {
                 </Limb>
                 <ellipse cx="103" cy="160" rx="33" ry="37" fill="#D2532A" />
                 <ellipse cx="122" cy="166" rx="12" ry="24" fill="#5A3226" stroke="none" />
+                <ellipse cx="103" cy="160" rx="33" ry="37" fill="url(#g-shade)" stroke="none" />
+                <ellipse cx="103" cy="160" rx="33" ry="37" fill="url(#g-sheen)" stroke="none" />
                 <rect x="60" y="131" width="28" height="40" rx="10" fill="#8E5A2B" />
                 <path d="M60 145Q74 139 88 145" fill="none" strokeWidth="2.6" />
                 <rect x="65" y="152" width="16" height="12" rx="4" fill="#B07A45" strokeWidth="2.4" />
@@ -80,6 +82,8 @@ function SantoniSide({ pose, flip, still }) {
                     <path d="M72 60Q65 38 76 31Q87 39 89 53Z" fill="#4A2A20" stroke="none" />
                     <ellipse cx="96" cy="110" rx="14" ry="10" fill="#FFF8EC" stroke="none" />
                     <ellipse cx="124" cy="70" rx="9" ry="5.5" fill="#FFF8EC" stroke="none" />
+                    <ellipse cx="106" cy="90" rx="47" ry="42" fill="url(#g-shade)" stroke="none" />
+                    <ellipse cx="106" cy="90" rx="47" ry="42" fill="url(#g-sheen)" stroke="none" />
                     <path d="M122 98Q117 108 121 118" fill="none" stroke="#8E3418" strokeWidth="6" />
                     <path d="M126 92Q150 82 161 96Q164 112 147 117Q129 120 121 108Z" fill="#FFF8EC" />
                     <ellipse cx="158" cy="96" rx="6.5" ry="5" fill="#2B1E18" strokeWidth="1.5" />
@@ -140,7 +144,7 @@ export default function Santoni({ pose = 'idle', expr = 'auto', flip = false, st
   return (
     <div style={{ position: "relative", width: "100%", height: "100%" }}>
       <svg viewBox="0 0 200 220" style={{ position: "absolute", inset: "0", width: "100%", height: "100%", overflow: "visible", display: "block" }}>
-        <ellipse cx="100" cy="211" rx="56" ry="7" style={{ fill: "rgba(43,30,24,.16)" }} />
+        <ellipse cx="100" cy="211" rx="68" ry="10" style={{ fill: "url(#g-shadow)" }} />
         <g style={{ transform: v.flipTf, transformOrigin: "100px 110px" }}>
           <g style={{ animation: v.aBody, transformOrigin: "100px 210px" }}>
             <g style={{ transform: v.tBody, transformOrigin: "100px 210px", transition: "transform .16s ease-out" }}>
@@ -163,6 +167,8 @@ export default function Santoni({ pose = 'idle', expr = 'auto', flip = false, st
                 </g>
                 <path d="M64 170 Q62 134 100 130 Q138 134 136 170 Q136 202 100 204 Q64 202 64 170 Z" style={{ fill: "#D2532A" }} />
                 <path d="M82 172 Q82 152 100 151 Q118 152 118 172 Q118 194 100 196 Q82 194 82 172 Z" style={{ fill: "#5A3226", stroke: "none" }} />
+                <path d="M64 170 Q62 134 100 130 Q138 134 136 170 Q136 202 100 204 Q64 202 64 170 Z" style={{ fill: "url(#g-shade)", stroke: "none" }} />
+                <path d="M64 170 Q62 134 100 130 Q138 134 136 170 Q136 202 100 204 Q64 202 64 170 Z" style={{ fill: "url(#g-sheen)", stroke: "none" }} />
                 <g transform="translate(68 148)"><g style={{ transform: `rotate(${v.armL}deg)`, transition: "transform .16s ease-out" }}><g style={{ animation: v.aArmL }}><rect x="-10" y="-6" width="20" height="40" rx="10" style={{ fill: "#3A2420" }} /></g></g></g>
                 <g transform="translate(132 148)"><g style={{ transform: `rotate(${v.armR}deg)`, transition: "transform .16s ease-out" }}><g style={{ animation: v.aArmR }}><rect x="-10" y="-6" width="20" height="40" rx="10" style={{ fill: "#3A2420" }} /></g></g></g>
                 <g style={{ transform: v.tHead, transformOrigin: "100px 132px", transition: "transform .2s ease-out" }}>
@@ -178,6 +184,8 @@ export default function Santoni({ pose = 'idle', expr = 'auto', flip = false, st
                   <ellipse cx="120" cy="73" rx="8" ry="5" style={{ fill: "#FFF8EC", stroke: "none" }} />
                   <path d="M74 97 Q70 106 76 116" style={{ fill: "none", stroke: "#8E3418", strokeWidth: "6" }} />
                   <path d="M126 97 Q130 106 124 116" style={{ fill: "none", stroke: "#8E3418", strokeWidth: "6" }} />
+                  <ellipse cx="100" cy="88" rx="60" ry="47" style={{ fill: "url(#g-shade)", stroke: "none" }} />
+                  <ellipse cx="100" cy="88" rx="60" ry="47" style={{ fill: "url(#g-sheen)", stroke: "none" }} />
                   <ellipse cx="100" cy="88" rx="60" ry="47" style={{ fill: "none" }} />
                   <g style={{ display: v.dDatar }}>
                     <g style={{ animation: v.aBlink, transformOrigin: "100px 89px" }}>

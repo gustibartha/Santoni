@@ -28,7 +28,7 @@ const POP_COLORS = { hit: '#FFF8EC', crit: '#F2B63C', skill: '#C9A8F0', heal: '#
 
 export function popEl(x, still) {
   return (
-    <div key={x.id} style={{ position: 'absolute', left: `calc(50% + ${x.dx}px)`, top: `${34 + x.dy}px`, transform: 'translate(-50%,0)', font: `${x.kind === 'crit' ? 32 : 25}px/1 'Bagel Fat One', system-ui`, color: POP_COLORS[x.kind] || '#FFF8EC', textShadow: OUT, whiteSpace: 'nowrap', pointerEvents: 'none', animation: still ? 'none' : 'panduPop 1.05s ease-out forwards' }}>
+    <div key={x.id} style={{ position: 'absolute', left: `calc(50% + ${x.dx}px)`, top: `${34 + x.dy}px`, transform: 'translate(-50%,0)', font: `${x.kind === 'crit' ? 32 : 25}px/1 'Bagel Fat One', system-ui`, color: POP_COLORS[x.kind] || '#FFF8EC', textShadow: OUT, whiteSpace: 'nowrap', pointerEvents: 'none', animation: still ? 'none' : x.kind === 'crit' ? 'critPop 1.15s ease-out forwards' : 'panduPop 1.05s ease-out forwards' }}>
       {x.text}
     </div>
   );
