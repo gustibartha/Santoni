@@ -26,12 +26,12 @@ export default function Run({ v }) {
         <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)", width: "24px", height: "24px", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "8px", background: "#F2B63C", color: "#2B1E18", font: "14px/1 'Material Symbols Rounded'" }}>swords</div>
         <div style={{ position: "absolute", right: "-12px", top: "50%", transform: "translateY(-50%)", width: "28px", height: "28px", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "9px", background: "#2B1E18", color: "#F2B63C", font: "17px/1 'Material Symbols Rounded'" }}>local_fire_department</div>
       </div>
-      <div style={{ position: "relative", height: "168px", flex: "none", border: "2.5px solid #2B1E18", borderRadius: "22px", overflow: "hidden", backgroundColor: "#F7D9BF", backgroundImage: "radial-gradient(rgba(43,30,24,.1) 1.2px,transparent 1.5px)", backgroundSize: "10px 10px", boxShadow: "0 3px 0 #2B1E18" }}>
+      <div style={{ position: "relative", height: "168px", flex: "none", border: "2.5px solid #2B1E18", borderRadius: "22px", overflow: "hidden", backgroundColor: v.sceneSky, backgroundImage: "radial-gradient(rgba(43,30,24,.1) 1.2px,transparent 1.5px)", backgroundSize: "10px 10px", boxShadow: "0 3px 0 #2B1E18" }}>
         <div style={{ position: "absolute", right: "120px", top: "22px", width: "30px", height: "30px", boxSizing: "border-box", borderRadius: "50%", border: "2.5px solid #2B1E18", background: "#F2B63C" }} />
         {v.farStrip}
-        <div style={{ position: "absolute", left: "0", right: "0", bottom: "0", height: "40px", background: "#9CCBB0", borderTop: "2.5px solid #2B1E18" }} />
+        <div style={{ position: "absolute", left: "0", right: "0", bottom: "0", height: "40px", background: v.sceneGround, borderTop: "2.5px solid #2B1E18" }} />
         {v.groundStrip}
-        <div style={{ position: "absolute", left: "52px", bottom: "8px", width: "122px", height: "134px" }}><Santoni pose={v.walkPose} still={v.still} /></div>
+        <div style={{ position: "absolute", left: "52px", bottom: "8px", width: "122px", height: "134px" }}><Santoni side pose={v.walkPose} still={v.still} /></div>
         {v.sceneEnemy && (
           <div style={{ position: "absolute", right: "26px", bottom: "12px", width: "112px", height: "112px" }}><Musuh kind={v.sceneEnemyKind} still={v.still} flip={true} /></div>
         )}

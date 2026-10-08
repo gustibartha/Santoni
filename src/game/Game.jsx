@@ -17,6 +17,7 @@ export default class Game extends Component {
     const saved = props.persist && loadSave(this._initDays);
     if (saved) { this.state = { ...this.state, ...saved.state }; this._uid = saved.uid || this._uid; }
     this.state = { ...this.state, ...this.energyPatch(this.state, Date.now()) };
+    if (this.state.best.length < C.CHAPTERS.length) this.state.best = this.state.best.concat(Array(C.CHAPTERS.length - this.state.best.length).fill(0));
     // One-time gift of new gear for saves made before it existed.
     const gift = C.NEW_GEAR_GIFT;
     if (saved && !(saved.state.gifts || []).includes(gift.id)) {
@@ -94,7 +95,7 @@ export default class Game extends Component {
     const days = this.days(p);
     const s = {
       screen: 'lobby', coins: 12480, gems: 1480, energy: 25, energyAt: null, clock: 0, musicOn: !music.muted, chapter: 2,
-      best: [days, days, Math.round(days * 0.7), 0, 0, 0],
+      best: [days, days, Math.round(days * 0.7)].concat(Array(C.CHAPTERS.length - 3).fill(0)),
       chests: { '0-0': 1, '0-1': 1, '0-2': 1, '1-0': 1, '1-1': 1, '1-2': 1, '2-0': 1 },
       equipped: { senjata: 'sumpit', topi: 'panci', baju: 'syal', kalung: 'tutup', sabuk: 'rafia', sepatu: 'sandal' },
       bag: ['centong', 'raket', 'helm', 'caping', 'gesper', 'payung', 'pramuka', 'jashujan', 'cincin', 'kaoskaki', 'payung', 'cincin'], gifts: [C.NEW_GEAR_GIFT.id],
@@ -121,9 +122,9 @@ export default class Game extends Component {
       if (screen === 'skill') { s.run.day = d - 1; s.offer = { kind: 'lvl', from: 5, to: 6, ids: ['kipas', 'tidur', 'statis'], rerolls: 1 }; }
     } else if (screen === 'battle') {
       s.screen = 'battle'; s.run = mkRun(); s.run.day = days; s.run.hp = 640; s.act = { who: 'hero', t: 0 };
-      const en = this.makeEnemy('angsa', days); en.hp = Math.round(en.maxHp * 0.54);
+      const en = this.makeEnemy('angsa', days, 2); en.hp = Math.round(en.maxHp * 0.54);
       s.battle = {
-        enemy: en, turn: 7, heroTurn: true, ult: 80, hits: 6, firstDone: true, napUsed: false, over: null, proc: 'kipas',
+        enemy: en, final: true, turn: 7, heroTurn: true, ult: 80, hits: 6, firstDone: true, napUsed: false, over: null, proc: 'kipas',
         log: [
           { id: 11, text: 'Angsa Pengacara menghadang. Ia mewakili semua angsa yang pernah merasa dirugikan.', tone: 'enemy' },
           { id: 12, text: 'Angsa Pengacara mengajukan keberatan. Dengan paruh. 148.', tone: 'enemy' },
@@ -225,9 +226,9 @@ export default class Game extends Component {
   }
   power(st) { return st.atk * 40 + st.hp * 4 + st.def * 60; }
   itemScore(id) { const it = C.ITEMS[id]; return !it ? 0 : it.stat === 'HP' ? it.val / 6 : it.stat === 'DEF' ? it.val * 1.6 : it.val; }
-  makeEnemy(key, day) {
-    const e = C.ENEMIES[key], f = 1 + day * 0.06, hp = Math.round(e.hp * f);
-    return { key, name: e.name, icon: e.icon, boss: !!e.boss, lvl: Math.max(1, Math.round(day * 1.1) + (e.boss ? 4 : 0)), hp, maxHp: hp, atk: Math.round(e.atk * f), def: Math.round(e.def * f) };
+  makeEnemy(key, day, chapter = 0) {
+    const e = C.ENEMIES[key], f = (1 + day * 0.06) * (1 + 0.14 * chapter), hp = Math.round(e.hp * f);
+    return { key, name: e.name, icon: e.icon, boss: !!e.boss, lvl: Math.max(1, Math.round(day * 1.1) + (e.boss ? 4 : 0) + chapter * 3), hp, maxHp: hp, atk: Math.round(e.atk * f), def: Math.round(e.def * f) };
   }
   rollSkills(n) {
     const pool = C.SKILLS.slice(), out = [];
@@ -250,7 +251,7 @@ export default class Game extends Component {
   toast(text) { this.setState({ toast: { id: this.uid(), text, until: Date.now() + 2800 } }); }
   shiftChapter(dir) {
     const days = this.days(), n = this.state.chapter + dir;
-    if (n < 0 || n > 5) return;
+    if (n < 0 || n > C.CHAPTERS.length - 1) return;
     if (n > 0 && this.state.best[n - 1] < days) return this.toast('Bab berikutnya masih terkunci. Gemboknya serius.');
     this.setState({ chapter: n });
   }
@@ -302,10 +303,11 @@ export default class Game extends Component {
   advanceDay() {
     const s = this.state; if (!s.run) return;
     const r = Object.assign({}, s.run, { day: s.run.day + 1 });
-    if (r.day >= r.maxDay) { r.day = r.maxDay; r.event = { kind: 'enemy', enemy: 'angsa' }; return this.setState({ run: r }); }
-    if (r.day === Math.round(r.maxDay / 2)) { r.event = { kind: 'enemy', enemy: 'lebah' }; return this.setState({ run: r }); }
+    const ch = C.CHAPTERS[r.chapter];
+    if (r.day >= r.maxDay) { r.day = r.maxDay; r.event = { kind: 'enemy', enemy: ch.boss, final: true }; return this.setState({ run: r }); }
+    if (r.day === Math.round(r.maxDay / 2)) { r.event = { kind: 'enemy', enemy: ch.mid }; return this.setState({ run: r }); }
     const x = Math.random();
-    if (x < 0.27) { r.event = { kind: 'enemy', enemy: this.pick(C.COMMON) }; return this.setState({ run: r }); }
+    if (x < 0.27) { r.event = { kind: 'enemy', enemy: this.pick(ch.pool) }; return this.setState({ run: r }); }
     if (x < 0.6) {
       const left = C.EVENTS.filter(e => r.used.indexOf(e.id) < 0);
       if (left.length) { const ev = this.pick(left); r.used = r.used.concat(ev.id); r.event = { kind: 'choice', id: ev.id }; return this.setState({ run: r }); }
@@ -351,18 +353,18 @@ export default class Game extends Component {
       return this.applyOutcome(r, o, o.t, { tone: o.skill ? 'skill' : undefined });
     }
     const e = C.ENEMIES[ev.enemy];
-    if (which === 'a') return this.startBattle(r, ev.enemy, false);
+    if (which === 'a') return this.startBattle(r, ev.enemy, false, ev.final);
     if (e.boss || (this.props || {}).gertak === false) return;
     if (Math.random() < this.bluffChance(r)) return this.applyOutcome(r, { coins: 20 + r.day * 3, xp: 25 }, `Santoni berdiri dengan dua kaki. ${e.name} memutuskan punya urusan lain.`, { tone: 'win' });
-    this.startBattle(r, ev.enemy, true);
+    this.startBattle(r, ev.enemy, true, ev.final);
   }
-  startBattle(r, key, offended) {
-    const e = C.ENEMIES[key], en = this.makeEnemy(key, r.day);
+  startBattle(r, key, offended, final = false) {
+    const e = C.ENEMIES[key], en = this.makeEnemy(key, r.day, r.chapter);
     const log = [{ id: this.uid(), text: `${e.name} menghadang. ${e.intro}`, tone: 'enemy' }];
     if (offended) { en.atk = Math.round(en.atk * 1.2); log.push({ id: this.uid(), text: `Santoni berdiri dengan dua kaki. ${e.name} tidak terkesan. ATK musuh +20%.`, tone: 'bad' }); }
     this._acc = 0;
     this.setState({ run: Object.assign({}, r, { event: null }), screen: 'battle', shake: null,
-      battle: { enemy: en, turn: 1, heroTurn: !offended, hits: 0, firstDone: false, napUsed: false, over: null, log, pops: [], banner: null, proc: null } });
+      battle: { enemy: en, final: !!final, turn: 1, heroTurn: !offended, hits: 0, firstDone: false, napUsed: false, over: null, log, pops: [], banner: null, proc: null } });
   }
   battleStep() {
     const s = this.state; if (!s.battle || s.battle.over) return;
@@ -562,16 +564,16 @@ export default class Game extends Component {
     if (b.over === 'lose') return this.finishRun(r, false);
     r.kills += 1;
     const e = C.ENEMIES[b.enemy.key];
-    if (b.enemy.key === 'angsa') return this.finishRun(r, true);
+    if (b.final) return this.finishRun(r, true);
     this.setState({ screen: 'run', battle: null, shake: null });
-    this.applyOutcome(r, { coins: Math.round((e.boss ? 160 : 40) + r.day * 4), xp: e.boss ? 90 : 30 + r.day * 2 }, `${b.enemy.name} kalah. ${e.lose}`, { tone: 'win', noDaily: true });
+    this.applyOutcome(r, { coins: Math.round(((e.boss ? 160 : 40) + r.day * 4) * (1 + 0.15 * r.chapter)), xp: e.boss ? 90 : 30 + r.day * 2 }, `${b.enemy.name} kalah. ${e.lose}`, { tone: 'win', noDaily: true });
   }
   finishRun(r, win) {
     const s = this.state;
     const best = s.best.slice(), record = r.day > best[r.chapter];
     best[r.chapter] = Math.max(best[r.chapter], r.day);
     this.setState({ screen: 'result', battle: null, offer: null, shake: null, best, journal: [{ id: this.uid(), chapter: r.chapter, day: r.day, maxDay: r.maxDay, win, entries: r.log }].concat(s.journal || []).slice(0, 8), run: Object.assign({}, r, { event: null }),
-      result: { win, day: r.day, maxDay: r.maxDay, kills: r.kills, skills: r.skills.length, coins: r.coins + r.day * 90 + r.kills * 60 + (win ? 1500 : 0), gems: win ? 120 : Math.floor(r.day / 4) * 10, xp: r.day * 12 + r.kills * 20,
+      result: { win, day: r.day, maxDay: r.maxDay, kills: r.kills, skills: r.skills.length, coins: Math.round((r.coins + r.day * 90 + r.kills * 60 + (win ? 1500 : 0)) * (1 + 0.15 * r.chapter)), gems: win ? 120 + 20 * r.chapter : Math.floor(r.day / 4) * 10, xp: r.day * 12 + r.kills * 20,
         item: win ? this.rollItem(true) : r.day >= 5 ? this.rollItem(false) : null, record, chapter: r.chapter, quote: this.pick(win ? C.QUOTES_WIN : C.QUOTES) } });
   }
   claim(m) {
@@ -666,7 +668,7 @@ export default class Game extends Component {
       energyTimer: s.energy < C.ENERGY.max ? `+1 ${this.fmtWait(this.energyWait(s, Date.now()).next)}` : '', coinsLabel: fmt(s.coins), gemsLabel: fmt(s.gems), goShop: g(() => this.go('shop')),
       power: fmt(this.power(base)),
       chapterNo: s.chapter + 1, chapterName: ch.name, chapterBest: Math.min(s.best[s.chapter], days), daysTotal: days,
-      prevOpacity: s.chapter > 0 ? 1 : 0.35, nextOpacity: s.chapter < 5 && unlocked(s.chapter + 1) ? 1 : 0.35,
+      prevOpacity: s.chapter > 0 ? 1 : 0.35, nextOpacity: s.chapter < C.CHAPTERS.length - 1 && unlocked(s.chapter + 1) ? 1 : 0.35,
       prevChapter: g(() => this.shiftChapter(-1)), nextChapter: g(() => this.shiftChapter(1)),
       bubbleText: C.BUBBLES[s.bubble % C.BUBBLES.length], nextBubble: g(() => this.setState({ bubble: s.bubble + 1 })),
       dailyDot: !s.daily, tapDaily: g(() => this.tapDaily()),
@@ -682,11 +684,13 @@ export default class Game extends Component {
       bTurn: 1, bBoss: false, speeds: [1, 2, 3].map(n => ({ n, set: g(() => this.setState({ speed: n })), bg: s.speed === n ? '#F2B63C' : 'transparent', fg: s.speed === n ? '#2B1E18' : '#FFF8EC' })),
       eIcon: 'help', eName: '', eLvl: 1, eHpPct: '100%', eHpLabel: '', eTf: 'none', hTf: 'none', eArtId: 'art-musuh', eArtLabel: '', enemyPops: null, heroPops: null, banner: null, battleSkills: skillTiles, bTile,bLog: [], bOver: false, bOverColor: '#F2B63C', bOverText: '',
       slotsL: [], slotsR: [], heroStats: [], autoEquip: g(() => this.autoEquip()), mergeItems: g(() => this.toast('Butuh tiga item kembar. Santoni cuma punya satu dari hampir semuanya.')), bagCount: s.bag.length, bag: [],
-      mapSummary: `${s.best.filter(x => x >= days).length} DARI 6 SELESAI`, chapters: [],
+      mapSummary: `${s.best.filter(x => x >= days).length} DARI ${C.CHAPTERS.length} SELESAI`, chapters: [],
       pityLeft: Math.max(1, 10 - s.pity), pull1: g(() => this.pull(1)), pull10: g(() => this.pull(10)), offers: [], hasPull: !!s.pull, pullBurst: null, pullSub: '', pullCards: null, closePull: g(() => this.setState({ pull: null })),
       resRibbonBg: '#D2532A', resRibbon: '', resTitle: '', resSub: '', resStats: [], resRecord: false, resRewards: [], resQuote: '', claim1: g(() => this.claim(1)), claim2: g(() => this.claim(2)),
       tabs: [], hasToast: !!s.toast, toastText: s.toast ? s.toast.text : '',
-      still, chapterUpper: ch.name.toUpperCase(), walkPose: 'idle', sceneEnemy: false, sceneEnemyKind: 'tikus', sceneQuestion: false, farStrip: null, groundStrip: null,
+      still, chapterTotal: C.CHAPTERS.length, lobbySky: ch.theme.lSky, lobbyHill: ch.theme.lHill, lobbyGround: ch.theme.lGround,
+      sceneSky: (r ? C.CHAPTERS[r.chapter] : ch).theme.sky, sceneGround: (r ? C.CHAPTERS[r.chapter] : ch).theme.ground, battleBg: (r ? C.CHAPTERS[r.chapter] : ch).theme.battle,
+      chapterUpper: ch.name.toUpperCase(), walkPose: 'idle', sceneEnemy: false, sceneEnemyKind: 'tikus', sceneQuestion: false, farStrip: null, groundStrip: null,
       evKind: 'tikus', eKind: 'tikus', heroPose: 'idle', hLunge: 'none', eLunge: 'none', resPose: rs && rs.win ? 'seram' : 'sleep',
       heroScreenPose: C.POSES[(s.heroPoseIdx || 0) % 6][0], heroScreenPoseLabel: C.POSES[(s.heroPoseIdx || 0) % 6][1].toUpperCase(), cyclePose: g(() => this.setState({ heroPoseIdx: (s.heroPoseIdx || 0) + 1 }))
     };
@@ -703,14 +707,14 @@ export default class Game extends Component {
           fx: e.fx.map(f => ({ icon: FX[f.k][0], label: `${f.v > 0 ? '+' : '−'}${fmt(Math.abs(f.v))} ${FX[f.k][1]}${f.tag ? ` · ${f.tag}` : ''}`, bg: f.v < 0 ? '#F6C9BD' : f.k === 'coins' ? '#FBE6B4' : f.k === 'xp' ? '#E7D9F5' : '#CFE6D6' })) }))
       });
       const walking = r.auto && !r.event && !o && scr === 'run' && !still;
-      Object.assign(v, { walkPose: r.auto && !r.event && !o ? 'walk' : 'idle', sceneEnemy: !!r.event && r.event.kind === 'enemy', sceneEnemyKind: r.event && r.event.kind === 'enemy' ? r.event.enemy : 'tikus', sceneQuestion: !!r.event && r.event.kind === 'choice', farStrip: stripEl('far', walking), groundStrip: stripEl('near', walking) });
+      Object.assign(v, { walkPose: r.auto && !r.event && !o ? 'walk' : 'idle', sceneEnemy: !!r.event && r.event.kind === 'enemy', sceneEnemyKind: r.event && r.event.kind === 'enemy' ? r.event.enemy : 'tikus', sceneQuestion: !!r.event && r.event.kind === 'choice', farStrip: stripEl('far', walking, C.CHAPTERS[r.chapter].theme.hill), groundStrip: stripEl('near', walking) });
       const ev = r.event;
       if (ev && ev.kind === 'choice') {
         const d = C.EVENTS.find(x => x.id === ev.id);
         Object.assign(v, { hasEvent: true, evTag: 'SESUATU TERJADI', evTagBg: '#2B1E18', evText: d.text,
           evChoices: ['a', 'b'].map((w, i) => { const c = d[w], poor = !!c.cost && r.coins < c.cost; return { label: c.label, icon: c.icon, hint: poor ? 'koin kurang' : c.hint, bg: i === 0 ? '#F2B63C' : '#FFF8EC', opacity: poor ? 0.5 : 1, onClick: g(() => this.choose(w)) }; }) });
       } else if (ev && ev.kind === 'enemy') {
-        const e = C.ENEMIES[ev.enemy], en = this.makeEnemy(ev.enemy, r.day), gOn = p.gertak !== false;
+        const e = C.ENEMIES[ev.enemy], en = this.makeEnemy(ev.enemy, r.day, r.chapter), gOn = p.gertak !== false;
         const choices = [{ label: 'Lawan', icon: 'swords', hint: 'auto-battle', bg: '#F2B63C', opacity: 1, onClick: g(() => this.choose('a')) }];
         if (gOn) choices.push(e.boss
           ? { label: 'Pose Seram', icon: 'sports_martial_arts', hint: 'bos kebal', bg: '#EADBC5', opacity: 0.55, onClick: g(() => this.toast(e.immune)) }

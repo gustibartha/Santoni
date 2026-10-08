@@ -47,7 +47,7 @@ function StatusChip({ s }) {
 
 export default function Battle({ v }) {
   return (
-    <div style={{ position: "absolute", inset: "0", animation: v.quakeAnim, backgroundColor: "#1E2622", backgroundImage: "radial-gradient(rgba(255,248,236,.06) 1.2px,transparent 1.5px)", backgroundSize: "10px 10px", color: "#FFF8EC" }}>
+    <div style={{ position: "absolute", inset: "0", animation: v.quakeAnim, backgroundColor: v.battleBg, backgroundImage: "radial-gradient(rgba(255,248,236,.06) 1.2px,transparent 1.5px)", backgroundSize: "10px 10px", color: "#FFF8EC" }}>
       <div style={{ position: "absolute", top: "14px", left: "12px", right: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
         <div style={{ padding: "8px 10px", borderRadius: "12px", border: "2px solid #0F1411", background: "#2E3A34", font: "500 10.5px/1 'DM Mono',monospace", letterSpacing: ".08em" }}>GILIRAN {v.bTurn}</div>
         {v.bBoss && (
@@ -95,9 +95,9 @@ export default function Battle({ v }) {
           <div style={{ position: "absolute", left: "6px", right: "6px", top: "-4px", bottom: "6px", borderRadius: "50%", border: "3px solid rgba(201,160,110,.9)", background: "radial-gradient(circle, rgba(201,160,110,0) 55%, rgba(201,160,110,.28) 100%)", boxShadow: "0 0 18px rgba(201,160,110,.55)", pointerEvents: "none" }} />
         )}
         {v.twin && (
-          <div key={v.twinKey} style={{ position: "absolute", left: "12px", right: "12px", top: "0", bottom: "10px", opacity: 0, animation: v.still ? "none" : "pdTwin .5s ease-out", filter: "grayscale(.4) brightness(1.15)", pointerEvents: "none" }}><Santoni pose="attack" still={true} /></div>
+          <div key={v.twinKey} style={{ position: "absolute", left: "12px", right: "12px", top: "0", bottom: "10px", opacity: 0, animation: v.still ? "none" : "pdTwin .5s ease-out", filter: "grayscale(.4) brightness(1.15)", pointerEvents: "none" }}><Santoni side pose="attack" still={true} /></div>
         )}
-        <div style={{ position: "absolute", left: "12px", right: "12px", top: "0", bottom: "10px", transform: v.hLunge, transition: "transform .14s ease-out" }}><Santoni pose={v.heroPose} still={v.still} /></div>
+        <div style={{ position: "absolute", left: "12px", right: "12px", top: "0", bottom: "10px", transform: v.hLunge, transition: "transform .14s ease-out" }}><Santoni side pose={v.heroPose} still={v.still} /></div>
         <div style={{ position: "absolute", inset: "0", pointerEvents: "none" }}>{v.heroPops}</div>
       </div>
       <div style={{ position: "absolute", top: "404px", left: "238px", right: "12px", display: "flex", flexDirection: "column", gap: "9px" }}>

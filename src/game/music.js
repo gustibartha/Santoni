@@ -8,31 +8,33 @@ const _ = null;
 
 // Eighth-note steps. Each bar is 8 steps; `chords`/`bass` are per bar.
 const TRACKS = {
+  // Bouncy, sunny C major: bell lead, root–fifth hopping bass, off-beat "ukulele" chords.
   santai: {
-    bpm: 96, lead: 'triangle', leadVol: 0.16, drums: false,
+    bpm: 116, style: 'happy', leadVol: 0.12,
     melody: [
-      76, _, 79, 76, 74, 72, 74, _,
-      72, _, 69, 72, 76, _, 74, _,
-      72, _, 74, 76, 79, _, 76, _,
-      74, _, 72, 74, 67, _, _, _,
-      76, 79, 81, 79, 76, _, 74, 76,
-      79, _, 76, _, 74, 76, 74, _,
-      72, 74, 76, _, 81, _, 79, _,
-      76, 74, 72, _, 72, _, _, _
+      72, 76, 79, 76, 84, _, 79, _,
+      74, 79, 83, 79, 81, _, 79, _,
+      76, 72, 76, 81, 79, _, 76, _,
+      77, _, 76, 74, 72, 74, 76, _,
+      72, 76, 79, 84, 83, 84, 79, _,
+      79, _, 74, 79, 83, _, 81, 79,
+      77, 76, 74, 72, 74, _, 79, _,
+      84, _, 79, 76, 72, _, _, _
     ],
-    chords: [[60, 64, 67], [57, 60, 64], [53, 57, 60], [55, 59, 62], [60, 64, 67], [52, 55, 59], [53, 57, 60], [55, 59, 62]],
-    bass: [48, 45, 41, 43, 48, 40, 41, 43]
+    chords: [[60, 64, 67], [55, 59, 62], [57, 60, 64], [53, 57, 60], [60, 64, 67], [55, 59, 62], [53, 57, 60], [60, 64, 67]],
+    bass: [48, 43, 45, 41, 48, 43, 41, 48]
   },
+  // Upbeat heroic I–V–vi–IV with drums, so fights feel fun rather than tense.
   battle: {
-    bpm: 140, lead: 'square', leadVol: 0.07, drums: true,
+    bpm: 148, style: 'battle', lead: 'square', leadVol: 0.065,
     melody: [
-      69, 72, 76, 72, 74, 72, 71, 72,
-      69, _, 72, 74, 76, _, 74, 72,
-      71, 74, 79, 74, 76, 74, 71, 67,
-      68, 71, 76, _, 74, _, 71, _
+      72, 72, 79, 72, 76, 74, 72, 74,
+      71, 74, 79, 74, 83, 81, 79, 74,
+      72, 76, 81, 76, 84, 83, 81, 79,
+      77, 76, 74, 72, 74, _, 79, _
     ],
-    chords: [[57, 60, 64], [53, 57, 60], [55, 59, 62], [52, 56, 59]],
-    bass: [45, 41, 43, 40]
+    chords: [[60, 64, 67], [55, 59, 62], [57, 60, 64], [53, 57, 60]],
+    bass: [48, 43, 45, 41]
   }
 };
 
@@ -127,16 +129,24 @@ class Music {
   playStep(tr, i, t, len) {
     const bar = Math.floor(i / 8) % tr.chords.length, pos = i % 8;
     const n = tr.melody[i];
-    if (n != null) this.tone(midi(n), t, len * 1.6, tr.lead, tr.leadVol, true);
-    if (tr.drums) {
+    if (tr.style === 'battle') {
+      if (n != null) this.tone(midi(n), t, len * 1.6, tr.lead, tr.leadVol, true);
       // Pulsing octave bass, kick on beats, hats off-beat.
       this.tone(midi(tr.bass[bar] + (pos % 2 ? 12 : 0)), t, len * 0.9, 'square', 0.05);
-      if (pos % 2 === 0) this.kick(t);
-      else this.hat(t);
+      if (pos % 2 === 0) this.kick(t, 0.32);
+      else this.hat(t, 0.06);
       if (pos === 0) tr.chords[bar].forEach(c => this.tone(midi(c), t, len * 6, 'sawtooth', 0.018));
     } else {
-      if (pos === 0 || pos === 4) this.tone(midi(tr.bass[bar]), t, len * 3, 'sine', 0.22);
-      if (pos === 2 || pos === 6) tr.chords[bar].forEach((c, k) => this.tone(midi(c), t + k * 0.012, len * 1.5, 'sine', 0.05));
+      // Bell: a sine plus a quiet octave for sparkle, with a quick decay.
+      if (n != null) {
+        this.tone(midi(n), t, len * 2.2, 'sine', tr.leadVol, true);
+        this.tone(midi(n + 12), t, len * 1.1, 'sine', tr.leadVol * 0.28);
+      }
+      const root = tr.bass[bar];
+      if (pos % 2 === 0) this.tone(midi(pos % 4 === 0 ? root : root + 7), t, len * 0.9, 'triangle', 0.16);
+      else tr.chords[bar].forEach((c, k) => this.tone(midi(c + 12), t + k * 0.008, len * 0.6, 'triangle', 0.03));
+      if (pos === 0 || pos === 4) this.kick(t, 0.14);
+      if (pos % 2) this.hat(t, 0.025);
     }
   }
 
@@ -152,17 +162,17 @@ class Music {
     o.start(t); o.stop(t + dur + 0.05);
   }
 
-  kick(t) {
+  kick(t, vol = 0.35) {
     const c = this.ctx, o = c.createOscillator(), g = c.createGain();
     o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(45, t + 0.12);
-    g.gain.setValueAtTime(0.35, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
     o.connect(g); g.connect(this.master); o.start(t); o.stop(t + 0.2);
   }
 
-  hat(t) {
+  hat(t, vol = 0.06) {
     const c = this.ctx, s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
     s.buffer = this.noise; f.type = 'highpass'; f.frequency.value = 7000;
-    g.gain.setValueAtTime(0.06, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
     s.connect(f); f.connect(g); g.connect(this.master); s.start(t); s.stop(t + 0.06);
   }
 }

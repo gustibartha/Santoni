@@ -3,10 +3,10 @@
 import { ITEMS, RAR, OUT } from './data.js';
 import ItemArt from '../characters/ItemArt.jsx';
 
-export function stripEl(kind, on) {
+export function stripEl(kind, on, hill = '#B5D7C2') {
   const far = kind === 'far', playState = on ? 'running' : 'paused';
   const style = far
-    ? { position: 'absolute', left: 0, right: 0, bottom: '40px', height: '56px', backgroundImage: 'radial-gradient(circle at 50px 64px, #B5D7C2 0 42px, #2B1E18 42px 44.5px, transparent 45px)', backgroundSize: '180px 56px', backgroundRepeat: 'repeat-x', animation: 'pdScrollFar 7s linear infinite', animationPlayState: playState, pointerEvents: 'none' }
+    ? { position: 'absolute', left: 0, right: 0, bottom: '40px', height: '56px', backgroundImage: `radial-gradient(circle at 50px 64px, ${hill} 0 42px, #2B1E18 42px 44.5px, transparent 45px)`, backgroundSize: '180px 56px', backgroundRepeat: 'repeat-x', animation: 'pdScrollFar 7s linear infinite', animationPlayState: playState, pointerEvents: 'none' }
     : { position: 'absolute', left: 0, right: 0, bottom: '16px', height: '5px', backgroundImage: 'repeating-linear-gradient(90deg, rgba(43,30,24,.3) 0 18px, transparent 18px 40px)', backgroundSize: '80px 5px', animation: 'pdScrollNear .9s linear infinite', animationPlayState: playState, pointerEvents: 'none' };
   return <div key={kind} style={style} />;
 }

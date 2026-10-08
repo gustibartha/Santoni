@@ -158,13 +158,21 @@ export const ULT_ELEMENTS = {
   angin: '+30% kerusakan'
 };
 
+// Dungeons ("bab"). Each has its own enemy pool, mid-run boss (`mid`) and final boss (`boss`),
+// and a colour theme for the travel scene (sky/hill/ground), the lobby (l*) and battles.
+// Enemies get 14% tougher per chapter.
+const T = (sky, hill, ground, lSky, lHill, lGround, battle) => ({ sky, hill, ground, lSky, lHill, lGround, battle });
 export const CHAPTERS = [
-  { name: 'Kebun Bambu Tetangga', icon: 'forest', desc: 'Tetangga belum tahu.' },
-  { name: 'Pasar Subuh', icon: 'storefront', desc: 'Buka jam tiga pagi. Santoni bangun jam tiga sore.' },
-  { name: 'Rawa Kerupuk', icon: 'water', desc: 'Rawanya renyah. Jangan tanya kenapa.' },
-  { name: 'Gunung Kasur', icon: 'landscape', desc: 'Sangat empuk. Banyak yang tidak kembali karena ketiduran.' },
-  { name: 'Gua Wi-Fi Lemah', icon: 'wifi_off', desc: 'Satu bar. Kadang nol. Bosnya selalu buffering.' },
-  { name: 'Kantor Pajak Hutan', icon: 'account_balance', desc: 'Antrean nomor 4.891. Bawa fotokopi KTP.' }
+  { name: 'Kebun Bambu Tetangga', icon: 'forest', desc: 'Tetangga belum tahu.', pool: ['tikus', 'bebek', 'kumbang'], mid: 'kelinci', boss: 'lebah', theme: T('#E3EFD3', '#9CCB8E', '#7FB77A', '#CFE6B8', '#A8D49A', '#E2F0D0', '#1C2A1F') },
+  { name: 'Pasar Subuh', icon: 'storefront', desc: 'Buka jam tiga pagi. Santoni bangun jam tiga sore.', pool: ['tikus', 'bebek', 'kelinci'], mid: 'lele', boss: 'lebah', theme: T('#F9E3C8', '#E8B48A', '#D9A86A', '#F6C9A0', '#E9A97A', '#F3E1C0', '#2A2220') },
+  { name: 'Rawa Kerupuk', icon: 'water', desc: 'Rawanya renyah. Jangan tanya kenapa.', pool: ['tikus', 'bebek', 'kumbang', 'lele', 'kelinci'], mid: 'lebah', boss: 'angsa', theme: T('#F7D9BF', '#B5D7C2', '#9CCBB0', '#F3B49A', '#E8A584', '#CFE6D6', '#1E2622') },
+  { name: 'Gunung Kasur', icon: 'landscape', desc: 'Sangat empuk. Banyak yang tidak kembali karena ketiduran.', pool: ['kumbang', 'kelinci', 'bebek'], mid: 'lebah', boss: 'angsa', theme: T('#E9E5F7', '#C9C1EA', '#EEEAF8', '#D9D2F2', '#BDB3E6', '#F1EEFA', '#23213A') },
+  { name: 'Gua Wi-Fi Lemah', icon: 'wifi_off', desc: 'Satu bar. Kadang nol. Bosnya selalu buffering.', pool: ['kumbang', 'tikus', 'lele'], mid: 'lebah', boss: 'angsa', theme: T('#5A5470', '#7A7398', '#8C85A8', '#6E6890', '#857DA6', '#A39CC0', '#15131F') },
+  { name: 'Kantor Pajak Hutan', icon: 'account_balance', desc: 'Antrean nomor 4.891. Bawa fotokopi KTP.', pool: ['tikus', 'kelinci', 'bebek'], mid: 'lebah', boss: 'angsa', theme: T('#ECE6DA', '#B4BEB8', '#C9BBA6', '#DCD3C2', '#BFC8C2', '#E8E0D0', '#222624') },
+  { name: 'Pantai Sandal Hilang', icon: 'beach_access', desc: 'Semua sandal kiri berakhir di sini. Yang kanan tidak pernah datang.', pool: ['lele', 'bebek', 'kumbang'], mid: 'kelinci', boss: 'angsa', theme: T('#D3ECF6', '#7FC4DC', '#F3DFA8', '#BFE3F1', '#86C7DE', '#F5E4B4', '#14293A') },
+  { name: 'Kebun Durian Jatuh', icon: 'park', desc: 'Pakai helm. Duriannya tidak pilih-pilih kepala.', pool: ['kumbang', 'kelinci', 'tikus', 'lele'], mid: 'lebah', boss: 'angsa', theme: T('#F1EECB', '#A7C66A', '#8FB55A', '#E8E6B0', '#B4CF78', '#E6EDC4', '#1F2A14') },
+  { name: 'Gunung Es Teh Manis', icon: 'ac_unit', desc: 'Dingin, manis, dan terlalu banyak gula. Dokter gigi tidak setuju.', pool: ['bebek', 'lele', 'kelinci', 'kumbang'], mid: 'lebah', boss: 'angsa', theme: T('#EAF6F8', '#CDE8EE', '#D9A36A', '#DDF0F4', '#C3E2EA', '#E9C58F', '#1E2A33') },
+  { name: 'Istana Angsa Pengacara', icon: 'castle', desc: 'Semua pintu terkunci. Kuncinya ada di pasal 47.', pool: ['tikus', 'bebek', 'kumbang', 'lele', 'kelinci'], mid: 'lebah', boss: 'angsa', theme: T('#F3E3F0', '#D8B4D8', '#C9A86A', '#EED3EA', '#D3A8D3', '#E8D6A8', '#2A1A2A') }
 ];
 export const OFFERS = [
   { id: 'energi', name: 'Energi ×10', icon: 'bolt', rar: 'Langka', cur: 'gem', price: 50, give: { energy: 10 }, msg: 'Energi +10. Santoni tetap mengantuk.' },

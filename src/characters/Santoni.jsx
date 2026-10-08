@@ -9,75 +9,123 @@ const POSES = {
   sleep: { tBody: 'translateY(8px) scale(1.04,.93)', armL: 4, armR: -4, tTail: 'rotate(18deg)', tHead: 'translateY(10px) rotate(-10deg)', aBody: 'pdBreath 3.6s ease-in-out infinite', aTail: N, aArm: N, aFootL: N, aFootR: N, expr: 'tidur' }
 };
 
-// Side view facing right, used for walking: legs and arms swing, tail sways behind, backpack on.
-function SantoniWalking({ flip, still }) {
-  const a = x => (still ? N : x);
+// Side view facing right (towards the road and the enemy). Static limb angles per pose sit on
+// an outer group with a transition; looping animations run on an inner group.
+const STEP = '.52s ease-in-out infinite';
+const SIDE = {
+  walk: { body: `pdSideBob ${STEP}`, tail: `pdTail ${STEP}`, head: `pdSideHead ${STEP}`, aLegF: `pdStepA ${STEP}`, aLegB: `pdStepB ${STEP}`, aArmF: `pdStepB ${STEP}`, aArmB: `pdStepA ${STEP}`, eye: 'datar' },
+  idle: { body: 'pdBreath 2.6s ease-in-out infinite', tail: 'pdTail 2.8s ease-in-out infinite', armF: 8, armB: -6, eye: 'datar' },
+  attack: { tBody: 'translateX(14px) rotate(9deg)', armF: -100, armB: -35, legF: -22, legB: 20, tTail: 'rotate(-12deg)', tHead: 'rotate(4deg)', eye: 'datar' },
+  hurt: { tBody: 'translateX(-12px) rotate(-10deg)', armF: -60, armB: -40, legF: 10, legB: -10, tTail: 'rotate(14deg)', tHead: 'rotate(-8deg)', eye: 'sakit' },
+  seram: { tBody: 'scale(1.03,1.07)', body: 'pdShake .3s ease-in-out infinite', armF: -145, armB: -150, tTail: 'rotate(-18deg) scale(1.1)', eye: 'datar' },
+  sleep: { tBody: 'translateY(10px) rotate(-5deg) scale(1.03,.94)', body: 'pdBreath 3.6s ease-in-out infinite', armF: 8, armB: 4, tTail: 'rotate(16deg)', tHead: 'translateY(8px) rotate(12deg)', eye: 'tidur' }
+};
+
+function Limb({ deg = 0, anim, origin, still, children }) {
+  return (
+    <g style={{ transform: `rotate(${deg}deg)`, transformOrigin: origin, transition: 'transform .16s ease-out' }}>
+      <g style={{ animation: still || !anim ? N : anim, transformOrigin: origin }}>{children}</g>
+    </g>
+  );
+}
+
+const zStyle = (size, w, anim, origin) => ({ font: `${size}px 'Bagel Fat One',system-ui`, fill: '#FFF8EC', stroke: '#2B1E18', strokeWidth: w, paintOrder: 'stroke', animation: anim, transformOrigin: origin });
+
+function SantoniSide({ pose, flip, still }) {
+  const p = SIDE[pose] || SIDE.idle;
+  const a = x => (still || !x ? N : x);
   const ink = { stroke: '#2B1E18', strokeWidth: 3.5, strokeLinejoin: 'round', strokeLinecap: 'round' };
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
       <svg viewBox="0 0 200 220" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'visible', display: 'block' }}>
         <ellipse cx="102" cy="211" rx="50" ry="7" style={{ fill: 'rgba(43,30,24,.16)' }} />
         <g style={{ transform: flip ? 'scaleX(-1)' : N, transformOrigin: '100px 110px' }}>
-          <g style={{ animation: a('pdSideBob .52s ease-in-out infinite'), transformOrigin: '100px 210px' }}>
-            <g style={ink}>
-              <g style={{ animation: a('pdTail .52s ease-in-out infinite'), transformOrigin: '80px 170px' }}>
-                <ellipse cx="62" cy="168" rx="19" ry="15" transform="rotate(-20 62 168)" fill="#F0A070" />
-                <ellipse cx="46" cy="154" rx="19" ry="15" transform="rotate(-40 46 154)" fill="#D2532A" />
-                <ellipse cx="36" cy="137" rx="18" ry="14" transform="rotate(-62 36 137)" fill="#F0A070" />
-                <ellipse cx="31" cy="119" rx="17" ry="13" transform="rotate(-80 31 119)" fill="#D2532A" />
-                <ellipse cx="31" cy="101" rx="15" ry="12" transform="rotate(-95 31 101)" fill="#8E3418" />
-              </g>
-              <g style={{ animation: a('pdStepB .52s ease-in-out infinite'), transformOrigin: '94px 178px' }}>
-                <rect x="85" y="172" width="17" height="32" rx="8.5" fill="#2C1A16" />
-                <ellipse cx="100" cy="204" rx="14" ry="7.5" fill="#2C1A16" />
-              </g>
-              <g style={{ animation: a('pdStepA .52s ease-in-out infinite'), transformOrigin: '96px 142px' }}>
-                <rect x="88" y="138" width="16" height="34" rx="8" fill="#2C1A16" />
-              </g>
-              <ellipse cx="103" cy="160" rx="33" ry="37" fill="#D2532A" />
-              <ellipse cx="122" cy="166" rx="12" ry="24" fill="#5A3226" stroke="none" />
-              <rect x="60" y="131" width="28" height="40" rx="10" fill="#8E5A2B" />
-              <path d="M60 145Q74 139 88 145" fill="none" strokeWidth="2.6" />
-              <rect x="65" y="152" width="16" height="12" rx="4" fill="#B07A45" strokeWidth="2.4" />
-              <path d="M86 136Q104 131 114 149" fill="none" stroke="#2B1E18" strokeWidth="6" />
-              <path d="M86 136Q104 131 114 149" fill="none" stroke="#6B4020" strokeWidth="2.6" />
-              <g style={{ animation: a('pdStepA .52s ease-in-out infinite'), transformOrigin: '112px 180px' }}>
-                <rect x="103" y="174" width="17" height="30" rx="8.5" fill="#3A2420" />
-                <rect x="100" y="205" width="32" height="7" rx="3.5" fill="#F2B63C" strokeWidth="2.5" />
-                <ellipse cx="117" cy="203" rx="15" ry="8" fill="#3A2420" />
-                <path d="M108 200Q118 194 128 200" fill="none" stroke="#F2B63C" strokeWidth="4.5" />
-              </g>
-              <g style={{ animation: a('pdStepB .52s ease-in-out infinite'), transformOrigin: '116px 142px' }}>
-                <rect x="108" y="138" width="16" height="36" rx="8" fill="#3A2420" />
-              </g>
-              <g style={{ animation: a('pdSideHead .52s ease-in-out infinite'), transformOrigin: '106px 128px' }}>
-                <path d="M104 56Q106 26 124 22Q132 38 124 58Z" fill="#4A2A20" />
-                <ellipse cx="106" cy="90" rx="47" ry="42" fill="#D2532A" />
-                <path d="M66 66Q54 30 76 22Q96 30 96 54Z" fill="#FFF8EC" />
-                <path d="M72 60Q65 38 76 31Q87 39 89 53Z" fill="#4A2A20" stroke="none" />
-                <ellipse cx="96" cy="110" rx="14" ry="10" fill="#FFF8EC" stroke="none" />
-                <ellipse cx="124" cy="70" rx="9" ry="5.5" fill="#FFF8EC" stroke="none" />
-                <path d="M122 98Q117 108 121 118" fill="none" stroke="#8E3418" strokeWidth="6" />
-                <path d="M126 92Q150 82 161 96Q164 112 147 117Q129 120 121 108Z" fill="#FFF8EC" />
-                <ellipse cx="158" cy="96" rx="6.5" ry="5" fill="#2B1E18" strokeWidth="1.5" />
-                <path d="M151 110Q144 112.5 137 110" fill="none" strokeWidth="2.6" />
-                <g style={{ animation: a('pdBlink 4.2s ease-in-out infinite'), transformOrigin: '127px 87px' }}>
-                  <path d="M119 84L136 84Q135 94 127.5 94Q120 94 119 84Z" fill="#2B1E18" stroke="none" />
-                  <circle cx="130" cy="88.5" r="1.8" fill="#FFF8EC" stroke="none" />
+          <g style={{ animation: a(p.body), transformOrigin: '100px 210px' }}>
+            <g style={{ transform: p.tBody || N, transformOrigin: '100px 210px', transition: 'transform .16s ease-out' }}>
+              <g style={ink}>
+                <g style={{ transform: p.tTail || N, transformOrigin: '80px 170px', transition: 'transform .2s ease-out' }}>
+                  <g style={{ animation: a(p.tail), transformOrigin: '80px 170px' }}>
+                    <ellipse cx="62" cy="168" rx="19" ry="15" transform="rotate(-20 62 168)" fill="#F0A070" />
+                    <ellipse cx="46" cy="154" rx="19" ry="15" transform="rotate(-40 46 154)" fill="#D2532A" />
+                    <ellipse cx="36" cy="137" rx="18" ry="14" transform="rotate(-62 36 137)" fill="#F0A070" />
+                    <ellipse cx="31" cy="119" rx="17" ry="13" transform="rotate(-80 31 119)" fill="#D2532A" />
+                    <ellipse cx="31" cy="101" rx="15" ry="12" transform="rotate(-95 31 101)" fill="#8E3418" />
+                  </g>
                 </g>
-                <path d="M116 83.5L138 83.5" fill="none" strokeWidth="3" />
+                <Limb deg={p.legB} anim={p.aLegB} origin="94px 178px" still={still}>
+                  <rect x="85" y="172" width="17" height="32" rx="8.5" fill="#2C1A16" />
+                  <ellipse cx="100" cy="204" rx="14" ry="7.5" fill="#2C1A16" />
+                </Limb>
+                <Limb deg={p.armB} anim={p.aArmB} origin="96px 142px" still={still}>
+                  <rect x="88" y="138" width="16" height="34" rx="8" fill="#2C1A16" />
+                </Limb>
+                <ellipse cx="103" cy="160" rx="33" ry="37" fill="#D2532A" />
+                <ellipse cx="122" cy="166" rx="12" ry="24" fill="#5A3226" stroke="none" />
+                <rect x="60" y="131" width="28" height="40" rx="10" fill="#8E5A2B" />
+                <path d="M60 145Q74 139 88 145" fill="none" strokeWidth="2.6" />
+                <rect x="65" y="152" width="16" height="12" rx="4" fill="#B07A45" strokeWidth="2.4" />
+                <path d="M86 136Q104 131 114 149" fill="none" stroke="#2B1E18" strokeWidth="6" />
+                <path d="M86 136Q104 131 114 149" fill="none" stroke="#6B4020" strokeWidth="2.6" />
+                <Limb deg={p.legF} anim={p.aLegF} origin="112px 180px" still={still}>
+                  <rect x="103" y="174" width="17" height="30" rx="8.5" fill="#3A2420" />
+                  <rect x="100" y="205" width="32" height="7" rx="3.5" fill="#F2B63C" strokeWidth="2.5" />
+                  <ellipse cx="117" cy="203" rx="15" ry="8" fill="#3A2420" />
+                  <path d="M108 200Q118 194 128 200" fill="none" stroke="#F2B63C" strokeWidth="4.5" />
+                </Limb>
+                <g style={{ transform: p.tHead || N, transformOrigin: '106px 128px', transition: 'transform .2s ease-out' }}>
+                  <g style={{ animation: a(p.head), transformOrigin: '106px 128px' }}>
+                    <path d="M104 56Q106 26 124 22Q132 38 124 58Z" fill="#4A2A20" />
+                    <ellipse cx="106" cy="90" rx="47" ry="42" fill="#D2532A" />
+                    <path d="M66 66Q54 30 76 22Q96 30 96 54Z" fill="#FFF8EC" />
+                    <path d="M72 60Q65 38 76 31Q87 39 89 53Z" fill="#4A2A20" stroke="none" />
+                    <ellipse cx="96" cy="110" rx="14" ry="10" fill="#FFF8EC" stroke="none" />
+                    <ellipse cx="124" cy="70" rx="9" ry="5.5" fill="#FFF8EC" stroke="none" />
+                    <path d="M122 98Q117 108 121 118" fill="none" stroke="#8E3418" strokeWidth="6" />
+                    <path d="M126 92Q150 82 161 96Q164 112 147 117Q129 120 121 108Z" fill="#FFF8EC" />
+                    <ellipse cx="158" cy="96" rx="6.5" ry="5" fill="#2B1E18" strokeWidth="1.5" />
+                    <path d="M151 110Q144 112.5 137 110" fill="none" strokeWidth="2.6" />
+                    {p.eye === 'datar' && (
+                      <>
+                        <g style={{ animation: a('pdBlink 4.2s ease-in-out infinite'), transformOrigin: '127px 87px' }}>
+                          <path d="M119 84L136 84Q135 94 127.5 94Q120 94 119 84Z" fill="#2B1E18" stroke="none" />
+                          <circle cx="130" cy="88.5" r="1.8" fill="#FFF8EC" stroke="none" />
+                        </g>
+                        <path d="M116 83.5L138 83.5" fill="none" strokeWidth="3" />
+                      </>
+                    )}
+                    {p.eye === 'sakit' && (
+                      <>
+                        <path d="M120 81L133 88L120 95" fill="none" strokeWidth="3.2" />
+                        <path d="M150 52Q157 63 150 68Q143 63 150 52Z" fill="#9EC3F0" strokeWidth="2.5" />
+                      </>
+                    )}
+                    {p.eye === 'tidur' && <path d="M118 88Q127 95 136 88" fill="none" strokeWidth="3" />}
+                  </g>
+                </g>
+                <Limb deg={p.armF} anim={p.aArmF} origin="116px 142px" still={still}>
+                  <rect x="108" y="138" width="16" height="36" rx="8" fill="#3A2420" />
+                </Limb>
               </g>
             </g>
           </g>
         </g>
+        {p.eye === 'tidur' && (
+          <g>
+            <text x="150" y="50" style={zStyle(24, 4, a('pdZ 2.4s ease-out infinite'), '154px 44px')}>z</text>
+            <text x="170" y="30" style={zStyle(17, 3.5, a('pdZ 2.4s 1.2s ease-out infinite'), '174px 26px')}>z</text>
+          </g>
+        )}
       </svg>
     </div>
   );
 }
 
-/** @param {{ pose?: keyof POSES, expr?: 'auto'|'datar'|'kaget'|'tidur'|'sakit', flip?: boolean, still?: boolean }} props */
-export default function Santoni({ pose = 'idle', expr = 'auto', flip = false, still = false }) {
-  if (pose === 'walk' && (expr === 'auto' || expr === 'datar')) return <SantoniWalking flip={flip} still={still} />;
+/**
+ * @param {{ pose?: keyof POSES, expr?: 'auto'|'datar'|'kaget'|'tidur'|'sakit', flip?: boolean, still?: boolean, side?: boolean }} props
+ * `side` draws the right-facing profile (always used for walking).
+ */
+export default function Santoni({ pose = 'idle', expr = 'auto', flip = false, still = false, side = false }) {
+  if ((side || pose === 'walk') && expr === 'auto') return <SantoniSide pose={pose} flip={flip} still={still} />;
   const c = POSES[pose] || POSES.idle;
   const face = expr && expr !== 'auto' ? expr : c.expr;
   const a = x => (still ? N : x);

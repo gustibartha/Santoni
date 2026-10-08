@@ -7,7 +7,7 @@ export default function Lobby({ v }) {
       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
         <button onClick={v.prevChapter} style={{ flex: "none", width: "40px", height: "40px", display: "grid", placeItems: "center", padding: "0", border: "2.5px solid #2B1E18", borderRadius: "14px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", color: "#2B1E18", font: "26px/1 'Material Symbols Rounded'", cursor: "pointer", opacity: v.prevOpacity }}>chevron_left</button>
         <div style={{ flex: "1", minWidth: "0", textAlign: "center", padding: "7px 10px 8px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18" }}>
-          <div style={{ font: "500 10px/1.2 'DM Mono',monospace", letterSpacing: ".1em", color: "#A93D1C" }}>BAB {v.chapterNo} DARI 6</div>
+          <div style={{ font: "500 10px/1.2 'DM Mono',monospace", letterSpacing: ".1em", color: "#A93D1C" }}>BAB {v.chapterNo} DARI {v.chapterTotal}</div>
           <div style={{ font: "21px/1.15 'Bagel Fat One',system-ui", marginTop: "3px" }}>{v.chapterName}</div>
           <div style={{ font: "600 12px/1.3 'Bricolage Grotesque'", color: "#6E5A4E", marginTop: "2px" }}>Rekor: Hari {v.chapterBest} / {v.daysTotal}</div>
         </div>
@@ -21,9 +21,9 @@ export default function Lobby({ v }) {
         </div>
         <span style={{ padding: "6px 9px", borderRadius: "9px", background: "#FFF8EC", color: "#2B1E18", font: "800 11px/1 'Bricolage Grotesque'" }}>Lihat</span>
       </div>
-      <div style={{ position: "relative", flex: "1", minHeight: "0", border: "2.5px solid #2B1E18", borderRadius: "26px", overflow: "hidden", backgroundColor: "#F3B49A", backgroundImage: "radial-gradient(rgba(43,30,24,.13) 1.2px,transparent 1.5px)", backgroundSize: "10px 10px", boxShadow: "0 4px 0 #2B1E18" }}>
-        <div style={{ position: "absolute", left: "-30%", right: "-30%", bottom: "-130px", height: "310px", borderRadius: "50%", background: "#E8A584", border: "2.5px solid #2B1E18" }} />
-        <div style={{ position: "absolute", left: "0", right: "0", bottom: "0", height: "74px", background: "#CFE6D6", borderTop: "2.5px solid #2B1E18" }} />
+      <div style={{ position: "relative", flex: "1", minHeight: "0", border: "2.5px solid #2B1E18", borderRadius: "26px", overflow: "hidden", backgroundColor: v.lobbySky, transition: "background-color .4s", backgroundImage: "radial-gradient(rgba(43,30,24,.13) 1.2px,transparent 1.5px)", backgroundSize: "10px 10px", boxShadow: "0 4px 0 #2B1E18" }}>
+        <div style={{ position: "absolute", left: "-30%", right: "-30%", bottom: "-130px", height: "310px", borderRadius: "50%", background: v.lobbyHill, border: "2.5px solid #2B1E18" }} />
+        <div style={{ position: "absolute", left: "0", right: "0", bottom: "0", height: "74px", background: v.lobbyGround, borderTop: "2.5px solid #2B1E18" }} />
         <div style={{ position: "absolute", right: "30px", bottom: "52px", width: "8px", height: "52px", border: "2.5px solid #2B1E18", borderRadius: "4px", background: "#8E5A2B" }} />
         <div style={{ position: "absolute", right: "10px", bottom: "96px", padding: "6px 9px", border: "2.5px solid #2B1E18", borderRadius: "8px", background: "#FFF8EC", font: "500 9px/1.15 'DM Mono',monospace", letterSpacing: ".06em", transform: "rotate(-5deg)", boxShadow: "0 2px 0 #2B1E18" }}>{v.chapterUpper} →</div>
         <div style={{ position: "absolute", left: "26px", top: "100px", width: "62px", height: "20px", boxSizing: "border-box", borderRadius: "12px", background: "#FFF8EC", border: "2.5px solid #2B1E18" }} />
