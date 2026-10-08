@@ -49,6 +49,7 @@ clear
 close
 cloud
 cloud_done
+cloud_off
 cloud_upload
 code
 confirmation_number

@@ -4,7 +4,7 @@ const BTN = { display: "flex", alignItems: "center", justifyContent: "center", g
 // Sign-in card for the online save. Signed in, it shows the account and the last upload.
 function AccountCard({ a }) {
   return (
-    <div style={{ marginTop: "18px", padding: "12px 14px 14px", border: "2.5px solid #2B1E18", borderRadius: "18px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18" }}>
+    <div style={{ marginTop: "14px", padding: "12px 14px 14px", border: "2.5px solid #2B1E18", borderRadius: "18px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
         <span style={{ font: "22px/1 'Material Symbols Rounded'", color: "#3C78C8" }}>{a.user ? 'cloud_done' : 'cloud'}</span>
         <div style={{ font: "16px/1.1 'Bagel Fat One',system-ui" }}>Akun online</div>
@@ -51,6 +51,7 @@ export default function Journal({ v }) {
         <div style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#5E4A3F" }}>{v.journalSummary}</div>
       </div>
       <div style={{ font: "500 13px/1.4 'Bricolage Grotesque'", color: "#5B4A40", marginTop: "6px" }}>Semua yang terjadi di perjalanan. Santoni tidak pernah membacanya.</div>
+      {v.acct.online && <AccountCard a={v.acct} />}
       <div style={{ display: "flex", flexDirection: "column", gap: "14px", marginTop: "14px" }}>
         {v.journal.map((j, i) => (
             <div key={j.key ?? j.id ?? i} style={{ border: "2.5px solid #2B1E18", borderRadius: "20px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", overflow: "hidden" }}>
@@ -88,7 +89,6 @@ export default function Journal({ v }) {
             </div>
         ))}
       </div>
-      {v.acct.online && <AccountCard a={v.acct} />}
       <div style={{ marginTop: "18px", padding: "12px 14px", border: "2.5px dashed #2B1E18", borderRadius: "18px", background: "#F3E6D3" }}>
         <div style={{ font: "16px/1.1 'Bagel Fat One',system-ui" }}>Cadangan progres</div>
         <div style={{ font: "500 12px/1.4 'Bricolage Grotesque'", color: "#5B4A40", marginTop: "4px" }}>Tanpa akun, progres hanya tersimpan di browser ini. Kode ini bisa dipakai untuk pindah perangkat tanpa login.</div>
