@@ -12,7 +12,7 @@ export default function Run({ v }) {
           <div style={{ font: "500 10px/1.2 'DM Mono',monospace", letterSpacing: ".08em", color: "#A93D1C", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>BAB {v.runChapterNo} · {v.runChapterUpper}</div>
           <div style={{ display: "flex", alignItems: "baseline", gap: "5px", marginTop: "3px" }}>
             <span style={{ font: "26px/1 'Bagel Fat One',system-ui" }}>Hari {v.day}</span>
-            <span style={{ font: "700 14px/1 'Bricolage Grotesque'", color: "#6E5A4E" }}>/ {v.maxDay}</span>
+            <span style={{ font: "700 14px/1 'Bricolage Grotesque'", color: "#5E4A3F" }}>/ {v.maxDay}</span>
           </div>
         </div>
         <MusicButton v={v} />
@@ -44,10 +44,19 @@ export default function Run({ v }) {
         </div>
         <div style={{ position: "absolute", right: "10px", top: "10px", padding: "5px 9px", borderRadius: "10px", background: "#2B1E18", color: "#FFF8EC", font: "500 10.5px/1 'DM Mono',monospace", letterSpacing: ".06em", pointerEvents: "none" }}>{v.walkStatus}</div>
       </div>
+      {v.runChips.length > 0 && (
+        <div style={{ display: "flex", gap: "6px", flex: "none", overflowX: "auto", scrollbarWidth: "none" }}>
+          {v.runChips.map(c => (
+            <button key={c.key} onClick={c.tap} style={{ display: "inline-flex", alignItems: "center", gap: "4px", flex: "none", height: "26px", padding: "0 9px 0 6px", border: "2px solid #2B1E18", borderRadius: "9px", background: c.bg, color: "#FFF8EC", font: "700 11.5px/1 'Bricolage Grotesque'", cursor: "pointer", whiteSpace: "nowrap" }}>
+              <span style={{ font: "15px/1 'Material Symbols Rounded'" }}>{c.icon}</span>{c.label}
+            </button>
+          ))}
+        </div>
+      )}
       <div style={{ display: "flex", alignItems: "center", gap: "10px", flex: "none" }}>
         <div style={{ width: "50px", height: "50px", flex: "none", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "50%", background: "#F2B63C", boxShadow: "0 3px 0 #2B1E18", textAlign: "center" }}>
           <div>
-            <div style={{ font: "500 8.5px/1 'DM Mono',monospace", letterSpacing: ".08em" }}>LV</div>
+            <div style={{ font: "500 9.5px/1 'DM Mono',monospace", letterSpacing: ".08em" }}>LV</div>
             <div style={{ font: "20px/1 'Bagel Fat One',system-ui", marginTop: "1px" }}>{v.lvl}</div>
           </div>
         </div>
@@ -64,7 +73,7 @@ export default function Run({ v }) {
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <div style={{ flex: "1", height: "9px", boxSizing: "border-box", border: "2px solid #2B1E18", borderRadius: "5px", background: "#EADBC5", overflow: "hidden" }}><div style={{ height: "100%", width: v.xpPct, background: "#F2B63C", transition: "width .3s" }} /></div>
-            <span style={{ font: "500 9.5px/1 'DM Mono',monospace", whiteSpace: "nowrap" }}>XP {v.xpLabel}</span>
+            <span style={{ font: "500 10.5px/1 'DM Mono',monospace", whiteSpace: "nowrap" }}>XP {v.xpLabel}</span>
           </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "5px", flex: "none" }}>
@@ -79,7 +88,7 @@ export default function Run({ v }) {
         </div>
       </div>
       <div style={{ position: "relative", flex: "1", minHeight: "0", border: "2.5px solid #2B1E18", borderRadius: "20px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: "0", left: "0", right: "0", zIndex: "1", display: "flex", justifyContent: "space-between", padding: "9px 14px 7px", background: "#FFF8EC", borderBottom: "1.5px dashed rgba(43,30,24,.25)", font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#6E5A4E" }}>
+        <div style={{ position: "absolute", top: "0", left: "0", right: "0", zIndex: "1", display: "flex", justifyContent: "space-between", padding: "9px 14px 7px", background: "#FFF8EC", borderBottom: "1.5px dashed rgba(43,30,24,.25)", font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#5E4A3F" }}>
           <span>CATATAN PERJALANAN</span>
           <span>{v.logCount} ENTRI</span>
         </div>
@@ -109,7 +118,7 @@ export default function Run({ v }) {
       <div style={{ display: "flex", alignItems: "center", gap: "8px", flex: "none", height: "54px" }}>
         <div style={{ flex: "1", minWidth: "0", height: "100%", boxSizing: "border-box", display: "flex", alignItems: "center", gap: "8px", padding: "0 9px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", overflowX: "auto", overflowY: "hidden", scrollbarWidth: "none" }}>
           {v.noSkills && (
-            <span style={{ font: "600 12px/1.25 'Bricolage Grotesque'", color: "#6E5A4E" }}>Belum ada skill. Santoni mengandalkan wajah.</span>
+            <span style={{ font: "600 12px/1.25 'Bricolage Grotesque'", color: "#5E4A3F" }}>Belum ada skill. Santoni mengandalkan wajah.</span>
           )}
           {v.ownedSkills.map((k, i) => (
               <div key={k.key ?? k.id ?? i} onClick={k.tap} style={{ cursor: "pointer", position: "relative", width: "34px", height: "34px", flex: "none", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2px solid #2B1E18", borderRadius: "10px", background: k.bg, color: k.fg, font: "19px/1 'Material Symbols Rounded'" }}>
@@ -130,21 +139,21 @@ export default function Run({ v }) {
         <div style={{ position: "absolute", left: "12px", right: "12px", bottom: "78px", zIndex: "8", padding: "16px 16px 14px", border: "3px solid #2B1E18", borderRadius: "24px", background: "#FFF8EC", boxShadow: "0 6px 0 #2B1E18,0 22px 44px rgba(43,30,24,.38)" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
             <span style={{ padding: "5px 8px", borderRadius: "8px", background: v.evTagBg, color: "#FFF8EC", font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".08em" }}>{v.evTag}</span>
-            <span style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#6E5A4E" }}>HARI {v.day}</span>
+            <span style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#5E4A3F" }}>HARI {v.day}</span>
           </div>
           {v.evIsEnemy && (
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginTop: "12px" }}>
               <div style={{ position: "relative", width: "60px", height: "60px", flex: "none", boxSizing: "border-box", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#E7D9F5", boxShadow: "0 3px 0 #2B1E18", overflow: "hidden" }}><div style={{ position: "absolute", left: "2px", right: "2px", top: "3px", bottom: "-1px" }}><Musuh kind={v.evKind} still={true} /></div></div>
               <div style={{ minWidth: "0" }}>
                 <div style={{ font: "22px/1.1 'Bagel Fat One',system-ui" }}>{v.evName}</div>
-                <div style={{ font: "500 10.5px/1.3 'DM Mono',monospace", color: "#6E5A4E", marginTop: "4px" }}>{v.evSub}</div>
+                <div style={{ font: "500 10.5px/1.3 'DM Mono',monospace", color: "#5E4A3F", marginTop: "4px" }}>{v.evSub}</div>
               </div>
             </div>
           )}
           <div style={{ marginTop: "11px", font: "500 15px/1.45 'Bricolage Grotesque'", textWrap: "pretty" }}>{v.evText}</div>
           {v.evTrait && (
             <div style={{ display: "flex", alignItems: "flex-start", gap: "7px", marginTop: "9px", padding: "7px 9px", borderRadius: "11px", background: "#EDE6F5", font: "500 12px/1.35 'Bricolage Grotesque'", color: "#3A3550" }}>
-              <span style={{ flex: "none", padding: "3px 6px", borderRadius: "6px", background: "#3A3550", color: "#FFF8EC", font: "500 9px/1 'DM Mono',monospace", letterSpacing: ".08em" }}>{v.evTrait.tag}</span>
+              <span style={{ flex: "none", padding: "3px 6px", borderRadius: "6px", background: "#3A3550", color: "#FFF8EC", font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".08em" }}>{v.evTrait.tag}</span>
               <span>{v.evTrait.desc}</span>
             </div>
           )}
@@ -160,7 +169,7 @@ export default function Run({ v }) {
             ))}
           </div>
           {v.hasEvFoot && (
-            <div style={{ marginTop: "11px", font: "500 11.5px/1.4 'Bricolage Grotesque'", color: "#6E5A4E", textWrap: "pretty" }}>{v.evFoot}</div>
+            <div style={{ marginTop: "11px", font: "500 11.5px/1.4 'Bricolage Grotesque'", color: "#5E4A3F", textWrap: "pretty" }}>{v.evFoot}</div>
           )}
         </div>
       )}

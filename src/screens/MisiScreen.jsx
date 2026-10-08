@@ -14,7 +14,7 @@ function QuestCard({ q }) {
           <div style={{ flex: "1", height: "9px", boxSizing: "border-box", border: "2px solid #2B1E18", borderRadius: "5px", background: "#EADBC5", overflow: "hidden" }}>
             <div style={{ height: "100%", width: q.pct, background: q.done ? "#4FAE72" : "#F2B63C", transition: "width .3s" }} />
           </div>
-          <span style={{ font: "500 9.5px/1 'DM Mono',monospace", color: "#6E5A4E", whiteSpace: "nowrap" }}>{q.progress}</span>
+          <span style={{ font: "500 10.5px/1 'DM Mono',monospace", color: "#5E4A3F", whiteSpace: "nowrap" }}>{q.progress}</span>
         </div>
       </div>
       <div style={{ width: "74px", flex: "none", display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}>
@@ -23,7 +23,7 @@ function QuestCard({ q }) {
           <span>{q.reward}</span>
         </div>
         <button onClick={q.claim} disabled={state !== 'ready'} className={state === 'ready' ? 'dc-press' : undefined}
-          style={{ width: "100%", height: "30px", padding: "0", border: "2px solid #2B1E18", borderRadius: "10px", background: state === 'ready' ? "#4FAE72" : "#EADBC5", color: state === 'ready' ? "#FFF8EC" : "#6E5A4E", boxShadow: state === 'ready' ? "0 3px 0 #2B1E18" : "none", font: "800 12px/1 'Bricolage Grotesque'", cursor: state === 'ready' ? "pointer" : "default", '--press-tf': "translateY(2px)", '--press-sh': "0 1px 0 #2B1E18" }}>
+          style={{ width: "100%", height: "30px", padding: "0", border: "2px solid #2B1E18", borderRadius: "10px", background: state === 'ready' ? "#4FAE72" : "#EADBC5", color: state === 'ready' ? "#FFF8EC" : "#5E4A3F", boxShadow: state === 'ready' ? "0 3px 0 #2B1E18" : "none", font: "800 12px/1 'Bricolage Grotesque'", cursor: state === 'ready' ? "pointer" : "default", '--press-tf': "translateY(2px)", '--press-sh': "0 1px 0 #2B1E18" }}>
           {state === 'claimed' ? 'Diklaim' : state === 'ready' ? 'Klaim' : 'Belum'}
         </button>
       </div>
@@ -37,7 +37,7 @@ export default function MisiScreen({ v }) {
     <div style={{ position: "absolute", top: "66px", left: "0", right: "0", bottom: "84px", overflowY: "auto", scrollbarWidth: "none", padding: "6px 14px 20px" }}>
       <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "8px" }}>
         <div style={{ font: "28px/1 'Bagel Fat One',system-ui" }}>Misi</div>
-        <div style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#6E5A4E" }}>{v.misiSummary}</div>
+        <div style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#5E4A3F" }}>{v.misiSummary}</div>
       </div>
       <div style={{ font: "500 13px/1.4 'Bricolage Grotesque'", color: "#5B4A40", marginTop: "6px" }}>Misi harian berganti tiap tengah malam. Misi petualangan menunggu dengan sabar.</div>
       <div style={{ display: "flex", gap: "4px", marginTop: "12px", padding: "4px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#EADBC5" }}>

@@ -2,7 +2,7 @@ import { Component } from 'react';
 import * as C from './data.js';
 import { stripEl, popEl, bannerEl, burstEl, pullCardsEl, elementFx, auraEl } from './effects.jsx';
 import GameView from './GameView.jsx';
-import { loadSave, writeSave } from './save.js';
+import { loadSave, writeSave, exportCode, importCode } from './save.js';
 import { music } from './music.js';
 
 // Local calendar day, used to reset daily missions at midnight.
@@ -107,6 +107,23 @@ export default class Game extends Component {
     return rw.coins ? `+${fmt(rw.coins)} koin` : rw.gems ? `+${rw.gems} permata` : rw.energy ? `+${rw.energy} energi` : C.ITEMS[rw.item].name;
   }
 
+  // --- Progress backup ---------------------------------------------------------------------
+  async copyBackup() {
+    const code = exportCode(this.state, this.days(), this._uid);
+    try {
+      await navigator.clipboard.writeText(code);
+      this.toast('Kode progres disalin. Simpan di tempat aman, misalnya catatan atau chat ke diri sendiri.');
+    } catch {
+      window.prompt('Salin kode progres ini:', code);
+    }
+  }
+  loadBackup() {
+    const code = window.prompt('Tempel kode progres (diawali SANTONI1:). Progres di perangkat ini akan diganti.');
+    if (code == null) return;
+    if (!importCode(code)) return this.toast('Kodenya tidak dikenali. Santoni memeriksa dua kali. Tetap tidak dikenali.');
+    location.reload();
+  }
+
   // --- Leaving a run or the tower ---------------------------------------------------------
   askQuit() { if (this.state.run) this.setState({ confirm: { kind: this.state.run.tower ? 'tower' : 'run' } }); }
   closeConfirm() { this.setState({ confirm: null }); }
@@ -150,6 +167,8 @@ export default class Game extends Component {
 
   // Number of copies of a skill the current run has learned (stacks scale most effects).
   stacks(r, id) { return r ? r.skills.filter(k => k === id).length : 0; }
+  ruleOf(r) { return r && !r.tower ? (C.CHAPTERS[r.chapter].rule || {}).id : null; }
+  setStance(id) { if (C.STANCES[id]) { this.setState({ stance: id }); this.toast(`${C.STANCES[id].name}: ${C.STANCES[id].desc}`); } }
   weaponOf(r) { return (r && r.weapon) || this.state.equipped.senjata || 'none'; }
   hasEl(r, el) { return !!r && r.skills.some(id => (C.SKILLS.find(k => k.id === id) || {}).el === el); }
   hasCombo(r, id) { const c = C.COMBOS.find(x => x.id === id); return !!c && c.els.every(el => this.hasEl(r, el)); }
@@ -192,11 +211,11 @@ export default class Game extends Component {
       bag: ['centong', 'raket', 'helm', 'caping', 'gesper', 'payung', 'pramuka', 'jashujan', 'cincin', 'kaoskaki', 'payung', 'cincin', 'kipasangin', 'bawang'], gifts: C.GEAR_GIFTS.map(g => g.id),
       pity: 2, sold: {}, bubble: 0, speed: 1, daily: false, act: null, heroPoseIdx: 0, openJ: null, tick: 0, journal: this.seedJournal(days),
       run: null, offer: null, battle: null, result: null, pull: null, toast: null, shake: null,
-      stats: {}, misi: { date: todayKey(), counts: {}, dClaimed: {}, aClaimed: {} }, misiTab: 'harian', tower: { floor: 1, best: 0 }, confirm: null
+      stats: {}, misi: { date: todayKey(), counts: {}, dClaimed: {}, aClaimed: {} }, misiTab: 'harian', stance: 'santai', tower: { floor: 1, best: 0 }, confirm: null
     };
     const d = Math.max(6, Math.round(days * 0.75));
     const mkRun = () => ({
-      chapter: 2, day: d, maxDay: days, hp: 868, maxHp: 1310, atk: 172, def: 66, lvl: 5, xp: 70, xpNext: 160,
+      chapter: 2, day: d, maxDay: days, stance: 'santai', forks: [], midDone: true, hp: 868, maxHp: 1310, atk: 172, def: 66, lvl: 5, xp: 70, xpNext: 160,
       weapon: p.weapon && (p.weapon === 'none' || C.ITEMS[p.weapon]) ? p.weapon : undefined,
       skills: p.skills && p.skills.length ? p.skills.filter(id => C.SKILLS.some(k => k.id === id)) : ['kipas', 'cakar', 'bulu', 'kipas'], coins: 340, kills: 5, used: ['sandal', 'katak', 'tombol'], auto: true, event: null, queue: null,
       log: [
@@ -370,8 +389,21 @@ export default class Game extends Component {
     const { cost } = C.ENERGY;
     if (s.energy < cost) return this.toast(`Energi habis. Santoni juga. Energi +1 dalam ${this.fmtWait(this.energyWait(s, Date.now()).next)}.`);
     const st = this.heroBase(s.equipped), ch = C.CHAPTERS[s.chapter];
-    const run = { weapon: s.equipped.senjata || 'none', chapter: s.chapter, day: 0, maxDay: this.days(), hp: st.hp, maxHp: st.hp, atk: st.atk, def: st.def, lvl: 1, xp: 0, xpNext: 70, skills: [], coins: 100, kills: 0, used: [], auto: true, event: null, queue: null,
-      log: [{ id: this.uid(), day: 0, text: `Santoni berangkat ke ${ch.name}. Tidak ada yang mengantar.`, fx: [], tone: 'plain' }] };
+    const days = this.days(), stance = C.STANCES[s.stance] ? s.stance : 'santai';
+    const run = { weapon: s.equipped.senjata || 'none', chapter: s.chapter, day: 0, maxDay: days, hp: st.hp, maxHp: st.hp, atk: st.atk, def: st.def, lvl: 1, xp: 0, xpNext: 70, skills: [], coins: 100, kills: 0, used: [], auto: true, event: null, queue: null,
+      stance, route: null, forks: [Math.round(days / 3), Math.round(days * 2 / 3)], midDone: false,
+      log: [{ id: this.uid(), day: 0, text: `Santoni berangkat ke ${ch.name} dengan gaya ${C.STANCES[stance].name.toLowerCase()}. Tidak ada yang mengantar.`, fx: [], tone: 'plain' }] };
+    const rule = (ch.rule || {}).id;
+    if (rule === 'ombak') {
+      const slots = Object.keys(s.equipped).filter(t => C.ITEMS[s.equipped[t]]);
+      if (slots.length) {
+        const t = this.pick(slots), it = C.ITEMS[s.equipped[t]];
+        if (it.stat === 'ATK') run.atk -= it.val; else if (it.stat === 'HP') { run.maxHp -= it.val; run.hp = run.maxHp; } else run.def -= it.val;
+        run.lost = it.name;
+        run.log.push({ id: this.uid(), day: 0, text: `Ombak membawa ${it.name}. Santoni melambaikan tangan. ${it.name} tidak membalas.`, fx: [{ k: it.stat === 'HP' ? 'maxHp' : it.stat.toLowerCase(), v: -it.val }], tone: 'bad' });
+      }
+    }
+    if (rule === 'manis') run.def = Math.round(run.def * 0.85);
     this._acc = 0;
     this.setState({ energy: s.energy - cost, screen: 'run', run, battle: null, result: null, pull: null, offer: { kind: 'start', ids: this.rollSkills(3), rerolls: 1 } });
   }
@@ -399,12 +431,21 @@ export default class Game extends Component {
     const s = this.state; if (!s.run) return;
     const r = Object.assign({}, s.run, { day: s.run.day + 1 });
     this.track({ days: 1 });
-    const ch = C.CHAPTERS[r.chapter];
+    const ch = C.CHAPTERS[r.chapter], rule = this.ruleOf(r), heal = this.healMult(r);
+    if (r.stance === 'santai') r.hp = Math.min(r.maxHp, r.hp + Math.round(r.maxHp * 0.03 * heal));
+    if (r.route && r.day > r.route.until) r.route = null;
     if (r.day >= r.maxDay) { r.day = r.maxDay; r.event = { kind: 'enemy', enemy: ch.boss, final: true }; return this.setState({ run: r }); }
-    if (r.day === Math.round(r.maxDay / 2)) { r.event = { kind: 'enemy', enemy: ch.mid }; return this.setState({ run: r }); }
+    if (!r.midDone && r.day >= Math.round(r.maxDay / 2)) { r.midDone = true; r.event = { kind: 'enemy', enemy: ch.mid }; return this.setState({ run: r }); }
+    if ((r.forks || []).includes(r.day)) { r.event = { kind: 'fork' }; return this.setState({ run: r }); }
+    if (rule === 'bambu' && r.day % 5 === 0) return this.applyOutcome(r, { hp: Math.round(r.maxHp * 0.1 * heal) }, 'Santoni ngemil rebung tetangga. Tetangganya belum tahu.', { tone: 'skill' });
+    if (rule === 'durian' && Math.random() < 0.12) return this.applyOutcome(r, { hp: -Math.round(r.maxHp * 0.08), xp: 20 }, 'Sebuah durian jatuh tepat di kepala Santoni. Santoni jadi sedikit lebih bijak.', { tone: 'bad' });
+    const route = r.route && r.route.kind;
+    const enemyChance = route === 'aman' ? 0 : route === 'bahaya' ? 1
+      : 0.27 + (r.stance === 'nekat' ? 0.1 : r.stance === 'santai' ? -0.07 : 0) + (rule === 'ngetem' ? 0.1 : 0);
+    const eventChance = r.stance === 'penasaran' ? 0.75 : 0.6;
     const x = Math.random();
-    if (x < 0.27) { r.event = { kind: 'enemy', enemy: this.pick(ch.pool) }; return this.setState({ run: r }); }
-    if (x < 0.6) {
+    if (x < enemyChance) { r.event = { kind: 'enemy', enemy: this.pick(ch.pool) }; return this.setState({ run: r }); }
+    if (x < Math.max(eventChance, enemyChance + 0.3)) {
       const left = C.EVENTS.filter(e => r.used.indexOf(e.id) < 0);
       if (left.length) { const ev = this.pick(left); r.used = r.used.concat(ev.id); r.event = { kind: 'choice', id: ev.id }; return this.setState({ run: r }); }
     }
@@ -417,11 +458,20 @@ export default class Game extends Component {
     o = Object.assign({}, o);
     if (piggy && o.coins > 0) o.coins = Math.round(o.coins * (1 + 0.3 * piggy));
     if (notes && o.xp) o.xp = Math.round(o.xp * (1 + 0.3 * notes));
+    const rule = this.ruleOf(r), coinTags = [];
+    if (o.coins > 0 && r.stance === 'nekat') { o.coins = Math.round(o.coins * 1.25); coinTags.push('nekat +25%'); }
+    if (o.coins > 0 && opts.danger) { o.coins *= 2; coinTags.push('bahaya ×2'); }
+    if (o.coins > 0 && rule === 'diskon') { o.coins *= 2; coinTags.push('harga coret ×2'); }
+    if (o.coins > 0 && rule === 'pajak') { o.coins = Math.round(o.coins * 0.85); coinTags.push('pajak −15%'); }
+    if (o.xp && r.stance === 'nekat') o.xp = Math.round(o.xp * 1.25);
+    if (o.xp && opts.danger) o.xp = Math.round(o.xp * 1.5);
+    if (o.xp && rule === 'ngetem') o.xp = Math.round(o.xp * 1.3);
+    if (o.hp > 0) o.hp = Math.round(o.hp * this.healMult(r));
     if (o.maxHp) { r.maxHp += o.maxHp; r.hp += o.maxHp; fx.push({ k: 'maxHp', v: o.maxHp }); }
     if (o.hp) { r.hp = Math.max(0, Math.min(r.maxHp, r.hp + o.hp)); fx.push({ k: 'hp', v: o.hp }); }
     if (o.atk) { r.atk += o.atk; fx.push({ k: 'atk', v: o.atk }); }
     if (o.def) { r.def += o.def; fx.push({ k: 'def', v: o.def }); }
-    if (o.coins) { r.coins = Math.max(0, r.coins + o.coins); fx.push(piggy && o.coins > 0 ? { k: 'coins', v: o.coins, tag: `celengan +${30 * piggy}%` } : { k: 'coins', v: o.coins }); }
+    if (o.coins) { r.coins = Math.max(0, r.coins + o.coins); if (piggy && o.coins > 0) coinTags.unshift(`celengan +${30 * piggy}%`); fx.push(coinTags.length ? { k: 'coins', v: o.coins, tag: coinTags.join(', ') } : { k: 'coins', v: o.coins }); }
     if (o.xp) fx.push(notes ? { k: 'xp', v: o.xp, tag: `catatan +${30 * notes}%` } : { k: 'xp', v: o.xp });
     r.xp += (o.xp || 0) + (opts.noDaily ? 0 : Math.round((12 + Math.floor(Math.random() * 10)) * (1 + 0.3 * notes)));
     r.log = r.log.concat({ id: this.uid(), day: r.day, text, fx, tone: opts.tone || ((o.hp || 0) < 0 ? 'bad' : 'plain') });
@@ -432,8 +482,9 @@ export default class Game extends Component {
     if (r.xp >= r.xpNext) {
       const from = r.lvl; r.xp -= r.xpNext; r.lvl += 1; r.xpNext = Math.round(r.xpNext * 1.3);
       r.atk = Math.round(r.atk * 1.05); r.hp = Math.min(r.maxHp, r.hp + Math.round(r.maxHp * 0.15));
-      const lv = { kind: 'lvl', from, to: r.lvl, ids: this.rollSkills(3), rerolls: 1 };
+      const lv = { kind: 'lvl', from, to: r.lvl, ids: this.rollSkills(3), rerolls: r.stance === 'penasaran' ? 2 : 1 };
       if (offer) r.queue = lv; else offer = lv;
+      music.sfx('levelup');
     }
     this._acc = 0;
     this.setState(offer ? { run: r, offer } : { run: r });
@@ -441,18 +492,40 @@ export default class Game extends Component {
   choose(which) {
     const s = this.state; if (!s.run || !s.run.event) return;
     const r = Object.assign({}, s.run), ev = r.event;
+    if (ev.kind === 'fork') return this.pickRoute(r, { a: 'aman', b: 'pintas', c: 'bahaya' }[which]);
     if (ev.kind === 'choice') {
-      const opt = C.EVENTS.find(e => e.id === ev.id)[which];
-      if (opt.cost && r.coins < opt.cost) return this.toast('Koin perjalanan kurang. Tidak ada yang memberi kredit di sini.');
+      const opt = C.EVENTS.find(e => e.id === ev.id)[which], cost = this.eventCost(r, opt.cost);
+      if (cost && r.coins < cost) return this.toast('Koin perjalanan kurang. Tidak ada yang memberi kredit di sini.');
       const o = Object.assign({}, opt.res());
-      if (opt.cost) o.coins = (o.coins || 0) - opt.cost;
+      if (cost) o.coins = (o.coins || 0) - cost;
       return this.applyOutcome(r, o, o.t, { tone: o.skill ? 'skill' : undefined });
     }
     const e = C.ENEMIES[ev.enemy];
     if (which === 'a') return this.startBattle(r, ev.enemy, false, ev.final);
-    if (e.boss || (this.props || {}).gertak === false) return;
+    if (e.boss || (this.props || {}).gertak === false || this.ruleOf(r) === 'pasal') return;
     if (Math.random() < this.bluffChance(r)) { this.track({ bluffs: 1 }); return this.applyOutcome(r, { coins: 20 + r.day * 3, xp: 25 }, `Santoni berdiri dengan dua kaki. ${e.name} memutuskan punya urusan lain.`, { tone: 'win' }); }
     this.startBattle(r, ev.enemy, true, ev.final);
+  }
+  healMult(r) { return this.ruleOf(r) === 'manis' ? 1.5 : 1; }
+  eventCost(r, cost) {
+    if (!cost) return 0;
+    const rule = this.ruleOf(r);
+    return rule === 'tawar' ? Math.round(cost / 2) : rule === 'diskon' ? cost * 2 : cost;
+  }
+  pickRoute(r, kind) {
+    const R = C.ROUTES[kind]; if (!R) return;
+    r.event = null;
+    if (kind === 'pintas') {
+      r.day = Math.min(r.maxDay - 1, r.day + 2);
+      r.log = r.log.concat({ id: this.uid(), day: r.day, text: 'Santoni lewat jalan pintas. Dua hari terlewat begitu saja, beserta isinya.', fx: [], tone: 'plain' });
+      this._acc = 0;
+      return this.setState({ run: r });
+    }
+    r.route = { kind, until: r.day + R.days };
+    if (kind === 'aman') return this.applyOutcome(r, { hp: Math.round(r.maxHp * 0.15) }, 'Santoni memilih jalan setapak. Burung berkicau. Tidak ada yang menghadang.', { tone: 'skill', noDaily: true });
+    r.log = r.log.concat({ id: this.uid(), day: r.day, text: 'Santoni memilih jalan berbahaya. Semak-semak bergerak. Santoni juga bergerak, pelan-pelan.', fx: [], tone: 'bad' });
+    this._acc = 0;
+    this.setState({ run: r });
   }
   startBattle(r, key, offended, final = false) {
     const e = C.ENEMIES[key], en = this.makeEnemy(key, r.day, r.chapter);
@@ -527,7 +600,8 @@ export default class Game extends Component {
     } else if (b.heroTurn) {
       b.hits += 1; act = { who: 'hero', t: now };
       const crit = Math.random() < 0.08 + 0.15 * n('kritis');
-      let mult = (0.9 + Math.random() * 0.2) * (crit ? 2 : 1);
+      const rule = this.ruleOf(r);
+      let mult = (0.9 + Math.random() * 0.2) * (crit ? (rule === 'renyah' ? 2.5 : 2) : 1);
       if (!b.firstDone && n('kerupuk')) { mult *= 1 + 0.6 * n('kerupuk'); banner = { id: this.uid(), text: 'Lempar Kerupuk!' }; proc = 'kerupuk'; }
       b.firstDone = true;
       if (n('sabar') && b.rage) mult *= 1 + 0.07 * n('sabar') * b.rage;
@@ -541,8 +615,16 @@ export default class Game extends Component {
       if (b.inked) { mult *= 0.5; b.inked = false; }
       if (e.trait === 'CANGKANG' && b.enemy.hp > b.enemy.maxHp * 0.5) mult *= 0.65;
       const posed = e.trait === 'BERPOSE' && Math.random() < 0.2;
-      const dmg = posed ? 0 : Math.max(1, Math.round(r.atk * mult - b.enemy.def * 0.5)); hit(dmg); total += dmg;
-      if (posed) {
+      const dozed = !posed && rule === 'kantuk' && Math.random() < 0.1, lagged = !posed && !dozed && rule === 'lag' && Math.random() < 0.15;
+      const dmg = posed || dozed || lagged ? 0 : Math.max(1, Math.round(r.atk * mult - b.enemy.def * 0.5)); hit(dmg); total += dmg;
+      if (dozed) {
+        const h = Math.round(r.maxHp * 0.05 * this.healMult(r)); r.hp = Math.min(r.maxHp, r.hp + h);
+        push('hero', `ZZZ +${h}`, 'heal'); act = { who: 'hero', t: now, pose: 'sleep' };
+        say('Santoni tertidur di tengah perkelahian. Kasurnya terlalu empuk.', 'skill');
+      } else if (lagged) {
+        push('enemy', 'BUFFERING', 'miss');
+        say('Pukulan Santoni tertahan. Sinyal satu bar. Coba lagi nanti.', 'plain');
+      } else if (posed) {
         push('enemy', 'BERPOSE', 'miss');
         say(`${name} berpose untuk kamera. Pukulan Santoni hanya mengenai ring light.`, 'enemy');
       } else {
@@ -603,12 +685,21 @@ export default class Game extends Component {
         if (combo('kobaran') && !b.kobaranSaid) { b.kobaranSaid = true; banner = { id: this.uid(), text: 'Kombo: Kobaran!' }; say(`Angin meniup api. ${name} membara lebih besar. ${d}.`, 'skill'); }
       }
       let skipped = false;
+      const eRule = this.ruleOf(r);
+      if (eRule === 'notulen' && b.enemy.hp > 0 && b.enemy.hp < b.enemy.maxHp) {
+        const h = Math.round(b.enemy.maxHp * 0.03); b.enemy.hp = Math.min(b.enemy.maxHp, b.enemy.hp + h); push('enemy', `+${h} RAPAT`, 'heal');
+      }
+      b.eAct = (b.eAct || 0) + 1;
+      const sings = eRule === 'karaoke' && b.eAct % 4 === 0, lags = eRule === 'lag' && Math.random() < 0.15;
       if (b.heat) {
         const d = Math.max(1, Math.round(r.atk * 0.06 * n('sambal') * b.heat)); hit(d); push('enemy', `PEDAS ${d}`, 'hurt'); proc = 'sambal';
         if (b.heat >= 5 && !b.heatSaid) { b.heatSaid = true; banner = { id: this.uid(), text: 'Pedas Level 5!' }; say(`${b.enemy.name} kepedasan. Matanya berair. ${d}.`, 'skill'); }
       }
       if (b.enemy.hp <= 0) {
         say(`${b.enemy.name} tumbang sebelum sempat menyerang.`, 'skill');
+      } else if (sings || lags) {
+        push('enemy', sings ? 'MENYANYI' : 'BUFFERING', 'miss');
+        say(sings ? `${name} mengambil mikrofon dan bernyanyi. Lupa sedang berkelahi.` : `Serangan ${name} tertahan. Sinyal hilang.`, 'skill');
       } else if (b.stun) {
         b.stun -= 1; b.stunGuard = true; skipped = true; push('enemy', 'LUMPUH', 'miss'); fxAt('petir');
         say(`${name} masih bergetar. Ia melewatkan giliran.`, 'skill');
@@ -676,19 +767,19 @@ export default class Game extends Component {
     b.log = log.slice(-5); b.pops = pops.slice(-8); b.banner = banner; b.proc = proc || b.proc; b.efx = efx;
     this.setState({ battle: b, run: r, shake, act });
     // Hold the next turn so the ultimate cinematic (~1.3 s) plays out at any battle speed.
-    if (ultFired) { this._acc = -1200 * (s.speed || 1); this.track({ ults: 1 }); }
+    if (ultFired) { this._acc = -1200 * (s.speed || 1); this.track({ ults: 1 }); music.sfx('ult'); }
   }
   endBattle() {
     const s = this.state, b = s.battle; if (!b) return;
     const r = Object.assign({}, s.run);
     const e = C.ENEMIES[b.enemy.key];
-    if (b.over === 'win') this.track({ kills: 1, bosses: e.boss ? 1 : 0 });
+    if (b.over === 'win') { this.track({ kills: 1, bosses: e.boss ? 1 : 0 }); if (e.boss || b.final) music.sfx('victory'); }
     if (r.tower) return this.finishTower(r, b.over === 'win');
     if (b.over === 'lose') return this.finishRun(r, false);
     r.kills += 1;
     if (b.final) return this.finishRun(r, true);
     this.setState({ screen: 'run', battle: null, shake: null });
-    this.applyOutcome(r, { coins: Math.round(((e.boss ? 160 : 40) + r.day * 4) * (1 + 0.15 * r.chapter)), xp: e.boss ? 90 : 30 + r.day * 2 }, `${b.enemy.name} kalah. ${e.lose}`, { tone: 'win', noDaily: true });
+    this.applyOutcome(r, { coins: Math.round(((e.boss ? 160 : 40) + r.day * 4) * (1 + 0.15 * r.chapter)), xp: e.boss ? 90 : 30 + r.day * 2 }, `${b.enemy.name} kalah. ${e.lose}`, { tone: 'win', noDaily: true, danger: !!(r.route && r.route.kind === 'bahaya') });
   }
   finishRun(r, win) {
     const s = this.state;
@@ -728,16 +819,21 @@ export default class Game extends Component {
     const s = this.state, cost = n === 1 ? 150 : 1350;
     if (s.gems < cost) return this.toast('Permata kurang. Santoni juga kurang tidur.');
     const hiIds = Object.keys(C.ITEMS).filter(k => C.ITEMS[k].rar === 'Epik' || C.ITEMS[k].rar === 'Legendaris');
-    let pity = s.pity; const items = [];
+    const legIds = hiIds.filter(k => C.ITEMS[k].rar === 'Legendaris');
+    // Two pity counters: Epik-or-better every 10 opens, Legendaris every LEGEND_PITY opens.
+    let pity = s.pity, pityL = s.pityL || 0; const items = [];
     for (let i = 0; i < n; i++) {
-      pity += 1;
+      pity += 1; pityL += 1;
       let id = this.rollItem(false);
-      if (pity >= 10 && hiIds.indexOf(id) < 0) id = this.pick(hiIds);
+      if (pityL >= C.LEGEND_PITY && C.ITEMS[id].rar !== 'Legendaris') id = this.pick(legIds);
+      else if (pity >= 10 && hiIds.indexOf(id) < 0) id = this.pick(hiIds);
       if (hiIds.indexOf(id) >= 0) pity = 0;
+      if (C.ITEMS[id].rar === 'Legendaris') pityL = 0;
       items.push(id);
     }
-    this.setState({ gems: s.gems - cost, pity, bag: s.bag.concat(items), pull: { id: this.uid(), items } });
+    this.setState({ gems: s.gems - cost, pity, pityL, bag: s.bag.concat(items), pull: { id: this.uid(), items } });
     this.track({ pulls: 1 });
+    music.sfx(items.some(id => C.ITEMS[id].rar === 'Legendaris') ? 'legend' : 'chest');
   }
   buy(id) {
     const s = this.state, of = C.OFFERS.find(x => x.id === id);
@@ -801,17 +897,18 @@ export default class Game extends Component {
       chests: chestFor(s.chapter), chestPct: pct(s.best[s.chapter], days), goRun: g(() => this.startRun()),
       toggleAuto: g(() => this.toggleAuto()), pauseIcon: 'pause', runChapterNo: 1, runChapterUpper: '', day: 0, maxDay: days, runCoins: '0', dayPct: '0%',
       weatherIcon: 'wb_sunny', weather: '', walkStatus: '', lvl: 1, hpPct: '100%', hpLabel: '', xpPct: '0%', xpLabel: '', atk: '0', def: '0',
-      logCount: 0, logRef: this.logRef, log: [], evTrait: null, hasEvent: false, evTagBg: '#2B1E18', evTag: '', evIsEnemy: false, evIcon: 'help', evName: '', evSub: '', evText: '', evChoices: [], hasEvFoot: false, evFoot: '',
+      logCount: 0, logRef: this.logRef, log: [], runChips: [], evTrait: null, hasEvent: false, evTagBg: '#2B1E18', evTag: '', evIsEnemy: false, evIcon: 'help', evName: '', evSub: '', evText: '', evChoices: [], hasEvFoot: false, evFoot: '',
       noSkills: skillTiles.length === 0, ownedSkills: skillTiles, cycleSpeed: g(() => this.setState({ speed: (s.speed % 3) + 1 })), speedLabel: `×${s.speed}`, quitRun: g(() => this.askQuit()),
       hasOffer: false, burst: null, offerTitle: '', offerHasLvl: false, offerFrom: 0, offerTo: 0, offerSub: '', offerCards: [], reroll: g(() => this.reroll()), rerollDisabled: true, rerollOpacity: 0.4, rerollLeft: 0,
       bTurn: 1, bBoss: false, speeds: [1, 2, 3].map(n => ({ n, set: g(() => this.setState({ speed: n })), bg: s.speed === n ? '#F2B63C' : 'transparent', fg: s.speed === n ? '#2B1E18' : '#FFF8EC' })),
       eIcon: 'help', eName: '', eLvl: 1, eHpPct: '100%', eHpLabel: '', eTf: 'none', hTf: 'none', eArtId: 'art-musuh', eArtLabel: '', enemyPops: null, heroPops: null, banner: null, battleSkills: skillTiles, bTile,bLog: [], bOver: false, bOverColor: '#F2B63C', bOverText: '',
       slotsL: [], slotsR: [], heroStats: [], autoEquip: g(() => this.autoEquip()), mergeItems: g(() => this.toast('Butuh tiga item kembar. Santoni cuma punya satu dari hampir semuanya.')), bagCount: s.bag.length, bag: [],
       mapSummary: `${s.best.filter(x => x >= days).length} DARI ${C.CHAPTERS.length} SELESAI`, chapters: [],
-      pityLeft: Math.max(1, 10 - s.pity), pull1: g(() => this.pull(1)), pull10: g(() => this.pull(10)), offers: [], hasPull: !!s.pull, pullBurst: null, pullSub: '', pullCards: null, closePull: g(() => this.setState({ pull: null })),
+      pityLeft: Math.max(1, 10 - s.pity), legendLeft: Math.max(1, C.LEGEND_PITY - (s.pityL || 0)), pull1: g(() => this.pull(1)), pull10: g(() => this.pull(10)), offers: [], hasPull: !!s.pull, pullBurst: null, pullSub: '', pullCards: null, closePull: g(() => this.setState({ pull: null })),
       resRibbonBg: '#D2532A', resRibbon: '', resTitle: '', resSub: '', resStats: [], resRecord: false, resRewards: [], resQuote: '', claim1: g(() => this.claim(1)), claim2: g(() => this.claim(2)),
       tabs: [], hasToast: !!s.toast, toastText: s.toast ? s.toast.text : '',
-      still, chapterTotal: C.CHAPTERS.length, lobbySky: ch.theme.lSky, lobbyHill: ch.theme.lHill, lobbyGround: ch.theme.lGround,
+      still, stances: Object.entries(C.STANCES).map(([id, st]) => ({ id, name: st.name, icon: st.icon, on: (s.stance || 'santai') === id, pick: g(() => this.setStance(id)) })),
+      chapterRule: ch.rule, chapterTotal: C.CHAPTERS.length, lobbySky: ch.theme.lSky, lobbyHill: ch.theme.lHill, lobbyGround: ch.theme.lGround,
       sceneSky: (r ? C.CHAPTERS[r.chapter] : ch).theme.sky, sceneGround: (r ? C.CHAPTERS[r.chapter] : ch).theme.ground, battleBg: (r ? C.CHAPTERS[r.chapter] : ch).theme.battle,
       chapterUpper: ch.name.toUpperCase(), walkPose: 'idle', sceneEnemy: false, sceneEnemyKind: 'tikus', sceneQuestion: false, farStrip: null, groundStrip: null,
       evKind: 'tikus', eKind: 'tikus', heroPose: 'idle', hLunge: 'none', eLunge: 'none', resPose: rs && rs.win ? 'seram' : 'sleep',
@@ -830,16 +927,30 @@ export default class Game extends Component {
           fx: e.fx.map(f => ({ icon: FX[f.k][0], label: `${f.v > 0 ? '+' : '−'}${fmt(Math.abs(f.v))} ${FX[f.k][1]}${f.tag ? ` · ${f.tag}` : ''}`, bg: f.v < 0 ? '#F6C9BD' : f.k === 'coins' ? '#FBE6B4' : f.k === 'xp' ? '#E7D9F5' : '#CFE6D6' })) }))
       });
       const walking = r.auto && !r.event && !o && scr === 'run' && !still;
+      const rr = C.CHAPTERS[r.chapter].rule, st = C.STANCES[r.stance], rt = r.route && C.ROUTES[r.route.kind];
+      v.runChips = [
+        rr && !r.tower && { key: 'rule', icon: 'gavel', label: rr.name, bg: '#2B1E18', tap: g(() => this.toast(`Aturan bab — ${rr.name}: ${rr.desc}`)) },
+        st && { key: 'stance', icon: st.icon, label: st.name, bg: '#3C78C8', tap: g(() => this.toast(`Gaya jalan — ${st.name}: ${st.desc}`)) },
+        rt && { key: 'route', icon: rt.icon, label: `${rt.name} · s/d H${r.route.until}`, bg: r.route.kind === 'bahaya' ? '#D2532A' : '#2F7A5C', tap: g(() => this.toast(rt.desc)) }
+      ].filter(Boolean);
       Object.assign(v, { walkPose: r.auto && !r.event && !o ? 'walk' : 'idle', sceneEnemy: !!r.event && r.event.kind === 'enemy', sceneEnemyKind: r.event && r.event.kind === 'enemy' ? r.event.enemy : 'tikus', sceneQuestion: !!r.event && r.event.kind === 'choice', farStrip: stripEl('far', walking, C.CHAPTERS[r.chapter].theme.hill), groundStrip: stripEl('near', walking) });
       const ev = r.event;
       if (ev && ev.kind === 'choice') {
         const d = C.EVENTS.find(x => x.id === ev.id);
         Object.assign(v, { hasEvent: true, evTag: 'SESUATU TERJADI', evTagBg: '#2B1E18', evText: d.text,
-          evChoices: ['a', 'b'].map((w, i) => { const c = d[w], poor = !!c.cost && r.coins < c.cost; return { label: c.label, icon: c.icon, hint: poor ? 'koin kurang' : c.hint, bg: i === 0 ? '#F2B63C' : '#FFF8EC', opacity: poor ? 0.5 : 1, onClick: g(() => this.choose(w)) }; }) });
+          evChoices: ['a', 'b'].map((w, i) => { const c = d[w], cost = this.eventCost(r, c.cost), poor = !!cost && r.coins < cost; return { label: c.label, icon: c.icon, hint: poor ? 'koin kurang' : cost ? `−${cost} koin` : c.hint, bg: i === 0 ? '#F2B63C' : '#FFF8EC', opacity: poor ? 0.5 : 1, onClick: g(() => this.choose(w)) }; }) });
+      } else if (ev && ev.kind === 'fork') {
+        Object.assign(v, { hasEvent: true, evTag: 'PERSIMPANGAN', evTagBg: '#7E43B5', evText: C.FORK_TEXT,
+          evChoices: [['a', 'aman'], ['b', 'pintas'], ['c', 'bahaya']].map(([w, k], i) => {
+            const R = C.ROUTES[k];
+            return { label: R.name, icon: R.icon, hint: R.hint, bg: ['#CFE6D6', '#FFF8EC', '#F6C9BD'][i], opacity: 1, onClick: g(() => this.choose(w)) };
+          }), hasEvFoot: true, evFoot: 'Aman: tanpa musuh 3 hari. Pintas: lompat 2 hari. Berbahaya: musuh tiap hari, koin ×2 dan XP ×1,5.' });
       } else if (ev && ev.kind === 'enemy') {
         const e = C.ENEMIES[ev.enemy], en = this.makeEnemy(ev.enemy, r.day, r.chapter), gOn = p.gertak !== false;
         const choices = [{ label: 'Lawan', icon: 'swords', hint: 'auto-battle', bg: '#F2B63C', opacity: 1, onClick: g(() => this.choose('a')) }];
-        if (gOn) choices.push(e.boss
+        const pasal = this.ruleOf(r) === 'pasal';
+        if (gOn && pasal) choices.push({ label: 'Pose Seram', icon: 'gavel', hint: 'pasal 47', bg: '#EADBC5', opacity: 0.55, onClick: g(() => this.toast(C.CHAPTERS[r.chapter].rule.desc)) });
+        else if (gOn) choices.push(e.boss
           ? { label: 'Pose Seram', icon: 'sports_martial_arts', hint: 'bos kebal', bg: '#EADBC5', opacity: 0.55, onClick: g(() => this.toast(e.immune)) }
           : { label: 'Pose Seram', icon: 'sports_martial_arts', hint: `${Math.round(this.bluffChance(r) * 100)}% kabur`, bg: '#FFF8EC', opacity: 1, onClick: g(() => this.choose('b')) });
         Object.assign(v, { evKind: ev.enemy, evTrait: e.trait ? { tag: e.trait, desc: e.traitDesc } : null, hasEvent: true, evTag: e.boss ? 'BOS MENGHADANG' : 'ADA YANG MENGHADANG', evTagBg: '#D2532A', evIsEnemy: true, evIcon: e.icon, evName: e.name,
@@ -925,7 +1036,7 @@ export default class Game extends Component {
           endIcon: done ? 'check_circle' : un ? 'chevron_right' : 'lock', endFg: done ? '#2F7A5C' : '#6E5A4E',
           cardBg: un ? '#FFF8EC' : '#EDE2D2', opacity: un ? 1 : 0.62, thumbBg: un ? (done ? '#CFE6D6' : '#FBE6B4') : '#E2D5C3',
           lineup: c.pool.map(k => ({ kind: k, name: C.ENEMIES[k].name, role: '' })).concat([{ kind: c.mid, name: C.ENEMIES[c.mid].name, role: 'TENGAH' }, { kind: c.boss, name: C.ENEMIES[c.boss].name, role: 'BOS' }]),
-          bossName: C.ENEMIES[c.boss].name, bossTrait: C.ENEMIES[c.boss].traitDesc || C.ENEMIES[c.boss].intro, power: `KEKUATAN MUSUH +${i * 14}%`,
+          rule: c.rule, bossName: C.ENEMIES[c.boss].name, bossTrait: C.ENEMIES[c.boss].traitDesc || C.ENEMIES[c.boss].intro, power: `KEKUATAN MUSUH +${i * 14}%`,
           select: g(() => this.selectChapter(i)), dayPct: pct(s.best[i], days), chests: chestFor(i), cta: done ? 'MAIN LAGI' : 'LANJUTKAN', play: g(() => this.startRun()) };
       });
     }
@@ -959,6 +1070,7 @@ export default class Game extends Component {
       fx: e.fx.map(f => ({ icon: FX[f.k][0], label: `${f.v > 0 ? '+' : '−'}${fmt(Math.abs(f.v))} ${FX[f.k][1]}${f.tag ? ` · ${f.tag}` : ''}`, bg: f.v < 0 ? '#F6C9BD' : f.k === 'coins' ? '#FBE6B4' : f.k === 'xp' ? '#E7D9F5' : '#CFE6D6' })) });
     const lj = J[0], te = lj && lj.entries.length ? lj.entries[(s.tick || 0) % lj.entries.length] : null;
     Object.assign(v, {
+      copyBackup: g(() => this.copyBackup()), loadBackup: g(() => this.loadBackup()),
       isJournal: scr === 'journal', journalSummary: `${J.length} PERJALANAN`, openJournal: g(() => this.go('journal')),
       tickerText: te ? `H${te.day} · ${te.text}` : 'Belum ada catatan. Santoni belum ke mana-mana.',
       tapBebek: g(() => this.toast('Bebek Satpam: "KTP-nya, Mas." Santoni tidak punya KTP.')),

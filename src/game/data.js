@@ -153,6 +153,23 @@ export const ITEMS = {
   karate: { name: 'Sabuk Karate Pinjaman', type: 'sabuk', rar: 'Epik', stat: 'HP', val: 210, lvl: 14, icon: 'sports_martial_arts', desc: 'Sabuk hitam. Pemiliknya sabuk kuning. Jangan tanya.' },
   sepaturoda: { name: 'Sepatu Roda Bekas', type: 'sepatu', rar: 'Langka', stat: 'DEF', val: 17, lvl: 11, icon: 'roller_skating', desc: 'Satu rodanya macet. Santoni berbelok ke kiri terus.' }
 };
+// A Legendaris item is guaranteed within this many chest opens.
+export const LEGEND_PITY = 40;
+
+// Travel stance, picked in the lobby before leaving. Effects are applied in Game.
+export const STANCES = {
+  santai: { name: 'Santai', icon: 'self_improvement', desc: 'Pulih 3% HP tiap hari. Musuh lebih jarang muncul. Santoni tidak terburu-buru.' },
+  nekat: { name: 'Nekat', icon: 'local_fire_department', desc: 'Musuh lebih sering muncul, tapi koin dan XP +25%. Santoni pura-pura berani.' },
+  penasaran: { name: 'Penasaran', icon: 'travel_explore', desc: 'Lebih banyak kejadian aneh dan +1 acak ulang tiap naik level.' }
+};
+// Route choice offered at the forks (about 1/3 and 2/3 of the way). Lasts `days` days.
+export const ROUTES = {
+  aman: { name: 'Jalan Setapak', icon: 'park', hint: 'aman · pulih 15%', desc: 'Tidak ada musuh selama 3 hari. Pulihkan 15% HP sekarang.', days: 3 },
+  pintas: { name: 'Jalan Pintas', icon: 'fast_forward', hint: 'lompat 2 hari', desc: 'Langsung melompat 2 hari ke depan. Hadiahnya ikut terlewat.', days: 0 },
+  bahaya: { name: 'Jalan Berbahaya', icon: 'skull', hint: 'musuh · koin ×2', desc: 'Musuh tiap hari selama 3 hari. Koin ×2 dan XP ×1,5 dari mereka.', days: 3 }
+};
+export const FORK_TEXT = 'Jalan bercabang tiga. Papan petunjuknya sudah lama jatuh. Santoni menatap ketiganya dengan ekspresi yang sama.';
+
 // Missions. `stat` is a counter tracked by Game.track(); daily ones reset at local midnight.
 // Rewards: coins, gems, energy, or an item id.
 export const DAILY_QUESTS = [
@@ -217,20 +234,20 @@ export const ULT_ELEMENTS = {
 // Enemies get 14% tougher per chapter.
 const T = (sky, hill, ground, lSky, lHill, lGround, battle) => ({ sky, hill, ground, lSky, lHill, lGround, battle });
 export const CHAPTERS = [
-  { name: 'Kebun Bambu Tetangga', icon: 'forest', desc: 'Tetangga belum tahu.', pool: ['tikus', 'bebek', 'kumbang'], mid: 'kelinci', boss: 'lebah', theme: T('#E3EFD3', '#9CCB8E', '#7FB77A', '#CFE6B8', '#A8D49A', '#E2F0D0', '#1C2A1F') },
-  { name: 'Pasar Subuh', icon: 'storefront', desc: 'Buka jam tiga pagi. Santoni bangun jam tiga sore.', pool: ['tikus', 'bebek', 'kelinci'], mid: 'lele', boss: 'lebah', theme: T('#F9E3C8', '#E8B48A', '#D9A86A', '#F6C9A0', '#E9A97A', '#F3E1C0', '#2A2220') },
-  { name: 'Rawa Kerupuk', icon: 'water', desc: 'Rawanya renyah. Jangan tanya kenapa.', pool: ['tikus', 'bebek', 'kumbang', 'lele', 'kelinci'], mid: 'lebah', boss: 'angsa', theme: T('#F7D9BF', '#B5D7C2', '#9CCBB0', '#F3B49A', '#E8A584', '#CFE6D6', '#1E2622') },
-  { name: 'Gunung Kasur', icon: 'landscape', desc: 'Sangat empuk. Banyak yang tidak kembali karena ketiduran.', pool: ['kumbang', 'kelinci', 'bebek'], mid: 'lebah', boss: 'angsa', theme: T('#E9E5F7', '#C9C1EA', '#EEEAF8', '#D9D2F2', '#BDB3E6', '#F1EEFA', '#23213A') },
-  { name: 'Gua Wi-Fi Lemah', icon: 'wifi_off', desc: 'Satu bar. Kadang nol. Bosnya selalu buffering.', pool: ['kumbang', 'tikus', 'lele'], mid: 'lebah', boss: 'angsa', theme: T('#5A5470', '#7A7398', '#8C85A8', '#6E6890', '#857DA6', '#A39CC0', '#15131F') },
-  { name: 'Kantor Pajak Hutan', icon: 'account_balance', desc: 'Antrean nomor 4.891. Bawa fotokopi KTP.', pool: ['tikus', 'kelinci', 'bebek'], mid: 'lebah', boss: 'angsa', theme: T('#ECE6DA', '#B4BEB8', '#C9BBA6', '#DCD3C2', '#BFC8C2', '#E8E0D0', '#222624') },
-  { name: 'Pantai Sandal Hilang', icon: 'beach_access', desc: 'Semua sandal kiri berakhir di sini. Yang kanan tidak pernah datang.', pool: ['lele', 'bebek', 'kumbang'], mid: 'kelinci', boss: 'angsa', theme: T('#D3ECF6', '#7FC4DC', '#F3DFA8', '#BFE3F1', '#86C7DE', '#F5E4B4', '#14293A') },
-  { name: 'Kebun Durian Jatuh', icon: 'park', desc: 'Pakai helm. Duriannya tidak pilih-pilih kepala.', pool: ['kumbang', 'kelinci', 'tikus', 'lele'], mid: 'lebah', boss: 'angsa', theme: T('#F1EECB', '#A7C66A', '#8FB55A', '#E8E6B0', '#B4CF78', '#E6EDC4', '#1F2A14') },
-  { name: 'Gunung Es Teh Manis', icon: 'ac_unit', desc: 'Dingin, manis, dan terlalu banyak gula. Dokter gigi tidak setuju.', pool: ['bebek', 'lele', 'kelinci', 'kumbang'], mid: 'lebah', boss: 'angsa', theme: T('#EAF6F8', '#CDE8EE', '#D9A36A', '#DDF0F4', '#C3E2EA', '#E9C58F', '#1E2A33') },
-  { name: 'Istana Angsa Pengacara', icon: 'castle', desc: 'Semua pintu terkunci. Kuncinya ada di pasal 47.', pool: ['tikus', 'bebek', 'kumbang', 'lele', 'kelinci'], mid: 'lebah', boss: 'angsa', theme: T('#F3E3F0', '#D8B4D8', '#C9A86A', '#EED3EA', '#D3A8D3', '#E8D6A8', '#2A1A2A') },
-  { name: 'Terminal Bus Abadi', icon: 'directions_bus', desc: 'Busnya berangkat "sebentar lagi" sejak 1998. Kodok Ojek menawarkan jalan pintas.', pool: ['kodok', 'kambing', 'tikus'], mid: 'kucing', boss: 'buaya', theme: T('#E4E8EC', '#AEB8C2', '#9AA0A8', '#D6DCE2', '#B4BEC8', '#C9CED4', '#1B2028') },
-  { name: 'Mal Diskon 90%', icon: 'shopping_bag', desc: 'Diskonnya nyata. Harganya dinaikkan dulu kemarin.', pool: ['kucing', 'cumi', 'kelinci', 'kambing'], mid: 'kodok', boss: 'buaya', theme: T('#FBE3EC', '#F2AFC8', '#E9D7C6', '#F8D0DF', '#EFA2BE', '#F3E2D2', '#2A1822') },
-  { name: 'Laut Dalam Karaoke', icon: 'scuba_diving', desc: 'Dua ribu meter di bawah laut. Mikrofonnya tetap menyala.', pool: ['cumi', 'lele', 'kura', 'kodok'], mid: 'buaya', boss: 'gajah', theme: T('#BFE4EA', '#4FA3B8', '#3E7F8F', '#A9D9E2', '#5DB0C2', '#7FC0CC', '#0E1E2A') },
-  { name: 'Menara Rapat Tanpa Akhir', icon: 'apartment', desc: 'Rapat tentang rapat berikutnya. Notulennya sudah 900 halaman.', pool: ['kura', 'kambing', 'kucing', 'cumi', 'tikus'], mid: 'buaya', boss: 'gajah', theme: T('#EEE8DC', '#C8B8A0', '#A8957A', '#E6DCCA', '#CBB89C', '#D8CBB4', '#211D18') }
+  { name: 'Kebun Bambu Tetangga', rule: { id: 'bambu', name: 'Rebung Gratis', desc: 'Tiap 5 hari, Santoni ngemil rebung tetangga: pulih 10% HP.' }, icon: 'forest', desc: 'Tetangga belum tahu.', pool: ['tikus', 'bebek', 'kumbang'], mid: 'kelinci', boss: 'lebah', theme: T('#E3EFD3', '#9CCB8E', '#7FB77A', '#CFE6B8', '#A8D49A', '#E2F0D0', '#1C2A1F') },
+  { name: 'Pasar Subuh', rule: { id: 'tawar', name: 'Tawar-Menawar', desc: 'Semua kejadian berbayar setengah harga. Penjualnya masih mengantuk.' }, icon: 'storefront', desc: 'Buka jam tiga pagi. Santoni bangun jam tiga sore.', pool: ['tikus', 'bebek', 'kelinci'], mid: 'lele', boss: 'lebah', theme: T('#F9E3C8', '#E8B48A', '#D9A86A', '#F6C9A0', '#E9A97A', '#F3E1C0', '#2A2220') },
+  { name: 'Rawa Kerupuk', rule: { id: 'renyah', name: 'Serba Renyah', desc: 'Pukulan kritis ×2,5, bukan ×2. Semuanya terdengar kriuk.' }, icon: 'water', desc: 'Rawanya renyah. Jangan tanya kenapa.', pool: ['tikus', 'bebek', 'kumbang', 'lele', 'kelinci'], mid: 'lebah', boss: 'angsa', theme: T('#F7D9BF', '#B5D7C2', '#9CCBB0', '#F3B49A', '#E8A584', '#CFE6D6', '#1E2622') },
+  { name: 'Gunung Kasur', rule: { id: 'kantuk', name: 'Kantuk Berat', desc: '10% giliran Santoni tertidur: tidak menyerang, tapi pulih 5% HP.' }, icon: 'landscape', desc: 'Sangat empuk. Banyak yang tidak kembali karena ketiduran.', pool: ['kumbang', 'kelinci', 'bebek'], mid: 'lebah', boss: 'angsa', theme: T('#E9E5F7', '#C9C1EA', '#EEEAF8', '#D9D2F2', '#BDB3E6', '#F1EEFA', '#23213A') },
+  { name: 'Gua Wi-Fi Lemah', rule: { id: 'lag', name: 'Sinyal Lag', desc: '15% serangan siapa pun tertahan "buffering" dan tidak terjadi.' }, icon: 'wifi_off', desc: 'Satu bar. Kadang nol. Bosnya selalu buffering.', pool: ['kumbang', 'tikus', 'lele'], mid: 'lebah', boss: 'angsa', theme: T('#5A5470', '#7A7398', '#8C85A8', '#6E6890', '#857DA6', '#A39CC0', '#15131F') },
+  { name: 'Kantor Pajak Hutan', rule: { id: 'pajak', name: 'Potong Pajak', desc: '15% dari setiap koin yang didapat dipotong pajak. Ada kuitansinya.' }, icon: 'account_balance', desc: 'Antrean nomor 4.891. Bawa fotokopi KTP.', pool: ['tikus', 'kelinci', 'bebek'], mid: 'lebah', boss: 'angsa', theme: T('#ECE6DA', '#B4BEB8', '#C9BBA6', '#DCD3C2', '#BFC8C2', '#E8E0D0', '#222624') },
+  { name: 'Pantai Sandal Hilang', rule: { id: 'ombak', name: 'Sandal Hanyut', desc: 'Di awal perjalanan, satu equipment acak terbawa ombak dan tidak aktif.' }, icon: 'beach_access', desc: 'Semua sandal kiri berakhir di sini. Yang kanan tidak pernah datang.', pool: ['lele', 'bebek', 'kumbang'], mid: 'kelinci', boss: 'angsa', theme: T('#D3ECF6', '#7FC4DC', '#F3DFA8', '#BFE3F1', '#86C7DE', '#F5E4B4', '#14293A') },
+  { name: 'Kebun Durian Jatuh', rule: { id: 'durian', name: 'Durian Jatuh', desc: 'Tiap hari 12% peluang kejatuhan durian: −8% HP, tapi +20 XP. Wangi.' }, icon: 'park', desc: 'Pakai helm. Duriannya tidak pilih-pilih kepala.', pool: ['kumbang', 'kelinci', 'tikus', 'lele'], mid: 'lebah', boss: 'angsa', theme: T('#F1EECB', '#A7C66A', '#8FB55A', '#E8E6B0', '#B4CF78', '#E6EDC4', '#1F2A14') },
+  { name: 'Gunung Es Teh Manis', rule: { id: 'manis', name: 'Kebanyakan Gula', desc: 'Semua pemulihan HP ×1,5, tapi DEF Santoni −15%.' }, icon: 'ac_unit', desc: 'Dingin, manis, dan terlalu banyak gula. Dokter gigi tidak setuju.', pool: ['bebek', 'lele', 'kelinci', 'kumbang'], mid: 'lebah', boss: 'angsa', theme: T('#EAF6F8', '#CDE8EE', '#D9A36A', '#DDF0F4', '#C3E2EA', '#E9C58F', '#1E2A33') },
+  { name: 'Istana Angsa Pengacara', rule: { id: 'pasal', name: 'Pasal 47', desc: 'Pose Seram dilarang di istana ini. Semua perkelahian wajib.' }, icon: 'castle', desc: 'Semua pintu terkunci. Kuncinya ada di pasal 47.', pool: ['tikus', 'bebek', 'kumbang', 'lele', 'kelinci'], mid: 'lebah', boss: 'angsa', theme: T('#F3E3F0', '#D8B4D8', '#C9A86A', '#EED3EA', '#D3A8D3', '#E8D6A8', '#2A1A2A') },
+  { name: 'Terminal Bus Abadi', rule: { id: 'ngetem', name: 'Ngetem Lama', desc: 'Musuh lebih sering mampir, tapi semua XP ×1,3.' }, icon: 'directions_bus', desc: 'Busnya berangkat "sebentar lagi" sejak 1998. Kodok Ojek menawarkan jalan pintas.', pool: ['kodok', 'kambing', 'tikus'], mid: 'kucing', boss: 'buaya', theme: T('#E4E8EC', '#AEB8C2', '#9AA0A8', '#D6DCE2', '#B4BEC8', '#C9CED4', '#1B2028') },
+  { name: 'Mal Diskon 90%', rule: { id: 'diskon', name: 'Harga Coret', desc: 'Hadiah koin ×2, tapi kejadian berbayar dua kali lipat harganya.' }, icon: 'shopping_bag', desc: 'Diskonnya nyata. Harganya dinaikkan dulu kemarin.', pool: ['kucing', 'cumi', 'kelinci', 'kambing'], mid: 'kodok', boss: 'buaya', theme: T('#FBE3EC', '#F2AFC8', '#E9D7C6', '#F8D0DF', '#EFA2BE', '#F3E2D2', '#2A1822') },
+  { name: 'Laut Dalam Karaoke', rule: { id: 'karaoke', name: 'Giliran Nyanyi', desc: 'Tiap giliran ke-4, musuh sibuk bernyanyi dan lupa menyerang.' }, icon: 'scuba_diving', desc: 'Dua ribu meter di bawah laut. Mikrofonnya tetap menyala.', pool: ['cumi', 'lele', 'kura', 'kodok'], mid: 'buaya', boss: 'gajah', theme: T('#BFE4EA', '#4FA3B8', '#3E7F8F', '#A9D9E2', '#5DB0C2', '#7FC0CC', '#0E1E2A') },
+  { name: 'Menara Rapat Tanpa Akhir', rule: { id: 'notulen', name: 'Rapat Diperpanjang', desc: 'Musuh pulih 3% HP tiap giliran mereka. Rapat belum selesai.' }, icon: 'apartment', desc: 'Rapat tentang rapat berikutnya. Notulennya sudah 900 halaman.', pool: ['kura', 'kambing', 'kucing', 'cumi', 'tikus'], mid: 'buaya', boss: 'gajah', theme: T('#EEE8DC', '#C8B8A0', '#A8957A', '#E6DCCA', '#CBB89C', '#D8CBB4', '#211D18') }
 ];
 export const OFFERS = [
   { id: 'energi', name: 'Energi ×10', icon: 'bolt', rar: 'Langka', cur: 'gem', price: 50, give: { energy: 10 }, msg: 'Energi +10. Santoni tetap mengantuk.' },

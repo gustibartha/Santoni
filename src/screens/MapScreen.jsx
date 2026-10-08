@@ -8,17 +8,17 @@ function TowerCard({ t }) {
     <div style={{ display: "flex", gap: "12px", padding: "12px", border: "3px solid #2B1E18", borderRadius: "22px", background: "#2E2440", color: "#FFF8EC", boxShadow: "0 5px 0 #2B1E18" }}>
       <div style={{ width: "62px", flex: "none", display: "flex", flexDirection: "column", gap: "3px" }}>
         {floors.map((f, i) => (
-          <div key={f} style={{ height: "26px", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2px solid #120C09", borderRadius: "7px", background: i === 2 ? "#F2B63C" : f % 5 === 0 ? "#D2532A" : "#4A3D66", color: i === 2 ? "#2B1E18" : "#FFF8EC", font: "500 9.5px/1 'DM Mono',monospace" }}>
+          <div key={f} style={{ height: "26px", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2px solid #120C09", borderRadius: "7px", background: i === 2 ? "#F2B63C" : f % 5 === 0 ? "#D2532A" : "#4A3D66", color: i === 2 ? "#2B1E18" : "#FFF8EC", font: "500 10.5px/1 'DM Mono',monospace" }}>
             {f % 5 === 0 ? `BOS ${f}` : `LT ${f}`}
           </div>
         ))}
         <div style={{ height: "6px", borderRadius: "3px", background: "#120C09" }} />
       </div>
       <div style={{ flex: "1", minWidth: "0" }}>
-        <div style={{ font: "500 9px/1 'DM Mono',monospace", letterSpacing: ".1em", color: "#C9A8F0" }}>STAGE TANTANGAN</div>
+        <div style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".07em", color: "#C9A8F0" }}>STAGE TANTANGAN</div>
         <div style={{ font: "20px/1.1 'Bagel Fat One',system-ui", marginTop: "4px" }}>{t.name}</div>
         <div style={{ font: "500 11.5px/1.35 'Bricolage Grotesque'", color: "#D9CFE8", marginTop: "4px", textWrap: "pretty" }}>{t.desc}</div>
-        <div style={{ font: "500 9.5px/1.3 'DM Mono',monospace", color: "#F2B63C", marginTop: "6px" }}>
+        <div style={{ font: "500 10.5px/1.3 'DM Mono',monospace", color: "#F2B63C", marginTop: "6px" }}>
           {t.bossNext ? `LANTAI INI: ${t.nextBoss.toUpperCase()}` : `BOS DALAM ${t.bossIn} LANTAI · REKOR ${t.best}`}
         </div>
         <button onClick={t.play} className="dc-press" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", width: "100%", height: "40px", marginTop: "9px", padding: "0", border: "2.5px solid #120C09", borderRadius: "13px", background: "#F2B63C", boxShadow: "0 4px 0 #120C09", color: "#2B1E18", font: "18px/1 'Bagel Fat One',system-ui", cursor: "pointer", '--press-tf': "translateY(3px)", '--press-sh': "0 1px 0 #120C09" }}>
@@ -35,11 +35,11 @@ export default function MapScreen({ v }) {
     <div style={{ position: "absolute", top: "66px", left: "0", right: "0", bottom: "84px", display: "flex", flexDirection: "column", gap: "10px", padding: "6px 14px 0" }}>
       <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "8px" }}>
         <div style={{ font: "28px/1 'Bagel Fat One',system-ui" }}>Peta</div>
-        <div style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#6E5A4E" }}>{v.mapSummary}</div>
+        <div style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#5E4A3F" }}>{v.mapSummary}</div>
       </div>
       <div style={{ flex: "1", minHeight: "0", overflowY: "auto", margin: "0 -14px", padding: "6px 14px 22px", scrollbarWidth: "none" }}>
         <TowerCard t={v.tower} />
-        <div style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".1em", color: "#6E5A4E", margin: "16px 0 10px" }}>PERJALANAN</div>
+        <div style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".07em", color: "#5E4A3F", margin: "16px 0 10px" }}>PERJALANAN</div>
         <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: "14px" }}>
           <div style={{ position: "absolute", left: "20px", top: "24px", bottom: "24px", borderLeft: "3px dashed rgba(43,30,24,.32)" }} />
           {v.chapters.map((ch, i) => (
@@ -49,13 +49,13 @@ export default function MapScreen({ v }) {
                   <div style={{ border: "3px solid #2B1E18", borderRadius: "22px", background: "#FFF8EC", boxShadow: "0 5px 0 #2B1E18", overflow: "hidden" }}>
                     <div style={{ position: "relative", height: "124px", borderBottom: "2.5px solid #2B1E18", backgroundColor: "#CFE6D6", backgroundImage: "radial-gradient(rgba(43,30,24,.12) 1.2px,transparent 1.5px)", backgroundSize: "10px 10px" }}>
                       <ChapterBanner theme={ch.theme} boss={ch.boss} still={v.still} />
-                      <div style={{ position: "absolute", top: "10px", left: "10px", padding: "5px 8px", borderRadius: "8px", background: "#D2532A", color: "#FFF8EC", font: "500 9.5px/1 'DM Mono',monospace", letterSpacing: ".08em", pointerEvents: "none" }}>{ch.status}</div>
+                      <div style={{ position: "absolute", top: "10px", left: "10px", padding: "5px 8px", borderRadius: "8px", background: "#D2532A", color: "#FFF8EC", font: "500 10.5px/1 'DM Mono',monospace", letterSpacing: ".08em", pointerEvents: "none" }}>{ch.status}</div>
                     </div>
                     <div style={{ padding: "12px 14px 14px" }}>
                       <div style={{ font: "22px/1.1 'Bagel Fat One',system-ui" }}>{ch.name}</div>
                       <div style={{ font: "500 13px/1.4 'Bricolage Grotesque'", color: "#5B4A40", marginTop: "5px", textWrap: "pretty" }}>{ch.desc}</div>
                       <div style={{ marginTop: "10px", padding: "8px 10px 9px", borderRadius: "14px", background: "#F3E6D3" }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", font: "500 9px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#6E5A4E" }}><span>PENGHUNI</span><span>{ch.power}</span></div>
+                        <div style={{ display: "flex", justifyContent: "space-between", font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#5E4A3F" }}><span>PENGHUNI</span><span>{ch.power}</span></div>
                         <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginTop: "7px" }}>
                           {ch.lineup.map(m => (
                             <div key={m.role + m.kind} title={m.name} style={{ position: "relative", width: "38px", height: "38px", boxSizing: "border-box", border: `2px solid ${m.role === 'BOS' ? '#D2532A' : '#2B1E18'}`, borderRadius: "11px", background: m.role === 'BOS' ? "#FBE3D8" : "#FFF8EC" }}>
@@ -65,14 +65,15 @@ export default function MapScreen({ v }) {
                           ))}
                         </div>
                         <div style={{ marginTop: "11px", font: "600 11.5px/1.35 'Bricolage Grotesque'", color: "#5B4A40" }}><b>Bos: {ch.bossName}.</b> {ch.bossTrait}</div>
+                        {ch.rule && <div style={{ marginTop: "6px", font: "600 11.5px/1.35 'Bricolage Grotesque'", color: "#A93D1C" }}><b>Aturan bab — {ch.rule.name}.</b> {ch.rule.desc}</div>}
                       </div>
-                      <div style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".06em", color: "#6E5A4E", marginTop: "10px" }}>{ch.best}</div>
+                      <div style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".06em", color: "#5E4A3F", marginTop: "10px" }}>{ch.best}</div>
                       <div style={{ position: "relative", height: "46px", margin: "10px 16px 0 2px" }}>
                         <div style={{ position: "absolute", left: "0", right: "0", top: "11px", height: "10px", boxSizing: "border-box", border: "2px solid #2B1E18", borderRadius: "6px", background: "#EADBC5", overflow: "hidden" }}><div style={{ height: "100%", width: ch.dayPct, background: "#D2532A" }} /></div>
                         {ch.chests.map((c, i) => (
                             <div key={c.key ?? c.id ?? i} onClick={c.claim} style={{ position: "absolute", top: "0", left: c.left, transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", cursor: "pointer" }}>
                               <div style={{ width: "32px", height: "32px", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "10px", background: c.bg, color: c.color, font: "18px/1 'Material Symbols Rounded'", boxShadow: "0 2px 0 #2B1E18" }}>{c.icon}</div>
-                              <div style={{ font: "500 9px/1 'DM Mono',monospace" }}>{c.label}</div>
+                              <div style={{ font: "500 10px/1 'DM Mono',monospace" }}>{c.label}</div>
                             </div>
                         ))}
                       </div>
@@ -87,7 +88,7 @@ export default function MapScreen({ v }) {
                     <div style={{ width: "52px", height: "52px", flex: "none", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2px solid #2B1E18", borderRadius: "14px", background: ch.thumbBg, color: "#2B1E18", font: "26px/1 'Material Symbols Rounded'" }}>{ch.icon}</div>
                     <div style={{ flex: "1", minWidth: "0" }}>
                       <div style={{ font: "17px/1.15 'Bagel Fat One',system-ui" }}>{ch.name}</div>
-                      <div style={{ font: "600 12px/1.3 'Bricolage Grotesque'", color: "#6E5A4E", marginTop: "3px" }}>{ch.line}</div>
+                      <div style={{ font: "600 12px/1.3 'Bricolage Grotesque'", color: "#5E4A3F", marginTop: "3px" }}>{ch.line}</div>
                     </div>
                     <span style={{ font: "22px/1 'Material Symbols Rounded'", color: ch.endFg }}>{ch.endIcon}</span>
                   </div>

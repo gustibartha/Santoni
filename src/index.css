@@ -1,3 +1,13 @@
+/* Icons: self-hosted subset of Material Symbols Rounded (regenerate with `npm run icons`).
+   font-display: block keeps ligature names like "storefront" invisible while the font loads. */
+@font-face {
+  font-family: 'Material Symbols Rounded';
+  font-style: normal;
+  font-weight: 100 700;
+  font-display: block;
+  src: url('./assets/fonts/material-symbols-rounded.woff2') format('woff2');
+}
+
 *, *::before, *::after { box-sizing: border-box; }
 html, body, #root { height: 100%; margin: 0; }
 body {

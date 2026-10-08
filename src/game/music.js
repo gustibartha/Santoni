@@ -162,6 +162,32 @@ class Music {
     o.start(t); o.stop(t + dur + 0.05);
   }
 
+  // Short one-shot sound effects layered over the music. Silent when muted or before unlock.
+  sfx(name) {
+    if (this.muted || !this.ctx || this.ctx.state !== 'running') return;
+    const t = this.ctx.currentTime + 0.01;
+    const arp = (notes, step, type, vol, len) => notes.forEach((n, i) => {
+      this.tone(midi(n), t + i * step, len, type, vol, true);
+      this.tone(midi(n + 12), t + i * step, len * 0.6, 'sine', vol * 0.3);
+    });
+    if (name === 'chest') arp([72, 76, 79, 84], 0.07, 'sine', 0.16, 0.35);
+    else if (name === 'legend') { arp([72, 76, 79, 84, 88, 91], 0.07, 'sine', 0.18, 0.5); this.tone(midi(96), t + 0.45, 1.2, 'sine', 0.08, true); }
+    else if (name === 'levelup') arp([67, 72, 79], 0.09, 'triangle', 0.16, 0.3);
+    else if (name === 'victory') {
+      arp([72, 76, 79], 0.11, 'square', 0.06, 0.25);
+      [72, 76, 79, 84].forEach(n => this.tone(midi(n), t + 0.38, 0.9, 'triangle', 0.07));
+      this.kick(t + 0.38, 0.3);
+    } else if (name === 'ult') {
+      const c = this.ctx, s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+      s.buffer = this.noise; s.loop = true; f.type = 'bandpass'; f.Q.value = 1.2;
+      f.frequency.setValueAtTime(300, t); f.frequency.exponentialRampToValueAtTime(4000, t + 0.5);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.18, t + 0.3); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.6);
+      s.connect(f); f.connect(g); g.connect(this.master); s.start(t); s.stop(t + 0.65);
+      this.kick(t + 0.5, 0.45);
+      arp([60, 67, 72], 0.05, 'sawtooth', 0.04, 0.5);
+    }
+  }
+
   kick(t, vol = 0.35) {
     const c = this.ctx, o = c.createOscillator(), g = c.createGain();
     o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(45, t + 0.12);

@@ -39,7 +39,7 @@ function UltimateCinematic({ u }) {
 
 function StatusChip({ s }) {
   return (
-    <span style={{ display: "inline-flex", alignItems: "center", gap: "3px", flex: "none", height: "18px", padding: "0 6px 0 4px", borderRadius: "7px", border: "1.5px solid #0F1411", background: s.bg, color: "#FFF8EC", font: "500 9px/1 'DM Mono',monospace", letterSpacing: ".04em", whiteSpace: "nowrap" }}>
+    <span style={{ display: "inline-flex", alignItems: "center", gap: "3px", flex: "none", height: "18px", padding: "0 6px 0 4px", borderRadius: "7px", border: "1.5px solid #0F1411", background: s.bg, color: "#FFF8EC", font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".04em", whiteSpace: "nowrap" }}>
       <span style={{ font: "12px/1 'Material Symbols Rounded'" }}>{s.icon}</span>{s.label}
     </span>
   );
@@ -105,7 +105,7 @@ export default function Battle({ v }) {
         <div style={{ position: "absolute", inset: "0", pointerEvents: "none" }}>{v.heroPops}</div>
       </div>
       <div style={{ position: "absolute", top: "404px", left: "238px", right: "12px", display: "flex", flexDirection: "column", gap: "9px" }}>
-        <div style={{ font: "500 9.5px/1 'DM Mono',monospace", letterSpacing: ".1em", color: "#B9C4BE" }}>SKILL AKTIF</div>
+        <div style={{ font: "500 10.5px/1 'DM Mono',monospace", letterSpacing: ".07em", color: "#B9C4BE" }}>SKILL AKTIF</div>
         <div style={{ display: "grid", gridTemplateColumns: `repeat(${v.bTile.cols},${v.bTile.size}px)`, gap: `${v.bTile.gap}px` }}>
           {v.battleSkills.map((k, i) => (
               <div key={k.key ?? k.id ?? i} style={{ position: "relative", width: `${v.bTile.size}px`, height: `${v.bTile.size}px`, boxSizing: "border-box", display: "grid", placeItems: "center", border: `2.5px solid ${k.ring}`, borderRadius: `${v.bTile.radius}px`, background: k.bg, color: k.fg, font: `${v.bTile.icon}px/1 'Material Symbols Rounded'`, boxShadow: k.glow, transition: "box-shadow .15s,border-color .15s" }}>
@@ -141,7 +141,7 @@ export default function Battle({ v }) {
         <div style={{ width: "18px", height: "18px", flex: "none" }}><WeaponArt id={v.ultWeapon} size={18} /></div>
         <div style={{ position: "relative", flex: "1", height: "15px", boxSizing: "border-box", border: "2px solid #0F1411", borderRadius: "8px", background: "#0F1411", overflow: "hidden", animation: v.ultReady && !v.still ? "ultReady 1s ease-in-out infinite" : "none" }}>
           <div style={{ height: "100%", width: v.ultPct, background: v.ultReady ? "linear-gradient(90deg,#F2B63C,#FFE45C,#F2B63C)" : "linear-gradient(90deg,#B0620A,#F2B63C)", transition: "width .3s" }} />
-          <div style={{ position: "absolute", inset: "0", display: "flex", alignItems: "center", justifyContent: "center", font: "500 8.5px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#FFF8EC", textShadow: "0 1px 0 #0F1411,1px 0 0 #0F1411,-1px 0 0 #0F1411" }}>{v.ultReady ? `SIAP · ${v.ultName.toUpperCase()}` : `PAMUNGKAS · ${v.ultName.toUpperCase()}`}</div>
+          <div style={{ position: "absolute", inset: "0", display: "flex", alignItems: "center", justifyContent: "center", font: "500 9.5px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#FFF8EC", textShadow: "0 1px 0 #0F1411,1px 0 0 #0F1411,-1px 0 0 #0F1411" }}>{v.ultReady ? `SIAP · ${v.ultName.toUpperCase()}` : `PAMUNGKAS · ${v.ultName.toUpperCase()}`}</div>
         </div>
       </div>
       {v.hStatus.length > 0 && (

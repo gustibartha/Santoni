@@ -9,7 +9,7 @@ export default function Hud({ v }) {
       </div>
       <div style={{ minWidth: "0" }}>
         <div style={{ font: "800 14px/1.1 'Bricolage Grotesque'" }}>Santoni</div>
-        <div onClick={v.toggleMusic} role="button" aria-label={v.musicOn ? 'Matikan musik' : 'Nyalakan musik'} style={{ display: "inline-flex", alignItems: "center", gap: "2px", marginTop: "3px", padding: "2px 6px 2px 3px", borderRadius: "7px", background: v.musicOn ? "#2F7A5C" : "#EADBC5", color: v.musicOn ? "#FFF8EC" : "#6E5A4E", font: "500 8.5px/1 'DM Mono',monospace", letterSpacing: ".06em", cursor: "pointer", whiteSpace: "nowrap" }}>
+        <div onClick={v.toggleMusic} role="button" aria-label={v.musicOn ? 'Matikan musik' : 'Nyalakan musik'} style={{ display: "inline-flex", alignItems: "center", gap: "2px", marginTop: "3px", padding: "2px 6px 2px 3px", borderRadius: "7px", background: v.musicOn ? "#2F7A5C" : "#EADBC5", color: v.musicOn ? "#FFF8EC" : "#5E4A3F", font: "500 9.5px/1 'DM Mono',monospace", letterSpacing: ".06em", cursor: "pointer", whiteSpace: "nowrap" }}>
           <span style={{ font: "12px/1 'Material Symbols Rounded'" }}>{v.musicOn ? 'music_note' : 'music_off'}</span>{v.musicOn ? 'MUSIK' : 'SUNYI'}
         </div>
       </div>
@@ -18,7 +18,7 @@ export default function Hud({ v }) {
         <span style={{ width: "22px", height: "22px", display: "grid", placeItems: "center", borderRadius: "50%", background: "#3C78C8", color: "#FFF8EC", font: "15px/1 'Material Symbols Rounded'" }}>bolt</span>
         {v.energyLabel}
         {v.energyTimer && (
-          <span style={{ position: "absolute", top: "100%", left: "50%", transform: "translateX(-50%)", marginTop: "3px", padding: "2px 5px", borderRadius: "6px", background: "#3C78C8", color: "#FFF8EC", font: "500 8.5px/1 'DM Mono',monospace", letterSpacing: ".02em", whiteSpace: "nowrap", pointerEvents: "none" }}>{v.energyTimer}</span>
+          <span style={{ position: "absolute", top: "100%", left: "50%", transform: "translateX(-50%)", marginTop: "3px", padding: "2px 5px", borderRadius: "6px", background: "#3C78C8", color: "#FFF8EC", font: "500 9.5px/1 'DM Mono',monospace", letterSpacing: ".02em", whiteSpace: "nowrap", pointerEvents: "none" }}>{v.energyTimer}</span>
         )}
       </div>
       <div onClick={v.goShop} style={{ display: "flex", alignItems: "center", gap: "5px", height: "28px", padding: "0 9px 0 4px", borderRadius: "14px", background: "#2B1E18", color: "#FFF8EC", font: "700 12.5px/1 'Bricolage Grotesque'", cursor: "pointer" }}>
