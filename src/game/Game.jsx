@@ -3,6 +3,7 @@ import * as C from './data.js';
 import { stripEl, popEl, bannerEl, burstEl, pullCardsEl, elementFx, auraEl } from './effects.jsx';
 import GameView from './GameView.jsx';
 import { loadSave, writeSave } from './save.js';
+import { music } from './music.js';
 
 // Petualangan Santoni — game state + rules. `buildView()` turns state into the flat
 // view model that the screen components in src/screens render.
@@ -16,6 +17,12 @@ export default class Game extends Component {
     const saved = props.persist && loadSave(this._initDays);
     if (saved) { this.state = { ...this.state, ...saved.state }; this._uid = saved.uid || this._uid; }
     this.state = { ...this.state, ...this.energyPatch(this.state, Date.now()) };
+    // One-time gift of new gear for saves made before it existed.
+    const gift = C.NEW_GEAR_GIFT;
+    if (saved && !(saved.state.gifts || []).includes(gift.id)) {
+      this.state = { ...this.state, bag: this.state.bag.concat(gift.items), gifts: (saved.state.gifts || []).concat(gift.id),
+        toast: { id: this.uid(), text: `Kiriman datang: ${gift.items.map(id => C.ITEMS[id].name).join(' dan ')}. Pengirimnya tidak menulis nama.`, until: Date.now() + 5000 } };
+    }
   }
   uid() { this._uid = (this._uid || 1000) + 1; return this._uid; }
   days(p) { const d = parseInt((p || this.props || {}).runDays, 10); return d === 10 || d === 30 ? d : 20; }
@@ -86,11 +93,11 @@ export default class Game extends Component {
   initial(screen, p) {
     const days = this.days(p);
     const s = {
-      screen: 'lobby', coins: 12480, gems: 1480, energy: 25, energyAt: null, clock: 0, chapter: 2,
+      screen: 'lobby', coins: 12480, gems: 1480, energy: 25, energyAt: null, clock: 0, musicOn: !music.muted, chapter: 2,
       best: [days, days, Math.round(days * 0.7), 0, 0, 0],
       chests: { '0-0': 1, '0-1': 1, '0-2': 1, '1-0': 1, '1-1': 1, '1-2': 1, '2-0': 1 },
       equipped: { senjata: 'sumpit', topi: 'panci', baju: 'syal', kalung: 'tutup', sabuk: 'rafia', sepatu: 'sandal' },
-      bag: ['centong', 'helm', 'gesper', 'payung', 'pramuka', 'jashujan', 'cincin', 'kaoskaki', 'payung', 'cincin'],
+      bag: ['centong', 'raket', 'helm', 'caping', 'gesper', 'payung', 'pramuka', 'jashujan', 'cincin', 'kaoskaki', 'payung', 'cincin'], gifts: [C.NEW_GEAR_GIFT.id],
       pity: 2, sold: {}, bubble: 0, speed: 1, daily: false, act: null, heroPoseIdx: 0, openJ: null, tick: 0, journal: this.seedJournal(days),
       run: null, offer: null, battle: null, result: null, pull: null, toast: null, shake: null
     };
@@ -135,6 +142,15 @@ export default class Game extends Component {
 
   componentDidMount() {
     this.syncTimer();
+    if (!this.props.still) {
+      // Audio may only start from a user gesture; any tap or key press unlocks it.
+      this._unlock = () => music.unlock();
+      this._vis = () => music.setHidden(document.hidden);
+      addEventListener('pointerdown', this._unlock);
+      addEventListener('keydown', this._unlock);
+      document.addEventListener('visibilitychange', this._vis);
+      music.setTrack(this.trackFor(this.state));
+    }
     if (this.props.persist) {
       this._save = () => writeSave(this.state, this.days(), this._uid);
       this._saveIv = setInterval(this._save, 2000);
@@ -145,6 +161,11 @@ export default class Game extends Component {
   }
   componentWillUnmount() {
     clearInterval(this._iv); this._iv = null;
+    if (this._unlock) {
+      removeEventListener('pointerdown', this._unlock);
+      removeEventListener('keydown', this._unlock);
+      document.removeEventListener('visibilitychange', this._vis);
+    }
     if (this._save) {
       clearInterval(this._saveIv);
       removeEventListener('pagehide', this._save);
@@ -158,8 +179,16 @@ export default class Game extends Component {
       this.setState(this.initial(this._init, p));
     }
     if (!!pp.still !== !!p.still) this.syncTimer();
+    if (!p.still && ps.screen !== this.state.screen) music.setTrack(this.trackFor(this.state));
     const a = ps.run ? ps.run.log.length : -1, b = this.state.run ? this.state.run.log.length : -1;
     if (a !== b || ps.screen !== this.state.screen || !!ps.offer !== !!this.state.offer) this.scrollLog();
+  }
+  trackFor(s) { return s.screen === 'battle' ? 'battle' : 'santai'; }
+  toggleMusic() {
+    const on = !this.state.musicOn;
+    music.setMuted(!on);
+    this.setState({ musicOn: on });
+    this.toast(on ? 'Musik menyala. Santoni mengangguk pelan mengikuti irama.' : 'Musik dimatikan. Santoni bersenandung sendiri.');
   }
   // The whole game runs on one 100 ms tick; `still` freezes it for static previews.
   syncTimer() {
@@ -374,6 +403,17 @@ export default class Game extends Component {
       } else if (wid === 'centong') {
         total = strike(3.2); const h = Math.round(r.maxHp * 0.3); r.hp = Math.min(r.maxHp, r.hp + h);
         push('enemy', `KENDURI ${total}`, 'crit'); push('hero', `+${h}`, 'heal');
+      } else if (wid === 'raket') {
+        for (let i = 0; i < 3; i++) { const d = strike(0.75); total += d; push('enemy', `ZAP ${d}`, 'skill'); }
+        b.stunGuard = false; stunFor(); fxAt('petir', true);
+      } else if (wid === 'sapu') {
+        total = strike(2.6); b.quake = Math.min(3, (b.quake || 0) + 2); push('enemy', `SAPU ${total}`, 'crit'); fxAt('angin', true);
+      } else if (wid === 'ulekan') {
+        for (const p of [0.45, 0.65, 0.85]) { const d = strike(p); total += d; push('enemy', `−${d}`, 'hit'); }
+        const last = strike(1.7); total += last; push('enemy', `HALUS ${last}`, 'crit'); fxAt('tanah', true);
+      } else if (wid === 'gitar') {
+        total = strike(2.8); const h = Math.round(r.maxHp * 0.2); r.hp = Math.min(r.maxHp, r.hp + h);
+        b.stunGuard = false; stunFor(); push('enemy', `KONSER ${total}`, 'crit'); push('enemy', 'TERPESONA', 'miss'); push('hero', `+${h}`, 'heal');
       } else {
         total = strike(2.2); push('enemy', `TAMPAR ${total}`, 'crit');
       }
@@ -622,6 +662,7 @@ export default class Game extends Component {
       isLobby: scr === 'lobby', isRun: scr === 'run', isBattle: scr === 'battle', isHero: scr === 'hero', isMap: scr === 'map', isShop: scr === 'shop', isResult: scr === 'result',
       showHud: hudScreens.indexOf(scr) >= 0, showNav: hudScreens.indexOf(scr) >= 0,
       energyLabel: `${s.energy}/${C.ENERGY.max}`, tapEnergy: g(() => this.tapEnergy()),
+      musicOn: !!s.musicOn, toggleMusic: g(() => this.toggleMusic()),
       energyTimer: s.energy < C.ENERGY.max ? `+1 ${this.fmtWait(this.energyWait(s, Date.now()).next)}` : '', coinsLabel: fmt(s.coins), gemsLabel: fmt(s.gems), goShop: g(() => this.go('shop')),
       power: fmt(this.power(base)),
       chapterNo: s.chapter + 1, chapterName: ch.name, chapterBest: Math.min(s.best[s.chapter], days), daysTotal: days,

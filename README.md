@@ -12,6 +12,10 @@ npm run build    # hasil di dist/
 
 Satu perjalanan memakai 5 energi. Energi bertambah 1 setiap 5 menit sampai 30, juga saat game ditutup. Atur di `ENERGY` dalam `src/game/data.js`.
 
+## Musik
+
+Musik latar dibuat langsung dengan Web Audio API di `src/game/music.js` (tanpa file audio): lagu santai untuk menu dan perjalanan, lagu battle saat bertarung. Musik mulai setelah sentuhan pertama dan bisa dimatikan lewat tombol MUSIK di HUD atau ikon speaker di layar perjalanan/battle.
+
 ## Simpan progress
 
 Progress (koin, permata, item, rekor, jurnal, dan run/battle yang sedang berjalan) otomatis tersimpan di browser setiap 2 detik dan saat tab ditutup. Buka `?reset=1` untuk mulai dari awal. Progress tidak berpindah antar-perangkat atau antar-browser.

@@ -9,7 +9,9 @@ export default function Hud({ v }) {
       </div>
       <div style={{ minWidth: "0" }}>
         <div style={{ font: "800 14px/1.1 'Bricolage Grotesque'" }}>Santoni</div>
-        <div style={{ font: "500 9.5px/1.2 'DM Mono',monospace", color: "#6E5A4E", marginTop: "2px" }}>AKUN LV 23</div>
+        <div onClick={v.toggleMusic} role="button" aria-label={v.musicOn ? 'Matikan musik' : 'Nyalakan musik'} style={{ display: "inline-flex", alignItems: "center", gap: "2px", marginTop: "3px", padding: "2px 6px 2px 3px", borderRadius: "7px", background: v.musicOn ? "#2F7A5C" : "#EADBC5", color: v.musicOn ? "#FFF8EC" : "#6E5A4E", font: "500 8.5px/1 'DM Mono',monospace", letterSpacing: ".06em", cursor: "pointer", whiteSpace: "nowrap" }}>
+          <span style={{ font: "12px/1 'Material Symbols Rounded'" }}>{v.musicOn ? 'music_note' : 'music_off'}</span>{v.musicOn ? 'MUSIK' : 'SUNYI'}
+        </div>
       </div>
       <div style={{ flex: "1" }} />
       <div onClick={v.tapEnergy} style={{ position: "relative", display: "flex", alignItems: "center", gap: "5px", height: "28px", padding: "0 9px 0 3px", borderRadius: "14px", background: "#2B1E18", color: "#FFF8EC", font: "700 12.5px/1 'Bricolage Grotesque'", cursor: "pointer" }}>

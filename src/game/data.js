@@ -118,8 +118,24 @@ export const ITEMS = {
   rafia: { name: 'Tali Rafia', type: 'sabuk', rar: 'Biasa', stat: 'HP', val: 90, lvl: 6, icon: 'cable', desc: 'Merah muda. Kuat menahan apa saja kecuali angin.' },
   gesper: { name: 'Gesper Raksasa', type: 'sabuk', rar: 'Epik', stat: 'HP', val: 180, lvl: 2, icon: 'link', desc: 'Beratnya dua kilo. Gaya tetap nomor satu.' },
   sandal: { name: 'Sandal Kiri', type: 'sepatu', rar: 'Legendaris', stat: 'DEF', val: 22, lvl: 15, icon: 'directions_walk', desc: 'Hanya yang kiri. Ternyata cukup.' },
-  kaoskaki: { name: 'Kaus Kaki Ganjil', type: 'sepatu', rar: 'Biasa', stat: 'DEF', val: 9, lvl: 3, icon: 'nordic_walking', desc: 'Satu motif bebek, satu motif galaksi.' }
+  kaoskaki: { name: 'Kaus Kaki Ganjil', type: 'sepatu', rar: 'Biasa', stat: 'DEF', val: 9, lvl: 3, icon: 'nordic_walking', desc: 'Satu motif bebek, satu motif galaksi.' },
+  // New weapons
+  raket: { name: 'Raket Nyamuk Listrik', type: 'senjata', rar: 'Langka', stat: 'ATK', val: 40, lvl: 9, icon: 'sports_tennis', desc: 'Dijual sebagai alat rumah tangga. Santoni tidak setuju.' },
+  sapu: { name: 'Sapu Lidi Sakti', type: 'senjata', rar: 'Epik', stat: 'ATK', val: 52, lvl: 11, icon: 'cleaning_services', desc: 'Seribu lidi, satu tekad. Menyapu musuh dan debu sekaligus.' },
+  ulekan: { name: 'Ulekan Batu Nenek', type: 'senjata', rar: 'Epik', stat: 'ATK', val: 61, lvl: 13, icon: 'blender', desc: 'Sudah menghaluskan sambal tiga generasi. Musuh berikutnya.' },
+  gitar: { name: 'Gitar Pengamen Legendaris', type: 'senjata', rar: 'Legendaris', stat: 'ATK', val: 76, lvl: 18, icon: 'music_note', desc: 'Senarnya lima. Lagunya satu. Semua orang tetap menangis.' },
+  // New gear
+  caping: { name: 'Caping Sawah', type: 'topi', rar: 'Langka', stat: 'HP', val: 170, lvl: 6, icon: 'agriculture', desc: 'Lebar, adem, dan bisa untuk menampung hujan.' },
+  blangkon: { name: 'Blangkon Kondangan', type: 'topi', rar: 'Epik', stat: 'HP', val: 240, lvl: 12, icon: 'face', desc: 'Dipakai sekali setahun. Hari ini termasuk.' },
+  batik: { name: 'Kemeja Batik Rapi', type: 'baju', rar: 'Epik', stat: 'DEF', val: 20, lvl: 11, icon: 'checkroom', desc: 'Motif parang. Disetrika oleh nenek dengan penuh harapan.' },
+  sarung: { name: 'Sarung Kotak-Kotak', type: 'baju', rar: 'Langka', stat: 'DEF', val: 15, lvl: 7, icon: 'checkroom', desc: 'Bisa jadi baju, selimut, atau tas darurat.' },
+  peluit: { name: 'Kalung Peluit Satpam', type: 'kalung', rar: 'Langka', stat: 'ATK', val: 21, lvl: 8, icon: 'campaign', desc: 'Disita dari Bebek Satpam. Bebeknya masih mencari.' },
+  kunci: { name: 'Gantungan Kunci Kenangan', type: 'kalung', rar: 'Epik', stat: 'ATK', val: 29, lvl: 12, icon: 'key', desc: 'Oleh-oleh dari kota yang tidak pernah Santoni datangi.' },
+  pinggang: { name: 'Tas Pinggang Turis', type: 'sabuk', rar: 'Langka', stat: 'HP', val: 150, lvl: 7, icon: 'work', desc: 'Berisi permen, tiket bekas, dan rasa ingin tahu.' },
+  bakiak: { name: 'Bakiak Kayu', type: 'sepatu', rar: 'Epik', stat: 'DEF', val: 19, lvl: 10, icon: 'directions_walk', desc: 'Bunyinya terdengar dari tiga desa. Musuh tahu Santoni datang.' }
 };
+// Given once to existing saves so returning players get to try the new gear.
+export const NEW_GEAR_GIFT = { id: 'perlengkapan-baru-1', items: ['raket', 'caping'] };
 // The weapon with the highest ATK gets the elegant floating animation.
 export const TOP_WEAPON = Object.keys(ITEMS).filter(id => ITEMS[id].type === 'senjata').sort((a, b) => ITEMS[b].val - ITEMS[a].val)[0];
 
@@ -129,6 +145,10 @@ export const ULTIMATES = {
   sumpit: { name: 'Seribu Sumpitan', desc: '5 tusukan beruntun 55% ATK. Tusukan terakhir pasti kritis.', line: 'Sumpit Santoni bergerak terlalu cepat untuk dilihat. Termasuk oleh Santoni.' },
   payung: { name: 'Payung Badai', desc: 'Hempasan 180% ATK. Payung terbuka dan menangkis 2 serangan berikutnya.', line: 'Santoni membuka payung. Badai datang dari dalam payung itu.' },
   centong: { name: 'Kenduri Terakhir', desc: 'Hantaman nasi 320% ATK dan pulihkan 30% HP. Semua orang kenyang.', line: 'Santoni mengangkat centong. Aroma nasi kenduri memenuhi udara.' },
+  raket: { name: 'Setrum Massal', desc: '3 sabetan listrik 75% ATK. Musuh pasti lumpuh 1 giliran.', line: 'Santoni menekan tombol raket. Udara berbau gosong.' },
+  sapu: { name: 'Sapu Bersih', desc: 'Sapuan 260% ATK. Musuh terhuyung dua kali lipat: ATK −30%.', line: 'Santoni menyapu. Musuh ikut tersapu, bersama debu dan harga dirinya.' },
+  ulekan: { name: 'Ulek Sampai Halus', desc: '4 ulekan beruntun 45/65/85/170% ATK. Makin lama makin halus.', line: 'Santoni mengulek dengan irama nenek. Pelan, lalu tidak pelan.' },
+  gitar: { name: 'Konser Tunggal', desc: 'Petikan 280% ATK. Musuh terpesona 1 giliran, Santoni pulih 20% HP.', line: 'Santoni memetik satu lagu galau. Musuh lupa sedang berkelahi.' },
   none: { name: 'Tamparan Malas', desc: 'Tamparan 220% ATK. Santoni tidak senang harus melakukannya.', line: 'Santoni menghela napas, lalu menampar. Sekali saja.' }
 };
 export const ULT_ELEMENTS = {

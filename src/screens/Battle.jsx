@@ -2,6 +2,7 @@ import Santoni from '../characters/Santoni.jsx';
 import Musuh from '../characters/Musuh.jsx';
 import SkillArt from '../characters/SkillArt.jsx';
 import ItemArt from '../characters/ItemArt.jsx';
+import MusicButton from '../components/MusicButton.jsx';
 
 const OUTLINE = "2px 0 0 #2B1E18,-2px 0 0 #2B1E18,0 2px 0 #2B1E18,0 -2px 0 #2B1E18,1.5px 1.5px 0 #2B1E18,-1.5px 1.5px 0 #2B1E18,1.5px -1.5px 0 #2B1E18,-1.5px -1.5px 0 #2B1E18,0 4px 0 #2B1E18";
 
@@ -53,6 +54,7 @@ export default function Battle({ v }) {
           <div style={{ padding: "8px 10px", borderRadius: "12px", border: "2px solid #0F1411", background: "#D2532A", font: "500 10.5px/1 'DM Mono',monospace", letterSpacing: ".08em" }}>BOS</div>
         )}
         <div style={{ flex: "1" }} />
+        <MusicButton v={v} dark size={36} />
         <div style={{ display: "flex", gap: "3px", padding: "3px", borderRadius: "14px", background: "#0F1411" }}>
           {v.speeds.map((sp, i) => (
               <button key={sp.key ?? sp.id ?? i} onClick={sp.set} style={{ width: "40px", height: "30px", padding: "0", border: "0", borderRadius: "10px", background: sp.bg, color: sp.fg, font: "800 13px/1 'Bricolage Grotesque'", cursor: "pointer" }}>×{sp.n}</button>

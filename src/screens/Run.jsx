@@ -1,6 +1,7 @@
 import Santoni from '../characters/Santoni.jsx';
 import Musuh from '../characters/Musuh.jsx';
 import SkillArt from '../characters/SkillArt.jsx';
+import MusicButton from '../components/MusicButton.jsx';
 
 export default function Run({ v }) {
   return (
@@ -14,6 +15,7 @@ export default function Run({ v }) {
             <span style={{ font: "700 14px/1 'Bricolage Grotesque'", color: "#6E5A4E" }}>/ {v.maxDay}</span>
           </div>
         </div>
+        <MusicButton v={v} />
         <div style={{ display: "flex", alignItems: "center", gap: "5px", height: "30px", padding: "0 10px 0 5px", borderRadius: "15px", background: "#2B1E18", color: "#FFF8EC", font: "700 13px/1 'Bricolage Grotesque'" }}>
           <span style={{ width: "20px", height: "20px", borderRadius: "50%", background: "#F2B63C", boxShadow: "inset 0 0 0 2px #C28A16,inset 0 0 0 5px #F2B63C,inset 0 0 0 6.5px #C28A16" }} />
           {v.runCoins}

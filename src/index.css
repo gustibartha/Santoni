@@ -55,6 +55,11 @@ button:disabled { cursor: default !important; }
 @keyframes panduSpin { to { transform: rotate(360deg) } }
 @keyframes panduFlip { 0% { opacity: 0; transform: perspective(600px) rotateY(90deg) scale(.7) } 100% { opacity: 1; transform: none } }
 @keyframes pdScrollFar { from { background-position: 0 0 } to { background-position: -180px 0 } }
+/* Side-view walk: two bobs per stride, opposite limbs swing together */
+@keyframes pdSideBob { 0%, 50%, 100% { transform: translateY(0) rotate(0) } 25%, 75% { transform: translateY(-5px) rotate(1.5deg) } }
+@keyframes pdStepA { 0%, 100% { transform: rotate(-24deg) } 50% { transform: rotate(24deg) } }
+@keyframes pdStepB { 0%, 100% { transform: rotate(24deg) } 50% { transform: rotate(-24deg) } }
+@keyframes pdSideHead { 0%, 50%, 100% { transform: rotate(0) } 25%, 75% { transform: rotate(-2deg) } }
 @keyframes pdTwin { 0% { opacity: 0; transform: translate(-20px, 10px) } 35% { opacity: .65; transform: translate(40px, -24px) } 100% { opacity: 0; transform: translate(70px, -30px) } }
 /* Strongest weapon: slow float, rotating halo, twinkling stars */
 @keyframes itemFloat { 0%, 100% { transform: translateY(0) rotate(-3deg) } 50% { transform: translateY(-8%) rotate(3deg) } }

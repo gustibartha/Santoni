@@ -171,6 +171,160 @@ const ART = {
       <Sparkles color="#FFE45C" at={[[54, 10, 6], [56, 44, 4], [10, 14, 4.5], [9, 50, 3.5]]} />
     </>
   ),
+  raket: () => (
+    <>
+      <g transform="rotate(-35 32 32)">
+        <ellipse cx="32" cy="21" rx="15" ry="17" fill="#EEF4FB" />
+        <path d="M24 6v30M32 4v34M40 6v30M18 14h28M17 22h30M18 30h28" fill="none" stroke="#9EC3F0" strokeWidth="1.2" />
+        <ellipse cx="32" cy="21" rx="15" ry="17" fill="none" stroke={O} strokeWidth="8" />
+        <ellipse cx="32" cy="21" rx="15" ry="17" fill="none" stroke="#3C78C8" strokeWidth="4" />
+        <rect x="30" y="38" width="4" height="7" fill="#3C78C8" />
+        <rect x="27" y="44" width="10" height="19" rx="4" fill="#F2B63C" />
+        <circle cx="32" cy="50" r="2.4" fill="#D2532A" strokeWidth="1.6" />
+      </g>
+      <path d="M50 8l-4 6h4l-3 6M58 22l-4 3 3 1-3 4" fill="none" stroke="#C28A16" strokeWidth="2.2" />
+    </>
+  ),
+  sapu: () => (
+    <g transform="rotate(-18 32 32)">
+      <path d="M29 4h6v24h-6z" fill="#E2C07A" />
+      <path d="M31 6v20M33 6v20" fill="none" stroke="#B48A45" strokeWidth="1.2" />
+      <path d="M27 31L10 60H54L37 31Z" fill="#D9B26A" />
+      <path d="M30 33L19 59M32 33V59M34 33L45 59M28 33L14 59M36 33L50 59" fill="none" stroke="#A9803F" strokeWidth="1.4" />
+      <rect x="25" y="26" width="14" height="7" rx="2" fill="#D2532A" />
+      <path d="M25 29.5h14" fill="none" stroke="#FFF8EC" strokeWidth="1.6" />
+      <Sparkles color="#C9A8F0" at={[[52, 18, 5.5], [10, 26, 3.5]]} />
+    </g>
+  ),
+  ulekan: () => (
+    <>
+      <path d="M6 40Q32 30 58 40Q56 56 32 58Q8 56 6 40Z" fill="#8C8580" />
+      <ellipse cx="32" cy="40" rx="24" ry="6" fill="#D2532A" />
+      <path d="M18 39q6-3 12 0" fill="none" stroke="#F07A50" strokeWidth="2" />
+      <g transform="rotate(38 38 26)">
+        <rect x="32" y="4" width="12" height="34" rx="6" fill="#A79C93" />
+        <path d="M35 10v20" fill="none" stroke={SHINE} strokeWidth="2.2" />
+      </g>
+      <path d="M12 47q8 6 18 6" fill="none" stroke="#6E6862" strokeWidth="2" />
+      <Sparkles color="#C9A8F0" at={[[10, 16, 5.5], [20, 6, 3]]} />
+    </>
+  ),
+  gitar: () => (
+    <>
+      <g transform="rotate(-38 32 34)">
+        <rect x="29.5" y="2" width="5" height="26" fill="#8E5A2B" />
+        <rect x="27.5" y="-4" width="9" height="9" rx="2.5" fill="#6B4020" />
+        <g fill="#F2B63C" style={{ strokeWidth: 1.4 }}><circle cx="26" cy="-1" r="1.8" /><circle cx="38" cy="-1" r="1.8" /><circle cx="26" cy="3" r="1.8" /><circle cx="38" cy="3" r="1.8" /></g>
+        {[[32, 47, 15], [32, 30, 11]].map(([x, y, r], i) => <circle key={`o${i}`} cx={x} cy={y} r={r} fill="#E0A35A" strokeWidth="5.2" />)}
+        {[[32, 47, 15], [32, 30, 11]].map(([x, y, r], i) => <circle key={`f${i}`} cx={x} cy={y} r={r} fill="#E0A35A" stroke="none" />)}
+        <circle cx="32" cy="38" r="5" fill={O} />
+        <circle cx="32" cy="38" r="7.5" fill="none" stroke="#F2B63C" strokeWidth="1.6" />
+        <rect x="26.5" y="49" width="11" height="3.4" rx="1.2" fill="#6B4020" strokeWidth="1.6" />
+        <path d="M30.6 2v48M33.4 2v48" fill="none" stroke="#FFF8EC" strokeWidth=".9" />
+        <path d="M22 44q0-8 5-11" fill="none" stroke={SHINE} strokeWidth="2.2" />
+      </g>
+      <path d="M52 40v-12l7-2v11" fill="none" strokeWidth="2.2" />
+      <ellipse cx="50" cy="40.5" rx="3.2" ry="2.4" fill={O} />
+      <ellipse cx="57" cy="37.5" rx="3.2" ry="2.4" fill={O} />
+      <Sparkles color="#FFE45C" at={[[10, 10, 5.5], [8, 48, 4], [56, 10, 4]]} />
+    </>
+  ),
+  caping: () => (
+    <>
+      <path d="M14 46q18 16 36 0" fill="none" stroke="#D2532A" strokeWidth="2.4" />
+      <path d="M3 42Q24 8 32 7Q40 8 61 42Q32 52 3 42Z" fill="#E8C07A" />
+      <path d="M32 8L12 42M32 8L22 46M32 8V48M32 8L42 46M32 8L52 42" fill="none" stroke="#B48A45" strokeWidth="1.4" />
+      <path d="M9 34Q32 44 55 34" fill="none" stroke="#B48A45" strokeWidth="1.4" />
+      <path d="M3 42Q32 52 61 42" fill="none" strokeWidth="3" />
+      <path d="M22 20q4-6 8-8" fill="none" stroke={SHINE} strokeWidth="2.4" />
+    </>
+  ),
+  blangkon: () => (
+    <>
+      <ellipse cx="11" cy="40" rx="7" ry="9" fill="#5A3226" />
+      <path d="M9 45Q7 17 32 15Q57 17 55 45Q32 52 9 45Z" fill="#6B4020" />
+      <path d="M10 36Q32 44 54 36" fill="none" stroke="#F2B63C" strokeWidth="2.2" />
+      <path d="M16 26q4 4 8 0t8 0t8 0t8 0" fill="none" stroke="#F2B63C" strokeWidth="1.8" />
+      <g fill="#E8C07A" stroke="none"><circle cx="20" cy="31" r="1.5" /><circle cx="32" cy="32" r="1.5" /><circle cx="44" cy="31" r="1.5" /><circle cx="26" cy="21" r="1.3" /><circle cx="38" cy="21" r="1.3" /></g>
+      <path d="M18 20q5-4 10-4" fill="none" stroke={SHINE} strokeWidth="2.2" />
+      <Sparkles color="#C9A8F0" at={[[55, 10, 5.5], [8, 12, 3.5]]} />
+    </>
+  ),
+  batik: () => {
+    const shirt = 'M20 9L28 7Q32 12 36 7L44 9L57 20L50 31L44 27V57H20V27L14 31L7 20Z';
+    return (
+      <>
+        <clipPath id="item-batik-clip"><path d={shirt} /></clipPath>
+        <path d={shirt} fill="#9A5B2E" />
+        <g clipPath="url(#item-batik-clip)" fill="none" stroke="#F2D48A" strokeWidth="2.2">
+          {[-10, 2, 14, 26, 38, 50].map(x => <path key={x} d={`M${x} 60Q${x + 6} 48 ${x + 12} 44T${x + 24} 28T${x + 36} 12`} />)}
+        </g>
+        <path d={shirt} fill="none" />
+        <path d="M28 7L32 16L36 7" fill="#FFF8EC" strokeWidth="2.2" />
+        <path d="M32 17V56" fill="none" strokeWidth="1.8" />
+        <Sparkles color="#C9A8F0" at={[[56, 50, 5]]} />
+      </>
+    );
+  },
+  sarung: () => (
+    <>
+      <clipPath id="item-sarung-clip"><path d="M10 14H54V50Q43 56 32 50Q21 44 10 50Z" /></clipPath>
+      <path d="M10 14H54V50Q43 56 32 50Q21 44 10 50Z" fill="#3C78C8" />
+      <g clipPath="url(#item-sarung-clip)" fill="none">
+        <path d="M10 24H54M10 36H54M10 46H54" stroke="#9EC3F0" strokeWidth="4" />
+        <path d="M20 14V56M34 14V56M46 14V56" stroke="#9EC3F0" strokeWidth="4" />
+        <path d="M10 30H54M27 14V56M40 14V56" stroke="#D2532A" strokeWidth="1.4" />
+      </g>
+      <path d="M10 14H54V50Q43 56 32 50Q21 44 10 50Z" fill="none" />
+      <path d="M8 14H56V20H8Z" fill="#2E5E9E" />
+    </>
+  ),
+  peluit: () => (
+    <>
+      <Rope d="M10 4Q16 24 30 30M54 4Q48 22 38 28" color="#D2532A" w={2.4} />
+      <circle cx="34" cy="30" r="3.5" fill="#B9C4BE" strokeWidth="2" />
+      <path d="M16 40Q16 30 28 30H46V40Q46 54 31 54Q16 54 16 40Z" fill="#B9C4BE" />
+      <rect x="44" y="30" width="14" height="9" rx="2" fill="#B9C4BE" />
+      <circle cx="30" cy="42" r="4.5" fill={O} />
+      <path d="M21 36q2-3 6-3" fill="none" stroke={SHINE} strokeWidth="2.4" />
+    </>
+  ),
+  kunci: () => (
+    <>
+      <circle cx="20" cy="16" r="9" fill="none" stroke={O} strokeWidth="6" />
+      <circle cx="20" cy="16" r="9" fill="none" stroke="#B9C4BE" strokeWidth="2.6" />
+      <g transform="rotate(40 26 24)">
+        <circle cx="26" cy="26" r="7" fill="#F2B63C" />
+        <circle cx="26" cy="26" r="2.4" fill="#FFF8EC" strokeWidth="1.6" />
+        <path d="M23.5 33h5v22h-5z" fill="#F2B63C" />
+        <path d="M28.5 44h4M28.5 50h5" fill="none" strokeWidth="3" />
+      </g>
+      <Rope d="M24 22Q34 24 38 32" color="#D2532A" w={2} />
+      <path d="M40 52C29 45 31 34 37 34c2.5 0 3 1.5 3 3.5c0-2 .5-3.5 3-3.5c6 0 8 11-3 18Z" fill="#F08CA8" strokeWidth="2.2" />
+      <Sparkles color="#C9A8F0" at={[[56, 12, 5], [10, 52, 3.5]]} />
+    </>
+  ),
+  pinggang: () => (
+    <>
+      <rect x="2" y="26" width="60" height="9" rx="3" fill="#2B1E18" />
+      <path d="M12 30Q12 20 32 20Q52 20 52 30V42Q52 52 32 52Q12 52 12 42Z" fill="#2E8C86" />
+      <path d="M14 32Q32 28 50 32" fill="none" stroke="#F2B63C" strokeWidth="2.4" />
+      <rect x="22" y="36" width="20" height="11" rx="4" fill="#4FB0A8" strokeWidth="2.2" />
+      <circle cx="46" cy="31" r="2" fill="#F2B63C" strokeWidth="1.4" />
+      <path d="M16 26q4-4 10-4" fill="none" stroke={SHINE} strokeWidth="2.2" />
+      <path d={star(28, 41.5, 3)} fill="#F2B63C" style={{ strokeWidth: 1.2 }} />
+    </>
+  ),
+  bakiak: () => (
+    <>
+      <path d="M18 4H46Q54 4 54 14V50Q54 60 44 60H20Q10 60 10 50V14Q10 4 18 4Z" fill="#C98F45" />
+      <path d="M18 12q2 20 0 40M30 10q2 22 0 44M42 12q-2 20 0 40" fill="none" stroke="#A97A3F" strokeWidth="1.4" />
+      <path d="M6 20H58V32H6Z" fill="#2B1E18" />
+      <path d="M10 26H54" fill="none" stroke="#5A3A30" strokeWidth="1.6" />
+      <path d="M14 42v10" fill="none" stroke={SHINE} strokeWidth="2.4" />
+      <Sparkles color="#C9A8F0" at={[[58, 48, 5], [6, 50, 3.5]]} />
+    </>
+  ),
   kaoskaki: () => (
     <g transform="rotate(-8 32 32)">
       <path d="M22 5h20v29q0 6 6 10q11 6 6 13q-5 6-15 1L27 51q-7-4-5-13z" fill="#FFF8EC" />
