@@ -6,9 +6,10 @@ const O = '#2B1E18';
 const BLUSH = 'rgba(240,110,130,.42)';
 const SHINE = 'rgba(255,255,255,.7)';
 
+// Eyes blink on a slow loop (paused by the .ms-still class on still renders).
 function Eye({ x, y, r = 6.5 }) {
   return (
-    <g stroke="none">
+    <g stroke="none" className="ms-blink" style={{ transformOrigin: `${x}px ${y}px`, animationDelay: `${(x * 37 + y * 13) % 30 / 10}s` }}>
       <circle cx={x} cy={y} r={r} fill={O} />
       <circle cx={x + r * 0.32} cy={y - r * 0.38} r={r * 0.36} fill="#FFF" />
       <circle cx={x - r * 0.4} cy={y + r * 0.35} r={r * 0.16} fill="#FFF" />
@@ -437,8 +438,178 @@ Object.assign(ART, {
 });
 KINDS.push('kucing', 'kura', 'kambing', 'cumi', 'kodok', 'buaya', 'gajah');
 
+// Fourth wave: parking monkey, influencer peacock, night-watch bat, enforcer boar and the foreman hippo boss.
+Object.assign(ART, {
+  monyet: () => (
+    <>
+      <Line d="M136 172Q180 172 178 138Q176 114 156 122" color="#9A6A42" w={7} />
+      <ellipse cx="84" cy="188" rx="13" ry="7" fill="#E8C29A" />
+      <ellipse cx="116" cy="188" rx="13" ry="7" fill="#E8C29A" />
+      <Shaded id="ms-monyet" d="M100 118Q140 118 142 154Q144 190 100 190Q56 190 58 154Q60 118 100 118Z" fill="#9A6A42" shade="rgba(70,40,10,.22)" cy={202} />
+      <path d="M66 134Q100 124 134 134L138 180Q100 192 62 180Z" fill="#F08A3A" />
+      <path d="M64 158H136" fill="none" stroke="#FFF3C4" strokeWidth="5" />
+      <path d="M100 128V186" fill="none" strokeWidth="2.6" />
+      <Line d="M66 142Q46 130 42 104" color="#9A6A42" w={9} />
+      <g transform="rotate(-14 40 76)">
+        <rect x="34" y="50" width="12" height="44" rx="6" fill="#F7D44A" />
+        <path d="M34 64h12M34 78h12" fill="none" stroke="#D2532A" strokeWidth="4" />
+      </g>
+      <circle cx="42" cy="100" r="9" fill="#E8C29A" />
+      <ellipse cx="140" cy="164" rx="10" ry="9" fill="#E8C29A" />
+      <circle cx="52" cy="84" r="16" fill="#9A6A42" />
+      <circle cx="52" cy="84" r="9" fill="#E8C29A" stroke="none" />
+      <circle cx="148" cy="84" r="16" fill="#9A6A42" />
+      <circle cx="148" cy="84" r="9" fill="#E8C29A" stroke="none" />
+      <Shaded id="ms-monyet-h" d="M100 42Q146 42 148 86Q150 128 100 130Q50 128 52 86Q54 42 100 42Z" fill="#9A6A42" shade="rgba(70,40,10,.18)" cy={146} rx={70} ry={30} />
+      <path d="M100 66Q118 54 128 72Q138 94 120 114Q100 126 80 114Q62 94 72 72Q82 54 100 66Z" fill="#E8C29A" stroke="none" />
+      <Eye x={86} y={86} r={6.5} /><Eye x={114} y={86} r={6.5} />
+      <path d="M92 106q8 6 16 0" fill="none" strokeWidth="2.6" />
+      <rect x="106" y="101" width="18" height="10" rx="4" fill="#B9C4BE" strokeWidth="2.6" />
+      <path d="M124 106q12 6 18 22" fill="none" stroke="#D2532A" strokeWidth="2" />
+      <Blush at={[[74, 102], [126, 102]]} />
+      <path d="M64 62Q68 30 100 30Q132 30 136 62Z" fill="#F08A3A" />
+      <path d="M128 60Q152 56 158 66Q142 72 128 68Z" fill="#D9702A" />
+      <path d="M78 44q8-8 18-8" fill="none" stroke={SHINE} strokeWidth="2.6" />
+    </>
+  ),
+  merak: () => (
+    <>
+      <path d="M100 152Q18 144 16 86Q22 28 100 20Q178 28 184 86Q182 144 100 152Z" fill="#3FA48A" />
+      <path d="M100 150L38 84M100 150L60 48M100 150V36M100 150L140 48M100 150L162 84M100 150L44 120M100 150L156 120" fill="none" stroke="#2E7A66" strokeWidth="2.2" />
+      <g strokeWidth="2.2">
+        {[[38, 84], [60, 48], [100, 36], [140, 48], [162, 84], [44, 120], [156, 120]].map(([x, y], i) => (
+          <g key={i}><ellipse cx={x} cy={y} rx="11" ry="12" fill="#F2B63C" /><ellipse cx={x} cy={y + 1} rx="6" ry="7" fill="#3C78C8" /><circle cx={x} cy={y + 2} r="2.6" fill={O} stroke="none" /></g>
+        ))}
+      </g>
+      <ellipse cx="88" cy="188" rx="11" ry="6" fill="#E8A35A" />
+      <ellipse cx="112" cy="188" rx="11" ry="6" fill="#E8A35A" />
+      <Shaded id="ms-merak" d="M100 98Q134 100 136 142Q138 188 100 188Q62 188 64 142Q66 100 100 98Z" fill="#3C78C8" shade="rgba(20,40,110,.24)" cy={200} />
+      <ellipse cx="100" cy="154" rx="20" ry="24" fill="#6FA3E0" stroke="none" />
+      <path d="M90 140q10 6 20 0M88 154q12 6 24 0M90 168q10 6 20 0" fill="none" stroke="#4E88D0" strokeWidth="2" />
+      <path d="M92 56L84 30M100 54V26M108 56L116 30" fill="none" strokeWidth="2.4" />
+      <circle cx="84" cy="28" r="4.5" fill="#3FA48A" strokeWidth="2.2" />
+      <circle cx="100" cy="24" r="4.5" fill="#3FA48A" strokeWidth="2.2" />
+      <circle cx="116" cy="28" r="4.5" fill="#3FA48A" strokeWidth="2.2" />
+      <Shaded id="ms-merak-h" d="M100 52Q130 52 130 82Q130 110 100 110Q70 110 70 82Q70 52 100 52Z" fill="#3C78C8" shade="rgba(20,40,110,.18)" cy={122} rx={50} ry={22} />
+      <path d="M78 72q8-6 16 0M106 72q8-6 16 0" fill="none" stroke="#FFF8EC" strokeWidth="4" />
+      <Eye x={88} y={80} r={6} /><Eye x={112} y={80} r={6} />
+      <path d="M80 74l-6-3M120 74l6-3" fill="none" strokeWidth="2.2" />
+      <path d="M94 90L100 100L106 90Z" fill="#F2B63C" strokeWidth="2.4" />
+      <Blush at={[[80, 96], [120, 96]]} />
+      <Line d="M128 142L158 102" color="#B9C4BE" w={3} />
+      <rect x="148" y="78" width="20" height="30" rx="4" fill={O} />
+      <rect x="151" y="82" width="14" height="20" rx="2" fill="#FFC2D1" stroke="none" />
+      <ellipse cx="130" cy="142" rx="10" ry="13" fill="#2E62A8" />
+      <path d="M30 34l3 7 7 3-7 3-3 7-3-7-7-3 7-3Z" fill="#FFF3C4" strokeWidth="2" />
+      <path d="M84 62q6-6 14-6" fill="none" stroke={SHINE} strokeWidth="2.4" />
+    </>
+  ),
+  kelelawar: (a) => (
+    <>
+      <g style={{ animation: a.wingL === 'none' ? 'none' : 'msWingL .7s ease-in-out infinite', transformOrigin: '70px 118px' }}>
+        <path d="M70 114Q40 80 10 94Q20 106 16 120Q30 114 36 128Q46 120 54 136Q62 126 72 142Z" fill="#5E4E86" />
+        <path d="M70 116L22 98M70 122L36 124M70 130L54 134" fill="none" stroke="#3E3060" strokeWidth="2" />
+      </g>
+      <g style={{ animation: a.wingR === 'none' ? 'none' : 'msWingR .7s ease-in-out infinite', transformOrigin: '130px 118px' }}>
+        <path d="M130 114Q160 80 190 94Q180 106 184 120Q170 114 164 128Q154 120 146 136Q138 126 128 142Z" fill="#5E4E86" />
+        <path d="M130 116L178 98M130 122L164 124M130 130L146 134" fill="none" stroke="#3E3060" strokeWidth="2" />
+      </g>
+      <ellipse cx="90" cy="186" rx="9" ry="6" fill="#5E4E86" />
+      <ellipse cx="110" cy="186" rx="9" ry="6" fill="#5E4E86" />
+      <Shaded id="ms-kelelawar" d="M100 98Q136 100 136 140Q136 182 100 182Q64 182 64 140Q64 100 100 98Z" fill="#7A6A9E" shade="rgba(40,20,80,.24)" cy={194} />
+      <path d="M66 116L134 160L128 172L62 128Z" fill="#3FA48A" strokeWidth="2.6" />
+      <path d="M80 126L74 138M96 136L90 148M112 146L106 158" fill="none" stroke="#2E7A66" strokeWidth="2.4" />
+      <path d="M70 72L60 28L92 56Z" fill="#7A6A9E" />
+      <path d="M72 62L66 38L84 54Z" fill="#F3B4C0" stroke="none" />
+      <path d="M130 72L140 28L108 56Z" fill="#7A6A9E" />
+      <path d="M128 62L134 38L116 54Z" fill="#F3B4C0" stroke="none" />
+      <Shaded id="ms-kelelawar-h" d="M100 48Q140 48 140 84Q140 118 100 118Q60 118 60 84Q60 48 100 48Z" fill="#7A6A9E" shade="rgba(40,20,80,.18)" cy={132} rx={60} ry={24} />
+      <ellipse cx="100" cy="94" rx="24" ry="18" fill="#B9AED6" stroke="none" />
+      <Eye x={86} y={82} r={7} /><Eye x={114} y={82} r={7} />
+      <path d="M78 93q8 4 16 0M106 93q8 4 16 0" fill="none" stroke="#5E4E86" strokeWidth="2" />
+      <path d="M92 102q8 6 16 0" fill="none" strokeWidth="2.4" />
+      <path d="M95 104l2 6 2-5ZM103 105l2 5 2-6Z" fill="#FFF8EC" strokeWidth="1.6" />
+      <Blush at={[[74, 100], [126, 100]]} />
+      <rect x="138" y="124" width="16" height="48" rx="6" fill="#E3B04A" />
+      <path d="M146 134V162" fill="none" strokeWidth="3" />
+      <path d="M138 134h16M138 162h16" fill="none" stroke="#B0842A" strokeWidth="2" />
+      <ellipse cx="138" cy="150" rx="9" ry="8" fill="#7A6A9E" />
+      <path d="M78 58q6-6 14-6" fill="none" stroke={SHINE} strokeWidth="2.4" />
+    </>
+  ),
+  babi: () => (
+    <>
+      <Line d="M52 160Q34 164 32 150Q30 140 40 142" color="#8E6A4E" w={4} />
+      <ellipse cx="80" cy="188" rx="14" ry="7" fill="#5A3A28" />
+      <ellipse cx="120" cy="188" rx="14" ry="7" fill="#5A3A28" />
+      <Shaded id="ms-babi" d="M100 112Q150 112 152 152Q154 190 100 190Q46 190 48 152Q50 112 100 112Z" fill="#8E6A4E" shade="rgba(60,30,10,.24)" cy={202} />
+      <path d="M58 130Q100 118 142 130L146 176Q100 190 54 176Z" fill="#C9B77A" />
+      <path d="M100 124V184" fill="none" strokeWidth="2.4" />
+      <g fill="#F2B63C" strokeWidth="2"><circle cx="100" cy="140" r="3" /><circle cx="100" cy="156" r="3" /><circle cx="100" cy="172" r="3" /></g>
+      <path d="M118 136l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1Z" fill="#F2B63C" strokeWidth="1.8" />
+      <rect x="66" y="140" width="20" height="14" rx="3" fill="#B5A266" strokeWidth="2.2" />
+      <Line d="M146 160L172 116" color="#3E4A2C" w={7} />
+      <ellipse cx="146" cy="160" rx="11" ry="10" fill="#8E6A4E" />
+      <path d="M58 64L44 38L76 50Z" fill="#8E6A4E" />
+      <path d="M142 64L156 38L124 50Z" fill="#8E6A4E" />
+      <Shaded id="ms-babi-h" d="M100 42Q150 42 150 86Q150 128 100 128Q50 128 50 86Q50 42 100 42Z" fill="#8E6A4E" shade="rgba(60,30,10,.18)" cy={144} rx={70} ry={30} />
+      <path d="M72 66L90 72M128 66L110 72" fill="none" strokeWidth="3.4" />
+      <Eye x={84} y={80} r={6} /><Eye x={116} y={80} r={6} />
+      <ellipse cx="100" cy="102" rx="21" ry="15" fill="#C99A7A" />
+      <ellipse cx="93" cy="102" rx="3.2" ry="4.6" fill={O} stroke="none" />
+      <ellipse cx="107" cy="102" rx="3.2" ry="4.6" fill={O} stroke="none" />
+      <path d="M80 114Q70 104 74 90L82 102Z" fill="#FFF8EC" strokeWidth="2.4" />
+      <path d="M120 114Q130 104 126 90L118 102Z" fill="#FFF8EC" strokeWidth="2.4" />
+      <Blush at={[[70, 98], [130, 98]]} />
+      <path d="M62 54Q64 26 100 24Q136 26 138 54Z" fill="#4E5A3A" />
+      <path d="M58 52Q100 62 142 52L140 60Q100 70 60 60Z" fill="#3E4A2C" />
+      <circle cx="100" cy="40" r="7" fill="#F2B63C" strokeWidth="2.4" />
+      <path d="M76 40q6-8 14-9" fill="none" stroke={SHINE} strokeWidth="2.4" />
+    </>
+  ),
+  kudanil: () => (
+    <>
+      <ellipse cx="68" cy="188" rx="19" ry="8" fill="#9A8AB0" />
+      <ellipse cx="132" cy="188" rx="19" ry="8" fill="#9A8AB0" />
+      <Shaded id="ms-kudanil" d="M100 104Q170 104 172 150Q174 192 100 192Q26 192 28 150Q30 104 100 104Z" fill="#9A8AB0" shade="rgba(50,30,90,.24)" cy={206} rx={90} />
+      <ellipse cx="100" cy="160" rx="40" ry="26" fill="#C9BEDA" stroke="none" />
+      <path d="M40 124Q60 112 78 112L80 186Q52 186 34 172Z" fill="#F08A3A" />
+      <path d="M160 124Q140 112 122 112L120 186Q148 186 166 172Z" fill="#F08A3A" />
+      <path d="M37 150H80M120 150H163" fill="none" stroke="#FFF3C4" strokeWidth="5" />
+      <ellipse cx="32" cy="152" rx="13" ry="11" fill="#9A8AB0" />
+      <g transform="rotate(20 166 132)">
+        <rect x="158" y="104" width="16" height="56" rx="7" fill="#9EC3F0" />
+        <path d="M162 116h8M162 128h8M162 140h8" fill="none" stroke="#3C78C8" strokeWidth="2" />
+      </g>
+      <ellipse cx="166" cy="152" rx="13" ry="11" fill="#9A8AB0" />
+      <ellipse cx="52" cy="46" rx="9" ry="11" fill="#9A8AB0" />
+      <ellipse cx="148" cy="46" rx="9" ry="11" fill="#9A8AB0" />
+      <Shaded id="ms-kudanil-h" d="M100 36Q154 36 156 74Q158 112 100 114Q42 112 44 74Q46 36 100 36Z" fill="#9A8AB0" shade="rgba(50,30,90,.16)" cy={128} rx={80} ry={28} />
+      <path d="M100 74Q148 74 148 98Q148 124 100 124Q52 124 52 98Q52 74 100 74Z" fill="#B5A8CA" />
+      <ellipse cx="84" cy="90" rx="4.4" ry="3.2" fill={O} stroke="none" />
+      <ellipse cx="116" cy="90" rx="4.4" ry="3.2" fill={O} stroke="none" />
+      <path d="M78 108Q100 118 122 108" fill="none" strokeWidth="2.6" />
+      <rect x="86" y="109" width="8" height="8" rx="2" fill="#FFF8EC" strokeWidth="2" />
+      <rect x="106" y="109" width="8" height="8" rx="2" fill="#FFF8EC" strokeWidth="2" />
+      <Eye x={78} y={60} r={6.5} /><Eye x={122} y={60} r={6.5} />
+      <Blush at={[[64, 82], [136, 82]]} />
+      <path d="M74 122Q100 140 126 122" fill="none" stroke="#D2532A" strokeWidth="2.2" />
+      <rect x="93" y="130" width="15" height="9" rx="3.5" fill="#B9C4BE" strokeWidth="2.4" />
+      <path d="M64 46Q64 12 100 12Q136 12 136 46Z" fill="#F7D44A" />
+      <path d="M93 14h14v30h-14Z" fill="#E3B32A" strokeWidth="2.4" />
+      <rect x="54" y="42" width="92" height="10" rx="5" fill="#E3B32A" />
+      <path d="M74 32q4-12 16-16" fill="none" stroke={SHINE} strokeWidth="2.6" />
+    </>
+  )
+});
+KINDS.push('monyet', 'merak', 'kelelawar', 'babi', 'kudanil');
+
 /** @param {{ kind?: string, flip?: boolean, still?: boolean }} props */
-export default function Musuh({ kind = 'tikus', flip = false, still = false }) {
+/**
+ * @param {{ kind?: string, flip?: boolean, still?: boolean, mood?: 'hurt'|'attack'|null, moodKey?: any }} props
+ * `mood` plays a short reaction: a red flash with a squash when hit, a lean when attacking.
+ */
+export default function Musuh({ kind = 'tikus', flip = false, still = false, mood = null, moodKey = 0 }) {
   const Art = ART[kind] || ART.tikus;
   const anim = {
     bob: still ? 'none' : kind === 'kumbang' ? 'msSag 3.2s ease-in-out infinite' : 'msBob 2.2s ease-in-out infinite',
@@ -446,13 +617,15 @@ export default function Musuh({ kind = 'tikus', flip = false, still = false }) {
     wingR: still ? 'none' : 'msWingR .25s ease-in-out infinite'
   };
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+    <div className={still ? 'ms-still' : undefined} style={{ position: 'relative', width: '100%', height: '100%' }}>
       <svg viewBox="0 0 200 200" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'visible', display: 'block' }}>
         <ellipse cx="100" cy="194" rx="58" ry="7" style={{ fill: 'rgba(43,30,24,.16)' }} />
         <g style={{ transform: flip ? 'scaleX(-1)' : 'none', transformOrigin: '100px 100px' }}>
           <g style={{ animation: anim.bob, transformOrigin: '100px 192px' }}>
-            <g stroke={O} strokeWidth="3.5" strokeLinejoin="round" strokeLinecap="round">
-              <Art {...anim} />
+            <g key={mood ? `${mood}-${moodKey}` : 'calm'} style={{ animation: still || !mood ? 'none' : mood === 'hurt' ? 'msHurt .34s ease-out' : 'msAttack .38s ease-out', transformOrigin: '100px 192px' }}>
+              <g stroke={O} strokeWidth="3.5" strokeLinejoin="round" strokeLinecap="round">
+                <Art {...anim} />
+              </g>
             </g>
           </g>
         </g>

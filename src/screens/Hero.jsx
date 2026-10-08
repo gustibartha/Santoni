@@ -50,6 +50,16 @@ export default function Hero({ v }) {
             </div>
         ))}
       </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+        <button onClick={v.openRekan} style={{ display: "flex", alignItems: "center", gap: "8px", height: "44px", padding: "0 10px", border: "2.5px solid #2B1E18", borderRadius: "14px", background: "#F3B4C0", boxShadow: "0 3px 0 #2B1E18", color: "#2B1E18", cursor: "pointer" }}>
+          <span style={{ font: "22px/1 'Material Symbols Rounded'" }}>groups</span>
+          <span style={{ textAlign: "left" }}><span style={{ display: "block", font: "800 13px/1.1 'Bricolage Grotesque'" }}>Rekan</span><span style={{ display: "block", font: "600 10.5px/1.2 'Bricolage Grotesque'", color: "#5B4A40" }}>{`Tim ${v.rekanCount}`}</span></span>
+        </button>
+        <button onClick={v.openPet} style={{ display: "flex", alignItems: "center", gap: "8px", height: "44px", padding: "0 10px", border: "2.5px solid #2B1E18", borderRadius: "14px", background: "#CFE6B8", boxShadow: "0 3px 0 #2B1E18", color: "#2B1E18", cursor: "pointer" }}>
+          <span style={{ font: "22px/1 'Material Symbols Rounded'" }}>pets</span>
+          <span style={{ textAlign: "left" }}><span style={{ display: "block", font: "800 13px/1.1 'Bricolage Grotesque'" }}>Pet</span><span style={{ display: "block", font: "600 10.5px/1.2 'Bricolage Grotesque'", color: "#5B4A40" }}>{v.activePet ? (v.pets.find(p => p.active) || {}).name : 'Belum ada'}</span></span>
+        </button>
+      </div>
       <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "7px 10px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#2B1E18", color: "#FFF8EC", boxShadow: "0 3px 0 #120C09" }}>
         <div style={{ width: "34px", height: "34px", flex: "none", display: "grid", placeItems: "center" }}>
           {v.heroUlt.weapon !== 'none' && <ItemArt id={v.heroUlt.weapon} size={32} still={v.still} />}
@@ -68,8 +78,8 @@ export default function Hero({ v }) {
           Pasang terbaik
         </button>
         <button onClick={v.mergeItems} className="dc-press" style={{ height: "46px", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", padding: "0", border: "2.5px solid #2B1E18", borderRadius: "15px", background: "#FFF8EC", boxShadow: "0 4px 0 #2B1E18", color: "#2B1E18", font: "800 14px/1 'Bricolage Grotesque'", cursor: "pointer", '--press-tf': "translateY(3px)", '--press-sh': "0 1px 0 #2B1E18" }}>
-          <span style={{ font: "19px/1 'Material Symbols Rounded'" }}>merge_type</span>
-          Gabung item
+          <span style={{ font: "19px/1 'Material Symbols Rounded'" }}>hardware</span>
+          Bengkel
         </button>
       </div>
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: "8px" }}>

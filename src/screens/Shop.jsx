@@ -43,14 +43,14 @@ export default function Shop({ v }) {
               <span style={{ font: "18px/1 'Bagel Fat One',system-ui" }}>Buka 1×</span>
               <span style={{ display: "flex", alignItems: "center", gap: "3px", font: "800 12px/1 'Bricolage Grotesque'" }}>
                 <span style={{ font: "14px/1 'Material Symbols Rounded'", color: "#7E43B5" }}>diamond</span>
-                150
+                {v.pullCost1}
               </span>
             </button>
             <button onClick={v.pull10} className="dc-press" style={{ position: "relative", height: "60px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "5px", padding: "0", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#F2B63C", boxShadow: "0 4px 0 #2B1E18", color: "#2B1E18", cursor: "pointer", '--press-tf': "translateY(3px)", '--press-sh': "0 1px 0 #2B1E18" }}>
               <span style={{ font: "18px/1 'Bagel Fat One',system-ui" }}>Buka 10×</span>
               <span style={{ display: "flex", alignItems: "center", gap: "3px", font: "800 12px/1 'Bricolage Grotesque'" }}>
                 <span style={{ font: "14px/1 'Material Symbols Rounded'", color: "#7E43B5" }}>diamond</span>
-                1.350
+                {v.pullCost10}
               </span>
               <span style={{ position: "absolute", top: "-11px", right: "-6px", padding: "3px 7px", borderRadius: "8px", border: "2px solid #2B1E18", background: "#D2532A", color: "#FFF8EC", font: "800 10px/1 'Bricolage Grotesque'", transform: "rotate(4deg)" }}>Hemat 10%</span>
             </button>

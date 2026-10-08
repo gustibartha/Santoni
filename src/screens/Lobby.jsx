@@ -1,5 +1,6 @@
 import Santoni from '../characters/Santoni.jsx';
 import Musuh from '../characters/Musuh.jsx';
+import PetArt from '../characters/PetArt.jsx';
 
 export default function Lobby({ v }) {
   return (
@@ -14,11 +15,11 @@ export default function Lobby({ v }) {
         </div>
         <button onClick={v.nextChapter} style={{ flex: "none", width: "40px", height: "40px", display: "grid", placeItems: "center", padding: "0", border: "2.5px solid #2B1E18", borderRadius: "14px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", color: "#2B1E18", font: "26px/1 'Material Symbols Rounded'", cursor: "pointer", opacity: v.nextOpacity }}>chevron_right</button>
       </div>
-      <div onClick={v.tapFest} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "7px 10px 7px 8px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#2F7A5C", color: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", cursor: "pointer" }}>
-        <span style={{ width: "32px", height: "32px", flex: "none", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2px solid #2B1E18", borderRadius: "10px", background: "#F2B63C", color: "#2B1E18", font: "19px/1 'Material Symbols Rounded'" }}>celebration</span>
+      <div onClick={v.tapFest} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "7px 10px 7px 8px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: v.festColor, color: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", cursor: "pointer" }}>
+        <span style={{ width: "32px", height: "32px", flex: "none", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2px solid #2B1E18", borderRadius: "10px", background: "#F2B63C", color: "#2B1E18", font: "19px/1 'Material Symbols Rounded'" }}>{v.festIcon}</span>
         <div style={{ flex: "1", minWidth: "0" }}>
-          <div style={{ font: "800 13px/1.15 'Bricolage Grotesque'" }}>Festival Bambu</div>
-          <div style={{ font: "500 10.5px/1.2 'DM Mono',monospace", letterSpacing: ".06em" }}>MULAI 2H 14J · HADIAH: TOPI BAMBU</div>
+          <div style={{ font: "800 13px/1.15 'Bricolage Grotesque'" }}>{v.festName}</div>
+          <div style={{ font: "500 10.5px/1.2 'DM Mono',monospace", letterSpacing: ".06em" }}>{v.festSub}</div>
         </div>
         <span style={{ padding: "6px 9px", borderRadius: "9px", background: "#FFF8EC", color: "#2B1E18", font: "800 11px/1 'Bricolage Grotesque'" }}>Lihat</span>
       </div>
@@ -29,6 +30,7 @@ export default function Lobby({ v }) {
         <div style={{ position: "absolute", right: "10px", bottom: "96px", padding: "6px 9px", border: "2.5px solid #2B1E18", borderRadius: "8px", background: "#FFF8EC", font: "500 10px/1.15 'DM Mono',monospace", letterSpacing: ".06em", transform: "rotate(-5deg)", boxShadow: "0 2px 0 #2B1E18" }}>{v.chapterUpper} →</div>
         <div style={{ position: "absolute", left: "26px", top: "100px", width: "62px", height: "20px", boxSizing: "border-box", borderRadius: "12px", background: "#FFF8EC", border: "2.5px solid #2B1E18" }} />
         <div style={{ position: "absolute", left: "calc(50% - 150px)", bottom: "46px", width: "200px", height: "220px" }}><Santoni pose={"idle"} still={v.still} /></div>
+        {v.activePet && <div style={{ position: "absolute", left: "calc(50% - 22px)", bottom: "44px", pointerEvents: "none" }}><PetArt id={v.activePet} size={52} still={v.still} /></div>}
         <div onClick={v.tapKelinci} style={{ position: "absolute", left: "4px", bottom: "52px", width: "58px", height: "58px", cursor: "pointer" }}><Musuh kind={"kelinci"} still={v.still} /></div>
         <div onClick={v.tapBebek} style={{ position: "absolute", right: "56px", bottom: "46px", width: "70px", height: "70px", cursor: "pointer" }}><Musuh kind={"bebek"} still={v.still} flip={true} /></div>
         <div style={{ position: "absolute", right: "112px", bottom: "108px", width: "24px", height: "24px", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "8px", background: "#F2B63C", font: "15px/1 'Bagel Fat One',system-ui", transform: "rotate(-8deg)", pointerEvents: "none" }}>!</div>
@@ -50,6 +52,7 @@ export default function Lobby({ v }) {
           <div onClick={v.tapFest} style={{ position: "relative", width: "54px", height: "58px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "4px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", cursor: "pointer" }}>
             <span style={{ font: "24px/1 'Material Symbols Rounded'", color: "#2F7A5C" }}>celebration</span>
             <span style={{ font: "700 10px/1 'Bricolage Grotesque'" }}>Festival</span>
+            {v.festReady > 0 && <span style={{ position: "absolute", top: "-6px", right: "-6px", width: "16px", height: "16px", boxSizing: "border-box", borderRadius: "50%", border: "2px solid #2B1E18", background: "#D2532A" }} />}
           </div>
           <div onClick={v.tapPass} style={{ position: "relative", width: "54px", height: "58px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "4px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", cursor: "pointer" }}>
             <span style={{ font: "24px/1 'Material Symbols Rounded'", color: "#B0620A" }}>workspace_premium</span>
@@ -63,6 +66,7 @@ export default function Lobby({ v }) {
           <div onClick={v.tapTeman} style={{ position: "relative", width: "54px", height: "58px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "4px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", cursor: "pointer" }}>
             <span style={{ font: "24px/1 'Material Symbols Rounded'", color: "#2F7A5C" }}>group</span>
             <span style={{ font: "700 10px/1 'Bricolage Grotesque'" }}>Teman</span>
+            {v.friendGifts > 0 && <span style={{ position: "absolute", top: "-6px", right: "-6px", width: "16px", height: "16px", boxSizing: "border-box", borderRadius: "50%", border: "2px solid #2B1E18", background: "#D2532A" }} />}
           </div>
         </div>
         <div onClick={v.openJournal} style={{ position: "absolute", left: "10px", right: "10px", bottom: "10px", display: "flex", alignItems: "center", gap: "8px", height: "34px", boxSizing: "border-box", padding: "0 8px 0 5px", border: "2.5px solid #2B1E18", borderRadius: "12px", background: "#2B1E18", color: "#FFF8EC", cursor: "pointer" }}>
@@ -94,13 +98,19 @@ export default function Lobby({ v }) {
           </button>
         ))}
       </div>
-      <button onClick={v.goRun} className="dc-press" style={{ flex: "none", height: "68px", margin: "0 20px", display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", padding: "0", border: "3px solid #2B1E18", borderRadius: "22px", background: "#D2532A", boxShadow: "0 6px 0 #2B1E18", color: "#FFF8EC", font: "30px/1 'Bagel Fat One',system-ui", textShadow: "2px 0 0 #2B1E18,-2px 0 0 #2B1E18,0 2px 0 #2B1E18,0 -2px 0 #2B1E18,1.5px 1.5px 0 #2B1E18,-1.5px 1.5px 0 #2B1E18,1.5px -1.5px 0 #2B1E18,-1.5px -1.5px 0 #2B1E18,0 4px 0 #2B1E18", cursor: "pointer", '--press-tf': "translateY(4px)", '--press-sh': "0 2px 0 #2B1E18" }}>
+      <div style={{ display: "flex", gap: "10px", flex: "none" }}>
+        <button onClick={v.openModes} aria-label="Tantangan" style={{ position: "relative", width: "72px", height: "68px", flex: "none", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "3px", padding: "0", border: "3px solid #2B1E18", borderRadius: "20px", background: "#5A3E8A", boxShadow: "0 6px 0 #2B1E18", color: "#FFF8EC", font: "800 11px/1 'Bricolage Grotesque'", cursor: "pointer" }}>
+          <span style={{ font: "28px/1 'Material Symbols Rounded'", color: "#F2B63C" }}>swords</span>Tantangan
+          {v.hubBadge && <span style={{ position: "absolute", top: "-6px", right: "-6px", width: "16px", height: "16px", boxSizing: "border-box", borderRadius: "50%", border: "2px solid #2B1E18", background: "#D2532A" }} />}
+        </button>
+        <button onClick={v.goRun} className="dc-press" style={{ flex: "1", height: "68px", margin: "0", display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", padding: "0", border: "3px solid #2B1E18", borderRadius: "22px", background: "#D2532A", boxShadow: "0 6px 0 #2B1E18", color: "#FFF8EC", font: "30px/1 'Bagel Fat One',system-ui", textShadow: "2px 0 0 #2B1E18,-2px 0 0 #2B1E18,0 2px 0 #2B1E18,0 -2px 0 #2B1E18,1.5px 1.5px 0 #2B1E18,-1.5px 1.5px 0 #2B1E18,1.5px -1.5px 0 #2B1E18,-1.5px -1.5px 0 #2B1E18,0 4px 0 #2B1E18", cursor: "pointer", '--press-tf': "translateY(4px)", '--press-sh': "0 2px 0 #2B1E18" }}>
         PERGI
         <span style={{ display: "flex", alignItems: "center", gap: "2px", padding: "5px 9px 5px 6px", borderRadius: "12px", background: "#2B1E18", color: "#FFF8EC", font: "800 14px/1 'Bricolage Grotesque'", textShadow: "none" }}>
           <span style={{ font: "17px/1 'Material Symbols Rounded'", color: "#F2B63C" }}>bolt</span>
           5
         </span>
       </button>
+      </div>
     </div>
   );
 }

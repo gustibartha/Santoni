@@ -3,6 +3,19 @@
 import { ITEMS, RAR, OUT } from './data.js';
 import ItemArt from '../characters/ItemArt.jsx';
 
+// Parallax layers for the travel scene, drawn as tiling SVG backgrounds.
+const svgUri = body => `url("data:image/svg+xml,${encodeURIComponent(body)}")`;
+const CLOUDS = svgUri('<svg xmlns="http://www.w3.org/2000/svg" width="260" height="34" viewBox="0 0 260 34"><g fill="#FFFFFF" fill-opacity=".75" stroke="#2B1E18" stroke-width="2" stroke-linejoin="round"><path d="M14 28q0-10 11-10q4-9 15-6q10-3 13 7q9 0 9 9z"/><path d="M150 20q0-8 9-8q3-7 12-5q8 0 9 7q7 0 7 6z"/></g></svg>');
+const treeRow = (leaf, dark) => svgUri(`<svg xmlns="http://www.w3.org/2000/svg" width="220" height="50" viewBox="0 0 220 50"><g stroke="#2B1E18" stroke-width="2.2" stroke-linejoin="round"><path d="M34 50v-14" fill="none" stroke-width="5"/><path d="M34 50v-14" fill="none" stroke="#8E5A2B" stroke-width="2"/><circle cx="34" cy="22" r="15" fill="${leaf}"/><circle cx="24" cy="30" r="9" fill="${leaf}"/><circle cx="45" cy="30" r="9" fill="${leaf}"/><path d="M118 50q0-12 14-12q12 0 14 12z" fill="${dark}"/><path d="M178 50v-10" fill="none" stroke-width="4.5"/><path d="M168 42l10-26l10 26z" fill="${dark}"/></g></svg>`);
+
+export function sceneryEl(kind, on, leaf = '#7FC08E', dark = '#5E9E6E') {
+  const playState = on ? 'running' : 'paused';
+  const style = kind === 'cloud'
+    ? { position: 'absolute', left: 0, right: 0, top: '10px', height: '34px', backgroundImage: CLOUDS, backgroundSize: '260px 34px', backgroundRepeat: 'repeat-x', animation: 'pdScrollCloud 22s linear infinite', animationPlayState: playState, pointerEvents: 'none' }
+    : { position: 'absolute', left: 0, right: 0, bottom: '38px', height: '50px', backgroundImage: treeRow(leaf, dark), backgroundSize: '220px 50px', backgroundRepeat: 'repeat-x', animation: 'pdScrollTree 3.4s linear infinite', animationPlayState: playState, pointerEvents: 'none' };
+  return <div key={kind} style={style} />;
+}
+
 export function stripEl(kind, on, hill = '#B5D7C2') {
   const far = kind === 'far', playState = on ? 'running' : 'paused';
   const style = far

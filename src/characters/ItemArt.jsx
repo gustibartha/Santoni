@@ -417,6 +417,53 @@ const ART = {
       <path d="M14 14v14" fill="none" stroke={SHINE} strokeWidth="2.2" />
     </>
   ),
+  topibambu: () => (
+    <>
+      <ellipse cx="32" cy="44" rx="27" ry="9" fill="#C9A35A" />
+      <path d="M15 44Q14 20 32 18Q50 20 49 44Z" fill="#A7C66A" />
+      <path d="M18 26h28M16 33h32M15 40h34" fill="none" stroke="#7FA04A" strokeWidth="1.8" />
+      <path d="M24 19v24M32 18v26M40 19v24" fill="none" stroke="#8FB55A" strokeWidth="1.4" />
+      <path d="M15.6 38Q32 44 48.4 38L49 44Q32 50 15 44Z" fill="#D2532A" />
+      <path d="M48 36q8-6 10-14q-8 2-10 14Z" fill="#7FB77A" strokeWidth="1.8" />
+      <path d="M20 30q0-8 5-10" fill="none" stroke={SHINE} strokeWidth="2.2" />
+      <Sparkles color="#C9A8F0" at={[[8, 14, 5]]} />
+    </>
+  ),
+  kartumember: () => (
+    <>
+      <Rope d="M14 4Q20 16 22 22M50 4Q44 16 42 22" color="#D2532A" w={2.4} />
+      <rect x="8" y="22" width="48" height="32" rx="5" fill="#F2B63C" />
+      <rect x="14" y="30" width="10" height="8" rx="2" fill="#E8D9A0" strokeWidth="1.8" />
+      <path d="M14 46h18M36 46h10" fill="none" stroke="#B0620A" strokeWidth="2.4" />
+      <path d={star(44, 32, 5)} fill="#FFF8EC" strokeWidth="1.4" />
+      <path d="M12 26l40 24" fill="none" stroke="rgba(255,255,255,.45)" strokeWidth="4" />
+      <Sparkles color="#C9A8F0" at={[[58, 18, 4.5], [6, 58, 3.5]]} />
+    </>
+  ),
+  sabukdisko: () => (
+    <>
+      <rect x="2" y="28" width="60" height="11" rx="3" fill="#7E43B5" />
+      <g fill="#C9A8F0" stroke="none">{[8, 14, 50, 56].map(x => <circle key={x} cx={x} cy="33.5" r="1.6" />)}</g>
+      <circle cx="32" cy="33" r="15" fill="#DCE8F7" />
+      <path d="M17.5 30h29M18 37h28M32 18v30M24 20v26M40 20v26" fill="none" stroke="#9EC3F0" strokeWidth="1.4" />
+      <g fill="#FFF8EC" stroke="none"><rect x="25" y="23" width="6" height="5" /><rect x="36" y="31" width="5" height="5" /><rect x="27" y="38" width="5" height="4" /></g>
+      <circle cx="32" cy="33" r="15" fill="none" />
+      <path d="M8 10l4 6M56 10l-4 6M32 4v6" fill="none" stroke="#F2B63C" strokeWidth="2.6" />
+      <Sparkles color="#F2B63C" at={[[10, 52, 4], [54, 52, 4.5]]} />
+    </>
+  ),
+  karung: () => (
+    <>
+      <path d="M14 10H42L46 50Q46 58 36 58H16Q10 58 10 50Z" fill="#C9A35A" />
+      <path d="M14 10Q28 16 42 10" fill="none" />
+      <path d="M12 22q16 4 32 0M11 36q17 4 34 0" fill="none" stroke="#A8823F" strokeWidth="1.6" />
+      <path d="M16 46l6 6M22 46l-6 6M30 46l6 6M36 46l-6 6" fill="none" stroke="#A8823F" strokeWidth="1.4" />
+      <rect x="18" y="24" width="20" height="13" rx="2" fill="#FFF8EC" strokeWidth="2" />
+      <text x="28" y="34" textAnchor="middle" style={{ font: "700 10px 'DM Mono',monospace", fill: '#D2532A', stroke: 'none' }}>17</text>
+      <path d="M44 14q8 2 10 8" fill="none" stroke="#D2532A" strokeWidth="3" />
+      <Sparkles color="#C9A8F0" at={[[56, 40, 5]]} />
+    </>
+  ),
   kaoskaki: () => (
     <g transform="rotate(-8 32 32)">
       <path d="M22 5h20v29q0 6 6 10q11 6 6 13q-5 6-15 1L27 51q-7-4-5-13z" fill="#FFF8EC" />

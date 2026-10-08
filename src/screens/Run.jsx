@@ -2,6 +2,7 @@ import Santoni from '../characters/Santoni.jsx';
 import Musuh from '../characters/Musuh.jsx';
 import SkillArt from '../characters/SkillArt.jsx';
 import MusicButton from '../components/MusicButton.jsx';
+import PetArt from '../characters/PetArt.jsx';
 
 export default function Run({ v }) {
   return (
@@ -28,10 +29,13 @@ export default function Run({ v }) {
       </div>
       <div style={{ position: "relative", height: "168px", flex: "none", border: "2.5px solid #2B1E18", borderRadius: "22px", overflow: "hidden", backgroundColor: v.sceneSky, backgroundImage: "radial-gradient(rgba(43,30,24,.1) 1.2px,transparent 1.5px)", backgroundSize: "10px 10px", boxShadow: "0 3px 0 #2B1E18" }}>
         <div style={{ position: "absolute", right: "120px", top: "22px", width: "30px", height: "30px", boxSizing: "border-box", borderRadius: "50%", border: "2.5px solid #2B1E18", background: "#F2B63C" }} />
+        {v.cloudStrip}
         {v.farStrip}
+        {v.treeStrip}
         <div style={{ position: "absolute", left: "0", right: "0", bottom: "0", height: "40px", background: v.sceneGround, borderTop: "2.5px solid #2B1E18" }} />
         {v.groundStrip}
         <div style={{ position: "absolute", left: "52px", bottom: "8px", width: "122px", height: "134px" }}><Santoni side pose={v.walkPose} still={v.still} /></div>
+        {v.activePet && <div style={{ position: "absolute", left: "12px", bottom: "10px", pointerEvents: "none" }}><PetArt id={v.activePet} size={46} hop={v.walkPose === 'walk'} still={v.still} /></div>}
         {v.sceneEnemy && (
           <div style={{ position: "absolute", right: "26px", bottom: "12px", width: "112px", height: "112px" }}><Musuh kind={v.sceneEnemyKind} still={v.still} flip={true} /></div>
         )}
@@ -136,7 +140,7 @@ export default function Run({ v }) {
         </button>
       </div>
       {v.hasEvent && (
-        <div style={{ position: "absolute", left: "12px", right: "12px", bottom: "78px", zIndex: "8", padding: "16px 16px 14px", border: "3px solid #2B1E18", borderRadius: "24px", background: "#FFF8EC", boxShadow: "0 6px 0 #2B1E18,0 22px 44px rgba(43,30,24,.38)" }}>
+        <div style={{ position: "absolute", left: "12px", right: "12px", bottom: "78px", zIndex: "8", animation: v.still ? "none" : "cardUp .32s cubic-bezier(.2,1.1,.4,1) both", padding: "16px 16px 14px", border: "3px solid #2B1E18", borderRadius: "24px", background: "#FFF8EC", boxShadow: "0 6px 0 #2B1E18,0 22px 44px rgba(43,30,24,.38)" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
             <span style={{ padding: "5px 8px", borderRadius: "8px", background: v.evTagBg, color: "#FFF8EC", font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".08em" }}>{v.evTag}</span>
             <span style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#5E4A3F" }}>HARI {v.day}</span>
