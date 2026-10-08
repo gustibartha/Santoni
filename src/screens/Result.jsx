@@ -1,4 +1,5 @@
 import Santoni from '../characters/Santoni.jsx';
+import ItemArt from '../characters/ItemArt.jsx';
 
 export default function Result({ v }) {
   return (
@@ -28,7 +29,7 @@ export default function Result({ v }) {
       <div style={{ position: "relative", display: "grid", gridTemplateColumns: "repeat(4,minmax(0,1fr))", gap: "10px", width: "100%", marginTop: "10px" }}>
         {v.resRewards.map((rw, i) => (
             <div key={rw.key ?? rw.id ?? i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "6px", minWidth: "0" }}>
-              <div style={{ width: "100%", aspectRatio: "1", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "16px", background: rw.bg, boxShadow: "0 3px 0 #2B1E18" }}><span style={{ font: "32px/1 'Material Symbols Rounded'", color: rw.fg }}>{rw.icon}</span></div>
+              <div style={{ width: "100%", aspectRatio: "1", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "16px", background: rw.bg, boxShadow: "0 3px 0 #2B1E18" }}>{rw.item ? <ItemArt id={rw.item} size={48} /> : <span style={{ font: "32px/1 'Material Symbols Rounded'", color: rw.fg }}>{rw.icon}</span>}</div>
               <div style={{ font: "800 11.5px/1.2 'Bricolage Grotesque'", textAlign: "center" }}>{rw.label}</div>
             </div>
         ))}

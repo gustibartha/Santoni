@@ -1,5 +1,6 @@
 import Santoni from '../characters/Santoni.jsx';
 import Musuh from '../characters/Musuh.jsx';
+import SkillArt from '../characters/SkillArt.jsx';
 
 export default function Run({ v }) {
   return (
@@ -110,7 +111,7 @@ export default function Run({ v }) {
           )}
           {v.ownedSkills.map((k, i) => (
               <div key={k.key ?? k.id ?? i} onClick={k.tap} style={{ cursor: "pointer", position: "relative", width: "34px", height: "34px", flex: "none", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2px solid #2B1E18", borderRadius: "10px", background: k.bg, color: k.fg, font: "19px/1 'Material Symbols Rounded'" }}>
-                {k.icon}
+                <SkillArt id={k.id} size={26} />
                 {k.multi && (
                   <span style={{ position: "absolute", right: "-5px", bottom: "-5px", minWidth: "16px", height: "16px", padding: "0 3px", boxSizing: "border-box", borderRadius: "8px", background: "#2B1E18", color: "#FFF8EC", font: "800 9px/16px 'Bricolage Grotesque'", textAlign: "center" }}>{k.count}</span>
                 )}

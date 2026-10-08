@@ -1,3 +1,5 @@
+import SkillArt from '../characters/SkillArt.jsx';
+
 export default function SkillOffer({ v }) {
   return (
     <div style={{ position: "absolute", inset: "0", zIndex: "20", display: "flex", flexDirection: "column", alignItems: "center", padding: "58px 18px 24px", background: "rgba(32,22,17,.84)", overflow: "hidden" }}>
@@ -10,10 +12,15 @@ export default function SkillOffer({ v }) {
       <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: "14px", width: "100%", marginTop: "22px" }}>
         {v.offerCards.map((o, i) => (
             <div key={o.key ?? o.id ?? i} onClick={o.pick} className="dc-hover dc-press" style={{ display: "flex", gap: "14px", alignItems: "center", padding: "12px 14px 12px 12px", border: "3px solid #2B1E18", borderRadius: "22px", background: "#FFF8EC", boxShadow: "0 5px 0 #2B1E18", cursor: "pointer", transition: "transform .12s", '--hover-tf': "translateY(-3px)", '--press-tf': "translateY(3px)", '--press-sh': "0 2px 0 #2B1E18" }}>
-              <div style={{ width: "72px", height: "72px", flex: "none", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "18px", background: o.bg, color: o.fg, font: "38px/1 'Material Symbols Rounded'" }}>{o.icon}</div>
+              <div style={{ width: "72px", height: "72px", flex: "none", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "18px", background: o.bg, color: o.fg, font: "38px/1 'Material Symbols Rounded'" }}><SkillArt id={o.id} size={54} /></div>
               <div style={{ flex: "1", minWidth: "0" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                   <span style={{ padding: "3px 7px", borderRadius: "7px", background: o.fg, color: "#FFF8EC", font: "500 9.5px/1 'DM Mono',monospace", letterSpacing: ".08em" }}>{o.rarity}</span>
+                  {o.el && (
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "2px", padding: "2px 6px 2px 4px", borderRadius: "7px", border: `1.5px solid ${o.el.color}`, color: o.el.color, font: "500 9.5px/1 'DM Mono',monospace", letterSpacing: ".08em" }}>
+                      <span style={{ font: "12px/1 'Material Symbols Rounded'" }}>{o.el.icon}</span>{o.el.label}
+                    </span>
+                  )}
                   <span style={{ font: "500 9.5px/1 'DM Mono',monospace", letterSpacing: ".06em", color: "#6E5A4E" }}>{o.tag}</span>
                 </div>
                 <div style={{ font: "19px/1.1 'Bagel Fat One',system-ui", marginTop: "6px" }}>{o.name}</div>

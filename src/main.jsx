@@ -9,6 +9,8 @@ import './index.css';
 //   ?days=10|20|30   run length        ?gertak=0   disable the "Pose Seram" bluff
 //   ?still=1         freeze all animation and timers
 //   ?reset=1         wipe saved progress and start fresh
+//   ?skills=a,b,c    skill ids for the run/battle previews, e.g. ?screen=battle&skills=sambal,kembaran
+//   ?weapon=id       weapon for those previews (sumpit, payung, centong, none)
 // Progress is saved in this browser during normal play; ?screen= previews never save.
 const q = new URLSearchParams(location.search);
 if (q.get('reset') === '1') {
@@ -21,6 +23,8 @@ const props = {
   runDays: q.get('days') || '20',
   gertak: q.get('gertak') !== '0',
   still: q.get('still') === '1',
+  skills: q.get('skills') ? q.get('skills').split(',') : null,
+  weapon: q.get('weapon'),
   persist: !q.has('screen') && q.get('still') !== '1'
 };
 

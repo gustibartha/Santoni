@@ -28,7 +28,31 @@ export const SKILLS = [
   { id: 'sambal', name: 'Sambal Terasi', rar: 'Epik', icon: 'local_fire_department', desc: 'Tiap serangan menambah 1 lapis pedas (maks 5). Musuh kepedasan 6% ATK per lapis tiap giliran.', learn: 'Santoni membawa sambal dalam toples. Tutupnya tidak rapat.' },
   { id: 'kembaran', name: 'Kembaran Tak Resmi', rar: 'Epik', icon: 'group', desc: '30% peluang kembaran ikut memukul 70% ATK. Ia mengaku sepupu.', learn: 'Ada panda merah lain yang mirip Santoni. Ia tidak mau ditanya.' },
   { id: 'sindiran', name: 'Sindiran Halus', rar: 'Epik', icon: 'sentiment_dissatisfied', desc: '+50% kerusakan ke musuh yang HP-nya di bawah 35%.', learn: 'Santoni belajar menyindir. Santoni tidak pernah menaikkan suara.' },
-  { id: 'kesiangan', name: 'Bangun Kesiangan', rar: 'Legendaris', icon: 'alarm', desc: 'Sekali per perjalanan: saat HP habis, Santoni bangun lagi dengan 50% HP.', learn: 'Santoni menyetel alarm. Alarmnya juga ketiduran.' }
+  { id: 'kesiangan', name: 'Bangun Kesiangan', rar: 'Legendaris', icon: 'alarm', desc: 'Sekali per perjalanan: saat HP habis, Santoni bangun lagi dengan 50% HP.', learn: 'Santoni menyetel alarm. Alarmnya juga ketiduran.' },
+  // Elemental skills
+  { id: 'bara', el: 'api', name: 'Ekor Membara', rar: 'Langka', icon: 'whatshot', desc: '35% peluang membakar musuh 3 giliran: 10% ATK tiap giliran.', learn: 'Ujung ekor Santoni mulai berasap. Santoni pura-pura tidak mencium.' },
+  { id: 'naga', el: 'api', name: 'Napas Naga Kecil', rar: 'Epik', icon: 'volcano', desc: 'Tiap 4 serangan, semburan api 150% ATK dan membakar musuh.', learn: 'Santoni bersendawa. Keluar api. Santoni minta maaf ke rumput.' },
+  { id: 'setrum', el: 'petir', name: 'Colokan Longgar', rar: 'Langka', icon: 'electric_bolt', desc: '20% peluang menyetrum 60% ATK. Musuh lumpuh dan melewatkan 1 giliran.', learn: 'Santoni menemukan colokan di jalan. Sejak itu bulunya berdiri.' },
+  { id: 'badai', el: 'petir', name: 'Awan Pribadi', rar: 'Legendaris', icon: 'thunderstorm', desc: 'Awan kecil mengikuti Santoni. Tiap giliran musuh, petir menyambar 50% ATK.', learn: 'Sebuah awan memutuskan mengikuti Santoni. Tidak ada yang mengundangnya.' },
+  { id: 'batu', el: 'tanah', name: 'Kulit Batu Kali', rar: 'Langka', icon: 'landscape', desc: 'Awal tiap battle, dapat perisai 20% HP maks yang menyerap kerusakan.', learn: 'Santoni berendam di kali. Keluarnya sedikit lebih keras.' },
+  { id: 'gempa', el: 'tanah', name: 'Hentakan Gempa', rar: 'Epik', icon: 'landslide', desc: 'Tiap 3 serangan, hentakan 90% ATK. Musuh terhuyung: ATK −15%, menumpuk sampai 3.', learn: 'Santoni menghentakkan kaki. Gunung di kejauhan ikut kaget.' },
+  { id: 'tiup', el: 'angin', name: 'Tiupan Sepoi', rar: 'Biasa', icon: 'cyclone', desc: '15% peluang angin ikut menyerang 60% ATK.', learn: 'Angin sepoi mulai mengikuti Santoni. Angin itu kesepian.' },
+  { id: 'topan', el: 'angin', name: 'Topan Kecil', rar: 'Epik', icon: 'tornado', desc: 'Tiap 5 serangan, topan 200% ATK. Musuh terlempar dan melewatkan 1 giliran.', learn: 'Santoni berputar terlalu lama. Sekarang ada topan. Santoni pusing.' }
+];
+// Older skills that also count toward an element.
+for (const [id, el] of [['sambal', 'api'], ['statis', 'petir'], ['kipas', 'angin'], ['kardus', 'tanah']]) SKILLS.find(k => k.id === id).el = el;
+
+export const ELEMENTS = {
+  api: { label: 'API', icon: 'local_fire_department', color: '#D2532A' },
+  petir: { label: 'PETIR', icon: 'bolt', color: '#C28A16' },
+  tanah: { label: 'TANAH', icon: 'landscape', color: '#8E5A2B' },
+  angin: { label: 'ANGIN', icon: 'air', color: '#3C78C8' }
+};
+// Owning skills of both elements unlocks a combo.
+export const COMBOS = [
+  { id: 'kobaran', els: ['api', 'angin'], name: 'Kobaran', desc: 'Angin meniup api: kerusakan terbakar ×1,5.' },
+  { id: 'badaipetir', els: ['petir', 'angin'], name: 'Badai Petir', desc: 'Peluang menyetrum +10%.' },
+  { id: 'magma', els: ['api', 'tanah'], name: 'Magma', desc: 'Hentakan Gempa juga membakar musuh.' }
 ];
 // Energy refills one point every `regenMs` up to `max`, also while the game is closed.
 export const ENERGY = { max: 30, cost: 5, regenMs: 5 * 60 * 1000 };
@@ -96,6 +120,24 @@ export const ITEMS = {
   sandal: { name: 'Sandal Kiri', type: 'sepatu', rar: 'Legendaris', stat: 'DEF', val: 22, lvl: 15, icon: 'directions_walk', desc: 'Hanya yang kiri. Ternyata cukup.' },
   kaoskaki: { name: 'Kaus Kaki Ganjil', type: 'sepatu', rar: 'Biasa', stat: 'DEF', val: 9, lvl: 3, icon: 'nordic_walking', desc: 'Satu motif bebek, satu motif galaksi.' }
 };
+// The weapon with the highest ATK gets the elegant floating animation.
+export const TOP_WEAPON = Object.keys(ITEMS).filter(id => ITEMS[id].type === 'senjata').sort((a, b) => ITEMS[b].val - ITEMS[a].val)[0];
+
+// Weapon ultimates ("jurus pamungkas"). The gauge fills during battle; when full, the
+// equipped weapon's ultimate fires. Every element the run owns joins in (see ULT_ELEMENTS).
+export const ULTIMATES = {
+  sumpit: { name: 'Seribu Sumpitan', desc: '5 tusukan beruntun 55% ATK. Tusukan terakhir pasti kritis.', line: 'Sumpit Santoni bergerak terlalu cepat untuk dilihat. Termasuk oleh Santoni.' },
+  payung: { name: 'Payung Badai', desc: 'Hempasan 180% ATK. Payung terbuka dan menangkis 2 serangan berikutnya.', line: 'Santoni membuka payung. Badai datang dari dalam payung itu.' },
+  centong: { name: 'Kenduri Terakhir', desc: 'Hantaman nasi 320% ATK dan pulihkan 30% HP. Semua orang kenyang.', line: 'Santoni mengangkat centong. Aroma nasi kenduri memenuhi udara.' },
+  none: { name: 'Tamparan Malas', desc: 'Tamparan 220% ATK. Santoni tidak senang harus melakukannya.', line: 'Santoni menghela napas, lalu menampar. Sekali saja.' }
+};
+export const ULT_ELEMENTS = {
+  api: 'membakar 3 giliran',
+  petir: 'melumpuhkan 1 giliran',
+  tanah: 'ATK musuh −15%',
+  angin: '+30% kerusakan'
+};
+
 export const CHAPTERS = [
   { name: 'Kebun Bambu Tetangga', icon: 'forest', desc: 'Tetangga belum tahu.' },
   { name: 'Pasar Subuh', icon: 'storefront', desc: 'Buka jam tiga pagi. Santoni bangun jam tiga sore.' },

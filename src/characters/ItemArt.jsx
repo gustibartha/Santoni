@@ -1,0 +1,214 @@
+// Hand-drawn equipment illustrations (64×64), in the same thick-outline style as the characters.
+import { TOP_WEAPON } from '../game/data.js';
+
+export const O = '#2B1E18';
+export const SHINE = 'rgba(255,255,255,.6)';
+
+// Four-point sparkle used on Epik/Legendaris items.
+export const star = (x, y, r) => `M${x} ${y - r}Q${x} ${y} ${x + r} ${y}Q${x} ${y} ${x} ${y + r}Q${x} ${y} ${x - r} ${y}Q${x} ${y} ${x} ${y - r}Z`;
+export function Sparkles({ color, at }) {
+  return <g style={{ stroke: O, strokeWidth: 1.6 }}>{at.map(([x, y, r], i) => <path key={i} d={star(x, y, r)} fill={color} />)}</g>;
+}
+// A stroke drawn twice (dark outline under a colored core), for ropes and handles.
+export function Rope({ d, color, w = 3.5 }) {
+  return (
+    <>
+      <path d={d} fill="none" stroke={O} strokeWidth={w + 3} strokeLinecap="round" strokeLinejoin="round" />
+      <path d={d} fill="none" stroke={color} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round" />
+    </>
+  );
+}
+
+function Chopstick() {
+  return (
+    <>
+      <path d="M28.5 4h7l-2 55h-3z" fill="#E8C07A" />
+      <path d="M28.7 9h6.6v6h-6.6z" fill="#D2532A" />
+      <path d="M29.5 27h5M30.2 43h3.8" fill="none" strokeWidth="2" />
+      <path d="M31 19v22" fill="none" stroke={SHINE} strokeWidth="1.6" />
+    </>
+  );
+}
+
+const ART = {
+  sumpit: () => (
+    <>
+      <g transform="rotate(24 32 34) translate(-6 0)"><Chopstick /></g>
+      <g transform="rotate(40 32 34) translate(5 1)"><Chopstick /></g>
+    </>
+  ),
+  payung: () => (
+    <>
+      <Rope d="M32 30v20q0 8-7 8q-5 0-5-5" color="#8E5A2B" w={3.4} />
+      <path d="M7 31Q12 6 32 7Q52 6 57 31Q51 26 44.5 31Q38 26 32 31Q26 26 19.5 31Q13 26 7 31Z" fill="#D2532A" />
+      <path d="M32 7Q22 14 19.5 31Q26 26 32 31Z" fill="#FFF8EC" />
+      <path d="M32 7Q50 9 57 31Q51 26 44.5 31Q42 16 32 7Z" fill="#FFF8EC" />
+      <circle cx="32" cy="6" r="2.6" fill="#F2B63C" />
+      <path d="M13 22Q17 13 25 10" fill="none" stroke={SHINE} strokeWidth="2" />
+    </>
+  ),
+  centong: () => (
+    <>
+      <g transform="rotate(-32 32 32)">
+        <rect x="28" y="33" width="8" height="27" rx="4" fill="#C98F45" />
+        <ellipse cx="32" cy="21" rx="14" ry="16" fill="#E8BC78" />
+        <g style={{ strokeWidth: 1.4 }} fill="#FFF8EC">
+          <ellipse cx="27" cy="16" rx="2.6" ry="1.6" transform="rotate(-20 27 16)" />
+          <ellipse cx="35" cy="13" rx="2.6" ry="1.6" transform="rotate(25 35 13)" />
+          <ellipse cx="33" cy="22" rx="2.6" ry="1.6" transform="rotate(-10 33 22)" />
+          <ellipse cx="26" cy="25" rx="2.6" ry="1.6" transform="rotate(30 26 25)" />
+        </g>
+        <path d="M22 12Q24 7 29 6" fill="none" stroke={SHINE} strokeWidth="2" />
+      </g>
+      <Sparkles color="#C9A8F0" at={[[50, 12, 6], [55, 27, 3.5], [12, 50, 4]]} />
+    </>
+  ),
+  panci: () => (
+    <>
+      <path d="M24 16q-3-4 0-8M32 15q-3-4 0-8M40 16q-3-4 0-8" fill="none" stroke="#A8B4AE" strokeWidth="2.4" />
+      <path d="M11 33q-6 0-6 5t6 5M53 33q6 0 6 5t-6 5" fill="#D2783A" />
+      <path d="M12 26h40v20q0 10-10 10H22q-10 0-10-10z" fill="#D2783A" />
+      <rect x="8" y="22" width="48" height="8" rx="4" fill="#F0A070" />
+      <path d="M12 40h40" fill="none" strokeWidth="2" />
+      <path d="M17 34v12" fill="none" stroke={SHINE} strokeWidth="2.4" />
+      <Sparkles color="#C9A8F0" at={[[53, 12, 5.5], [9, 12, 3.5]]} />
+    </>
+  ),
+  pramuka: () => (
+    <>
+      <ellipse cx="32" cy="43" rx="27" ry="9" fill="#A0764A" />
+      <path d="M17 43Q16 18 32 16Q48 18 47 43Z" fill="#C49460" />
+      <path d="M24 21Q28 29 32 30Q36 29 40 21M32 17v13" fill="none" strokeWidth="2" />
+      <path d="M17.2 37Q32 42 46.8 37L47 43Q32 48 17 43Z" fill="#2F7A5C" />
+      <circle cx="32" cy="42" r="3.6" fill="#F2B63C" />
+      <path d="M21 33Q20 24 25 20" fill="none" stroke={SHINE} strokeWidth="2" />
+    </>
+  ),
+  helm: () => (
+    <>
+      <path d="M11 41Q10 15 32 14Q54 15 53 41Z" fill="#F2B63C" />
+      <path d="M27 15h10v26H27z" fill="#F8CF6A" />
+      <path d="M5 41Q32 34 59 41Q59 48 32 48Q5 48 5 41Z" fill="#E3A32C" />
+      <circle cx="44" cy="29" r="4.5" fill="#4FAE72" />
+      <path d="M42.4 29l1.3 1.4 2.4-2.6" fill="none" stroke="#FFF8EC" strokeWidth="1.6" />
+      <path d="M16 33Q16 22 23 18" fill="none" stroke={SHINE} strokeWidth="2.4" />
+    </>
+  ),
+  syal: () => (
+    <>
+      <path d="M38 27l12 2-4 25-12-2z" fill="#D2532A" />
+      <path d="M36.9 34l12 2M35.8 41l12 2" fill="none" stroke="#FFF8EC" strokeWidth="3" />
+      <path d="M35 52l-1 6M39 53l-1 6M43 53.5l-1 6M47 54l-1 6" fill="none" strokeWidth="2.2" />
+      <path d="M6 18Q19 10 32 17Q45 24 58 16V30Q45 38 32 31Q19 24 6 32Z" fill="#D2532A" />
+      <path d="M6 25Q19 17 32 24Q45 31 58 23" fill="none" stroke="#FFF8EC" strokeWidth="3.4" />
+      <path d="M13 20l2 2 2-2M23 18l2 2 2-2M41 27l2 2 2-2M50 24l2 2 2-2" fill="none" stroke="#8E3418" strokeWidth="1.4" />
+    </>
+  ),
+  jashujan: () => (
+    <>
+      <path d="M21 21Q32 13 43 21L52 55Q32 60 12 55Z" fill="#9EC3F0" />
+      <path d="M21 23Q19 7 32 7Q45 7 43 23Q32 28 21 23Z" fill="#9EC3F0" />
+      <ellipse cx="32" cy="18" rx="7" ry="5.5" fill="#5E8FCF" />
+      <path d="M32 26v31" fill="none" strokeWidth="2" />
+      <g fill="#FFF8EC" style={{ strokeWidth: 1.6 }}><circle cx="36" cy="33" r="2" /><circle cx="36" cy="41" r="2" /><circle cx="36" cy="49" r="2" /></g>
+      <path d="M20 30L17 50M24 13q2-3 5-4" fill="none" stroke={SHINE} strokeWidth="2.4" />
+    </>
+  ),
+  tutup: () => {
+    const pts = Array.from({ length: 24 }, (_, i) => {
+      const a = (i / 24) * Math.PI * 2, r = i % 2 ? 12 : 14.5;
+      return `${(32 + r * Math.cos(a)).toFixed(1)},${(43 + r * Math.sin(a)).toFixed(1)}`;
+    }).join(' ');
+    return (
+      <>
+        <Rope d="M9 6Q14 26 28 29M55 6Q50 26 36 29" color="#C49460" w={2.2} />
+        <polygon points={pts} fill="#D2532A" />
+        <circle cx="32" cy="43" r="8.5" fill="#E8704A" />
+        <path d={star(32, 43, 5)} fill="#FFF8EC" style={{ strokeWidth: 1.4 }} />
+        <circle cx="32" cy="28.5" r="3" fill="#F2B63C" />
+        <path d="M22 37q3-4 7-5" fill="none" stroke={SHINE} strokeWidth="2" />
+      </>
+    );
+  },
+  cincin: () => (
+    <>
+      <path fillRule="evenodd" d="M11 35a21 16 0 1 0 42 0a21 16 0 1 0-42 0ZM20 35a12 7.5 0 1 0 24 0a12 7.5 0 1 0-24 0Z" fill="#F08CA8" />
+      <g fill="#FFF8EC" style={{ strokeWidth: 1.4 }}>
+        <ellipse cx="47" cy="23" rx="3" ry="1.8" transform="rotate(30 47 23)" />
+        <ellipse cx="18" cy="47" rx="3" ry="1.8" transform="rotate(-20 18 47)" />
+      </g>
+      <path d="M16 30q4-6 12-8" fill="none" stroke={SHINE} strokeWidth="2.2" />
+    </>
+  ),
+  rafia: () => (
+    <>
+      <Rope d="M50 40Q61 46 55 58" color="#F49AC1" w={3.6} />
+      <ellipse cx="31" cy="37" rx="23" ry="15" fill="#F49AC1" />
+      <ellipse cx="31" cy="35" rx="15" ry="9" fill="#E978A9" />
+      <ellipse cx="31" cy="34" rx="7" ry="4" fill="#C2507F" />
+      <path d="M12 41q19 9 38 0M16 47q15 6 30 0" fill="none" stroke="#C2507F" strokeWidth="1.6" />
+      <path d="M14 31q5-7 14-8" fill="none" stroke={SHINE} strokeWidth="2.2" />
+    </>
+  ),
+  gesper: () => (
+    <>
+      <rect x="2" y="27" width="60" height="14" rx="3" fill="#8E5A2B" />
+      <g fill={O} stroke="none"><circle cx="8" cy="34" r="1.6" /><circle cx="56" cy="34" r="1.6" /></g>
+      <rect x="15" y="15" width="34" height="37" rx="9" fill="#F2B63C" />
+      <rect x="22" y="22" width="20" height="23" rx="4" fill="#8E5A2B" />
+      <rect x="30" y="20" width="4" height="27" rx="2" fill="#E3A32C" />
+      <path d="M19 24q0-5 5-6" fill="none" stroke={SHINE} strokeWidth="2.2" />
+      <Sparkles color="#C9A8F0" at={[[54, 12, 5.5], [10, 52, 4]]} />
+    </>
+  ),
+  sandal: () => (
+    <>
+      <path d="M33 5Q47 6 47 25Q47 41 42 51Q37 61 29 59Q19 57 19 44Q19 32 20 22Q20 6 33 5Z" fill="#F2B63C" />
+      <path d="M33 10Q42 11 42 25Q42 38 38 47Q35 54 30 53Q24 52 24 44Q24 32 25 22Q25 10 33 10Z" fill="#F8D37A" style={{ strokeWidth: 1.6 }} />
+      <Rope d="M31 17L21 31M31 17L45 30" color="#D2532A" w={3.6} />
+      <circle cx="31" cy="17" r="3" fill="#D2532A" />
+      <path d="M27 44q0 6 3 7" fill="none" stroke={SHINE} strokeWidth="2" />
+      <Sparkles color="#FFE45C" at={[[54, 10, 6], [56, 44, 4], [10, 14, 4.5], [9, 50, 3.5]]} />
+    </>
+  ),
+  kaoskaki: () => (
+    <g transform="rotate(-8 32 32)">
+      <path d="M22 5h20v29q0 6 6 10q11 6 6 13q-5 6-15 1L27 51q-7-4-5-13z" fill="#FFF8EC" />
+      <path d="M22 5h20v9H22z" fill="#3C78C8" />
+      <path d="M22 9.5h20" fill="none" stroke="#FFF8EC" strokeWidth="2" />
+      <path d="M45 46q9 4 9 10l-1 2q-5 5-14 0z" fill="#F2B63C" style={{ strokeWidth: 2 }} />
+      <path d="M22.4 40q0 8 6 11l3-6q-5-2-5-8z" fill="#7E43B5" style={{ strokeWidth: 2 }} />
+      <g fill="#7E43B5" stroke="none"><circle cx="28" cy="22" r="1.6" /><circle cx="36" cy="28" r="1.3" /><circle cx="33" cy="19" r="1" /></g>
+      <path d={star(36, 38, 3.4)} fill="#F2B63C" style={{ strokeWidth: 1.2 }} />
+    </g>
+  )
+};
+
+/**
+ * Equipment illustration for an item id from ITEMS; `size` is the rendered px size.
+ * The strongest weapon (TOP_WEAPON) floats in a slow golden halo unless `plain` is set.
+ */
+export default function ItemArt({ id, size = 40, plain = false, still = false }) {
+  const Art = ART[id];
+  if (!Art) return null;
+  const svg = (
+    <svg viewBox="0 0 64 64" width={size} height={size} style={{ display: 'block', overflow: 'visible' }} aria-hidden="true">
+      <g stroke={O} strokeWidth="2.6" strokeLinejoin="round" strokeLinecap="round">
+        <Art />
+      </g>
+    </svg>
+  );
+  if (plain || id !== TOP_WEAPON) return svg;
+  const a = name => (still ? 'none' : name);
+  return (
+    <div style={{ position: 'relative', width: size, height: size }}>
+      <div style={{ position: 'absolute', inset: '-22%', borderRadius: '50%', background: 'repeating-conic-gradient(rgba(242,182,60,.38) 0deg 10deg, transparent 10deg 30deg)', WebkitMaskImage: 'radial-gradient(circle, #000 30%, transparent 68%)', maskImage: 'radial-gradient(circle, #000 30%, transparent 68%)', animation: a('itemHalo 9s linear infinite') }} />
+      <div style={{ position: 'absolute', inset: 0, animation: a('itemFloat 2.8s ease-in-out infinite'), filter: 'drop-shadow(0 0 5px rgba(242,182,60,.85))' }}>{svg}</div>
+      {[[-6, 18, 0], [86, 6, 0.7], [80, 82, 1.4]].map(([x, y, d], i) => (
+        <svg key={i} viewBox="-6 -6 12 12" width={size * 0.2} height={size * 0.2} style={{ position: 'absolute', left: `${x}%`, top: `${y}%`, overflow: 'visible', animation: a(`itemTwinkle 2.1s ${d}s ease-in-out infinite`) }}>
+          <path d={star(0, 0, 5.5)} fill="#FFE45C" stroke={O} strokeWidth="1.2" />
+        </svg>
+      ))}
+    </div>
+  );
+}
