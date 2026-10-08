@@ -6,6 +6,7 @@ import { loadSave, writeSave, exportCode, importCode } from './save.js';
 import { music } from './music.js';
 import { modeMethods } from './modes.js';
 import { companionMethods } from './companions.js';
+import { accountMethods } from './account.js';
 import * as M from './modesData.js';
 
 // Local calendar day, used to reset daily missions at midnight.
@@ -22,6 +23,7 @@ export default class Game extends Component {
     this.state = this.initial(this._init, props);
     const saved = props.persist && loadSave(this._initDays);
     if (saved) { this.state = { ...this.state, ...saved.state }; this._uid = saved.uid || this._uid; }
+    if (this.state.confirm && this.state.confirm.kind === 'cloud') this.state.confirm = null;
     this.state = { ...this.state, ...this.energyPatch(this.state, Date.now()) };
     if (this.state.best.length < C.CHAPTERS.length) this.state.best = this.state.best.concat(Array(C.CHAPTERS.length - this.state.best.length).fill(0));
     // One-time gift of new gear for saves made before it existed.
@@ -183,6 +185,7 @@ export default class Game extends Component {
     const code = window.prompt('Tempel kode progres (diawali SANTONI1:). Progres di perangkat ini akan diganti.');
     if (code == null) return;
     if (!importCode(code)) return this.toast('Kodenya tidak dikenali. Santoni memeriksa dua kali. Tetap tidak dikenali.');
+    this._leaving = true; // keep the pagehide autosave from overwriting the imported save
     location.reload();
   }
 
@@ -328,10 +331,12 @@ export default class Game extends Component {
       music.setTrack(this.trackFor(this.state));
     }
     if (this.props.persist) {
-      this._save = () => writeSave(this.state, this.days(), this._uid);
+      this._save = hide => { if (this._leaving) return; writeSave(this.state, this.days(), this._uid); this.cloudTick(hide === true); };
       this._saveIv = setInterval(this._save, 2000);
-      addEventListener('pagehide', this._save);
-      document.addEventListener('visibilitychange', this._save);
+      this._saveHide = () => this._save(true);
+      addEventListener('pagehide', this._saveHide);
+      document.addEventListener('visibilitychange', this._saveHide);
+      this.initAccount();
     }
     this.scrollLog();
   }
@@ -344,9 +349,10 @@ export default class Game extends Component {
     }
     if (this._save) {
       clearInterval(this._saveIv);
-      removeEventListener('pagehide', this._save);
-      document.removeEventListener('visibilitychange', this._save);
+      removeEventListener('pagehide', this._saveHide);
+      document.removeEventListener('visibilitychange', this._saveHide);
     }
+    if (this._unwatch) this._unwatch();
   }
   componentDidUpdate(pp, ps) {
     const p = this.props;
@@ -1304,8 +1310,9 @@ export default class Game extends Component {
     v.pullCost10 = fmt(Math.round(1350 * (fn.id === 'diskon' ? 0.8 : 1)));
     Object.assign(v, this.modesView(s, { g, fmt }));
     Object.assign(v, this.companionsView(s, { g, fmt, pct }));
+    Object.assign(v, this.accountView(s, { g, fmt }));
     const cf = s.confirm;
-    v.confirm = cf ? {
+    v.confirm = cf && cf.kind === 'cloud' ? v.cloudConfirm || null : cf ? {
       title: cf.kind === 'tower' ? 'Menyerah di lantai ini?' : 'Pulang sekarang?',
       text: cf.kind === 'tower' ? 'Lantai ini tidak dihitung. Energi yang dipakai tidak kembali, tapi tangganya tetap ada besok.' : 'Perjalanan berakhir di sini. Hadiah dihitung sampai hari ini, dan rekor tetap dicatat.',
       yesLabel: cf.kind === 'tower' ? 'Menyerah' : 'Pulang', yes: g(() => this.quitRun()), no: g(() => this.closeConfirm())
@@ -1327,4 +1334,4 @@ export default class Game extends Component {
 }
 
 // Dungeons, arena, mine and workshop live in modes.js.
-Object.assign(Game.prototype, modeMethods, companionMethods);
+Object.assign(Game.prototype, modeMethods, companionMethods, accountMethods);

@@ -48,6 +48,8 @@ cleaning_services
 clear
 close
 cloud
+cloud_done
+cloud_upload
 code
 confirmation_number
 content_copy
@@ -73,10 +75,12 @@ eco
 edit_note
 egg
 electric_bolt
+email
 emoji_events
 emoji_nature
 energy
 engineering
+error
 event
 expand_less
 expand_more
@@ -91,6 +95,7 @@ flag
 flip
 floor
 flutter_dash
+folder
 forest
 fort
 function
@@ -106,6 +111,7 @@ headphones
 heat
 height
 help
+hide
 highlight
 hiking
 history
@@ -117,6 +123,7 @@ https
 hub
 image
 info
+input
 inventory_2
 join
 keep
@@ -133,6 +140,7 @@ local_fire_department
 local_parking
 local_police
 lock
+login
 logout
 loop
 mail
@@ -141,6 +149,7 @@ map
 margin
 menu_book
 merge
+message
 mic
 military_tech
 mode
@@ -162,8 +171,11 @@ padding
 paid
 pan_tool
 park
+password
 pause
 payments
+people
+person_add
 pest_control
 pest_control_rodent
 pets
@@ -199,6 +211,7 @@ schedule
 school
 scuba_diving
 search
+security
 select
 self_improvement
 sell
@@ -234,6 +247,7 @@ step
 steps
 stop
 storage
+store
 storefront
 style
 sunny
@@ -262,6 +276,7 @@ trip_origin
 try
 two_wheeler
 umbrella
+unsubscribe
 upgrade
 upload
 verified_user

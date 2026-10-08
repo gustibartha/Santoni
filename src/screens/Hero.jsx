@@ -3,7 +3,7 @@ import ItemArt from '../characters/ItemArt.jsx';
 
 export default function Hero({ v }) {
   return (
-    <div style={{ position: "absolute", top: "66px", left: "0", right: "0", bottom: "84px", display: "flex", flexDirection: "column", gap: "12px", padding: "6px 14px 12px" }}>
+    <div style={{ position: "absolute", top: "66px", left: "0", right: "0", bottom: "84px", display: "flex", flexDirection: "column", gap: "12px", padding: "6px 14px 18px", overflowY: "auto", overscrollBehavior: "contain", scrollbarWidth: "none" }}>
       <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "10px" }}>
         <div>
           <div style={{ font: "28px/1 'Bagel Fat One',system-ui" }}>Santoni</div>
@@ -39,7 +39,7 @@ export default function Hero({ v }) {
           ))}
         </div>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,minmax(0,1fr))", gap: "2px", marginTop: "4px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#2B1E18", boxShadow: "0 3px 0 #2B1E18", overflow: "hidden" }}>
+      <div style={{ flex: "none", display: "grid", gridTemplateColumns: "repeat(4,minmax(0,1fr))", gap: "2px", marginTop: "4px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#2B1E18", boxShadow: "0 3px 0 #2B1E18", overflow: "hidden" }}>
         {v.heroStats.map((st, i) => (
             <div key={st.key ?? st.id ?? i} style={{ padding: "8px 4px 9px", background: "#FFF8EC", textAlign: "center" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "3px", font: "500 10.5px/1 'DM Mono',monospace", letterSpacing: ".06em", color: "#5E4A3F" }}>
@@ -86,7 +86,7 @@ export default function Hero({ v }) {
         <span style={{ font: "18px/1 'Bagel Fat One',system-ui" }}>Tas</span>
         <span style={{ font: "500 10.5px/1 'DM Mono',monospace", letterSpacing: ".06em", color: "#5E4A3F" }}>{v.bagCount}/60 · KETUK UNTUK PASANG</span>
       </div>
-      <div style={{ flex: "1", minHeight: "0", overflowY: "auto", margin: "-4px -6px 0", padding: "4px 6px 8px", scrollbarWidth: "none" }}>
+      <div style={{ flex: "none", margin: "-4px -6px 0", padding: "4px 6px 8px" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(5,minmax(0,1fr))", gap: "9px" }}>
           {v.bag.map((it, i) => (
               <div key={it.key ?? it.id ?? i} onClick={it.equip} className="dc-press" style={{ position: "relative", aspectRatio: "1", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "14px", background: it.bg, boxShadow: "0 3px 0 #2B1E18", cursor: "pointer", '--press-tf': "translateY(2px)", '--press-sh': "0 1px 0 #2B1E18" }}>

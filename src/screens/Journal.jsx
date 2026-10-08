@@ -1,3 +1,48 @@
+const FIELD = { width: "100%", height: "40px", boxSizing: "border-box", padding: "0 12px", border: "2.5px solid #2B1E18", borderRadius: "12px", background: "#FFFFFF", color: "#2B1E18", font: "600 14px/1 'Bricolage Grotesque'", outline: "none" };
+const BTN = { display: "flex", alignItems: "center", justifyContent: "center", gap: "5px", height: "40px", boxSizing: "border-box", border: "2.5px solid #2B1E18", borderRadius: "12px", boxShadow: "0 3px 0 #2B1E18", color: "#2B1E18", font: "800 13px/1 'Bricolage Grotesque'", cursor: "pointer" };
+
+// Sign-in card for the online save. Signed in, it shows the account and the last upload.
+function AccountCard({ a }) {
+  return (
+    <div style={{ marginTop: "18px", padding: "12px 14px 14px", border: "2.5px solid #2B1E18", borderRadius: "18px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <span style={{ font: "22px/1 'Material Symbols Rounded'", color: "#3C78C8" }}>{a.user ? 'cloud_done' : 'cloud'}</span>
+        <div style={{ font: "16px/1.1 'Bagel Fat One',system-ui" }}>Akun online</div>
+      </div>
+      {a.checking && !a.user && <div style={{ font: "500 12px/1.4 'Bricolage Grotesque'", color: "#5B4A40", marginTop: "6px" }}>Memeriksa akun…</div>}
+      {a.user ? (
+        <>
+          <div style={{ font: "500 12px/1.4 'Bricolage Grotesque'", color: "#5B4A40", marginTop: "6px" }}>Masuk sebagai <b style={{ color: "#2B1E18", wordBreak: "break-all" }}>{a.user.email}</b>. Progres disimpan ke server otomatis, jadi bisa dilanjutkan di HP lain.</div>
+          <div style={{ font: "500 10.5px/1.2 'DM Mono',monospace", letterSpacing: ".04em", color: "#2F7A5C", marginTop: "6px" }}>{a.status}</div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginTop: "10px" }}>
+            <button onClick={a.saveNow} style={{ ...BTN, background: "#F2B63C" }}><span style={{ font: "17px/1 'Material Symbols Rounded'" }}>cloud_upload</span>Simpan sekarang</button>
+            <button onClick={a.logout} style={{ ...BTN, background: "#FFF8EC" }}><span style={{ font: "17px/1 'Material Symbols Rounded'" }}>logout</span>Keluar</button>
+          </div>
+        </>
+      ) : !a.checking && (
+        <form onSubmit={a.submit} style={{ marginTop: "8px" }}>
+          <div style={{ font: "500 12px/1.4 'Bricolage Grotesque'", color: "#5B4A40" }}>Masuk supaya progres tersimpan di server dan bisa dibuka dari perangkat lain.</div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3px", padding: "3px", marginTop: "10px", borderRadius: "12px", background: "#2B1E18" }}>
+            {[['masuk', 'Masuk'], ['daftar', 'Daftar baru']].map(([k, label]) => (
+              <button key={k} type="button" onClick={() => a.setMode(k)} style={{ height: "32px", border: "0", borderRadius: "9px", background: a.mode === k ? "#F2B63C" : "transparent", color: a.mode === k ? "#2B1E18" : "#FFF8EC", font: "800 12.5px/1 'Bricolage Grotesque'", cursor: "pointer" }}>{label}</button>
+            ))}
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "10px" }}>
+            <input type="email" name="email" autoComplete="email" inputMode="email" placeholder="Email" value={a.email} onChange={a.setEmail} style={FIELD} />
+            <input type="password" name="password" autoComplete={a.mode === 'daftar' ? 'new-password' : 'current-password'} placeholder={a.mode === 'daftar' ? 'Buat sandi (min. 6 karakter)' : 'Sandi'} value={a.password} onChange={a.setPassword} style={FIELD} />
+          </div>
+          {a.note && <div role="status" style={{ font: "600 12px/1.4 'Bricolage Grotesque'", color: "#A93D1C", marginTop: "8px", textWrap: "pretty" }}>{a.note}</div>}
+          <button type="submit" disabled={a.busy} style={{ ...BTN, width: "100%", marginTop: "10px", background: a.busy ? "#EADBC5" : "#3C78C8", color: a.busy ? "#6E5A4E" : "#FFF8EC", cursor: a.busy ? "default" : "pointer" }}>
+            <span style={{ font: "17px/1 'Material Symbols Rounded'" }}>{a.mode === 'daftar' ? 'person_add' : 'login'}</span>
+            {a.busy ? 'Sebentar…' : a.mode === 'daftar' ? 'Buat akun' : 'Masuk'}
+          </button>
+          {a.status && <div style={{ font: "500 11px/1.4 'Bricolage Grotesque'", color: "#5B4A40", marginTop: "8px" }}>{a.status}</div>}
+        </form>
+      )}
+    </div>
+  );
+}
+
 export default function Journal({ v }) {
   return (
     <div style={{ position: "absolute", top: "66px", left: "0", right: "0", bottom: "84px", overflowY: "auto", scrollbarWidth: "none", padding: "6px 14px 20px" }}>
@@ -43,9 +88,10 @@ export default function Journal({ v }) {
             </div>
         ))}
       </div>
+      {v.acct.online && <AccountCard a={v.acct} />}
       <div style={{ marginTop: "18px", padding: "12px 14px", border: "2.5px dashed #2B1E18", borderRadius: "18px", background: "#F3E6D3" }}>
         <div style={{ font: "16px/1.1 'Bagel Fat One',system-ui" }}>Cadangan progres</div>
-        <div style={{ font: "500 12px/1.4 'Bricolage Grotesque'", color: "#5B4A40", marginTop: "4px" }}>Progres tersimpan di browser ini saja. Salin kodenya untuk pindah perangkat atau berjaga-jaga kalau data browser terhapus.</div>
+        <div style={{ font: "500 12px/1.4 'Bricolage Grotesque'", color: "#5B4A40", marginTop: "4px" }}>Tanpa akun, progres hanya tersimpan di browser ini. Kode ini bisa dipakai untuk pindah perangkat tanpa login.</div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginTop: "10px" }}>
           <button onClick={v.copyBackup} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "5px", height: "38px", border: "2.5px solid #2B1E18", borderRadius: "12px", background: "#F2B63C", boxShadow: "0 3px 0 #2B1E18", color: "#2B1E18", font: "800 12.5px/1 'Bricolage Grotesque'", cursor: "pointer" }}><span style={{ font: "17px/1 'Material Symbols Rounded'" }}>content_copy</span>Salin kode</button>
           <button onClick={v.loadBackup} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "5px", height: "38px", border: "2.5px solid #2B1E18", borderRadius: "12px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", color: "#2B1E18", font: "800 12.5px/1 'Bricolage Grotesque'", cursor: "pointer" }}><span style={{ font: "17px/1 'Material Symbols Rounded'" }}>upload</span>Muat kode</button>
