@@ -11,6 +11,7 @@ import './index.css';
 //   ?reset=1         wipe saved progress and start fresh
 //   ?skills=a,b,c    skill ids for the run/battle previews, e.g. ?screen=battle&skills=sambal,kembaran
 //   ?weapon=id       weapon for those previews (sumpit, payung, centong, none)
+//   ?enemy=id        enemy for the battle preview, e.g. ?screen=battle&enemy=gajah
 // Progress is saved in this browser during normal play; ?screen= previews never save.
 const q = new URLSearchParams(location.search);
 if (q.get('reset') === '1') {
@@ -25,6 +26,7 @@ const props = {
   still: q.get('still') === '1',
   skills: q.get('skills') ? q.get('skills').split(',') : null,
   weapon: q.get('weapon'),
+  enemy: q.get('enemy'),
   persist: !q.has('screen') && q.get('still') !== '1'
 };
 

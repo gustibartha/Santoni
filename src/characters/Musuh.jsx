@@ -247,6 +247,196 @@ const ART = {
   )
 };
 
+// Third-wave enemies and the two new bosses.
+Object.assign(ART, {
+  kucing: () => (
+    <>
+      <Line d="M136 178Q178 180 174 148Q172 130 156 132" color="#F3C9A0" w={9} />
+      <ellipse cx="84" cy="188" rx="14" ry="7" fill="#F3C9A0" />
+      <ellipse cx="116" cy="188" rx="14" ry="7" fill="#F3C9A0" />
+      <Shaded id="ms-kucing" d="M100 126Q140 126 140 160Q140 190 100 190Q60 190 60 160Q60 126 100 126Z" fill="#F3C9A0" shade="rgba(160,90,30,.18)" cy={200} />
+      <ellipse cx="100" cy="166" rx="20" ry="18" fill="#FFF3E2" stroke="none" />
+      <path d="M60 72L54 28L90 52Z" fill="#F3C9A0" />
+      <path d="M64 63L60 40L80 54Z" fill="#F3B4C0" stroke="none" />
+      <path d="M140 72L146 28L110 52Z" fill="#F3C9A0" />
+      <path d="M136 63L140 40L120 54Z" fill="#F3B4C0" stroke="none" />
+      <Shaded id="ms-kucing-h" d="M100 46Q148 46 148 92Q148 134 100 134Q52 134 52 92Q52 46 100 46Z" fill="#F3C9A0" shade="rgba(160,90,30,.14)" cy={150} rx={70} ry={30} />
+      <path d="M92 50l2 12M100 48v14M108 50l-2 12M54 90h10M55 99h9M146 90h-10M145 99h-9" fill="none" stroke="#D9955E" strokeWidth="3" />
+      <ellipse cx="100" cy="108" rx="18" ry="13" fill="#FFF3E2" stroke="none" />
+      <Eye x={82} y={90} r={7} /><Eye x={118} y={90} r={7} />
+      <path d="M74 84l-5-4M126 84l5-4" fill="none" strokeWidth="2.4" />
+      <path d="M96 103h8l-4 5z" fill="#E58A9A" strokeWidth="2" />
+      <path d="M92 112q4 4 8 0q4 4 8 0" fill="none" strokeWidth="2.2" />
+      <path d="M72 108L48 104M72 114L48 118M128 108L152 104M128 114L152 118" fill="none" strokeWidth="1.6" />
+      <Blush at={[[72, 104], [128, 104]]} />
+      <Line d="M134 158L162 96" color="#B9C4BE" w={3} />
+      <circle cx="166" cy="80" r="21" fill="none" stroke={O} strokeWidth="9" />
+      <circle cx="166" cy="80" r="21" fill="none" stroke="#FFF6D0" strokeWidth="4.5" />
+      <rect x="157" y="67" width="18" height="27" rx="4" fill={O} />
+      <rect x="160" y="71" width="12" height="17" rx="2" fill="#9EC3F0" stroke="none" />
+      <ellipse cx="134" cy="160" rx="10" ry="8" fill="#F3C9A0" />
+      <rect x="18" y="36" width="38" height="17" rx="6" fill="#D2532A" />
+      <text x="37" y="48.5" textAnchor="middle" style={{ font: "700 10px 'DM Mono',monospace", fill: '#FFF8EC', stroke: 'none' }}>LIVE</text>
+    </>
+  ),
+  kura: () => (
+    <>
+      <ellipse cx="66" cy="186" rx="15" ry="8" fill="#A9C98A" />
+      <ellipse cx="134" cy="186" rx="15" ry="8" fill="#A9C98A" />
+      <ellipse cx="44" cy="140" rx="12" ry="19" transform="rotate(22 44 140)" fill="#A9C98A" />
+      <Shaded id="ms-kura" d="M100 96Q164 98 166 146Q166 188 100 190Q34 188 34 146Q36 98 100 96Z" fill="#6E9E5A" shade="rgba(20,50,20,.22)" cy={200} />
+      <g fill="#86B470" strokeWidth="2.2">
+        <path d="M46 124l12-7 12 7v13l-12 7-12-7z" /><path d="M130 124l12-7 12 7v13l-12 7-12-7z" /><path d="M88 104l12-6 12 6v10l-12 6-12-6z" />
+      </g>
+      <ellipse cx="100" cy="156" rx="37" ry="31" fill="#E8D9A0" />
+      <path d="M66 148h68M68 164h64M100 126v60" fill="none" stroke="#C9B77A" strokeWidth="2.2" />
+      <rect x="16" y="124" width="36" height="28" rx="3" fill="#FFF8EC" strokeWidth="2.6" />
+      <rect x="20" y="118" width="36" height="28" rx="3" fill="#FFF8EC" strokeWidth="2.6" />
+      <path d="M25 126h26M25 133h26M25 140h18" fill="none" stroke="#B9C4BE" strokeWidth="2" />
+      <ellipse cx="100" cy="82" rx="29" ry="26" fill="#A9C98A" />
+      <Eye x={89} y={82} r={5} /><Eye x={111} y={82} r={5} />
+      <rect x="77" y="74" width="23" height="16" rx="4" fill="rgba(220,232,247,.35)" strokeWidth="2.6" />
+      <rect x="100" y="74" width="23" height="16" rx="4" fill="rgba(220,232,247,.35)" strokeWidth="2.6" />
+      <path d="M93 98h14" fill="none" strokeWidth="2.4" />
+      <Blush at={[[78, 94], [122, 94]]} />
+      <path d="M84 62q6-4 12-4" fill="none" stroke={SHINE} strokeWidth="2.4" />
+      <ellipse cx="150" cy="146" rx="11" ry="9" fill="#A9C98A" />
+      <rect x="146" y="106" width="13" height="24" rx="5" fill="#8E5A2B" />
+      <rect x="138" y="128" width="29" height="11" rx="3" fill="#D2532A" />
+    </>
+  ),
+  kambing: () => (
+    <>
+      <rect x="76" y="176" width="15" height="14" rx="3" fill="#5A4A40" />
+      <rect x="109" y="176" width="15" height="14" rx="3" fill="#5A4A40" />
+      <Shaded id="ms-kambing" d="M100 118Q142 118 142 154Q142 186 100 186Q58 186 58 154Q58 118 100 118Z" fill="#F2EEE6" shade="rgba(120,110,100,.2)" cy={198} />
+      <Line d="M80 52Q60 28 46 42Q40 58 58 62" color="#A0764A" w={7} />
+      <Line d="M120 52Q140 28 154 42Q160 58 142 62" color="#A0764A" w={7} />
+      <ellipse cx="54" cy="80" rx="17" ry="7" transform="rotate(-18 54 80)" fill="#F2EEE6" />
+      <ellipse cx="146" cy="80" rx="17" ry="7" transform="rotate(18 146 80)" fill="#F2EEE6" />
+      <ellipse cx="54" cy="80" rx="10" ry="3" transform="rotate(-18 54 80)" fill="#F3B4C0" stroke="none" />
+      <ellipse cx="146" cy="80" rx="10" ry="3" transform="rotate(18 146 80)" fill="#F3B4C0" stroke="none" />
+      <path d="M92 124L100 152L108 124Z" fill="#E6D9CC" />
+      <path d="M100 44Q132 46 132 84Q132 118 100 128Q68 118 68 84Q68 46 100 44Z" fill="#F2EEE6" />
+      <ellipse cx="100" cy="110" rx="18" ry="12" fill="#E6D9CC" stroke="none" />
+      <g fill={O} stroke="none"><ellipse cx="94" cy="108" rx="2" ry="3" /><ellipse cx="106" cy="108" rx="2" ry="3" /></g>
+      <Eye x={86} y={80} r={5.5} /><Eye x={114} y={80} r={5.5} />
+      <path d="M76 68Q84 60 93 66M108 70Q116 68 124 70" fill="none" strokeWidth="3" />
+      <path d="M92 120Q100 115 108 120" fill="none" strokeWidth="2.4" />
+      <Blush at={[[76, 96], [124, 96]]} />
+      <path d="M118 46q8 2 12 10" fill="none" stroke={SHINE} strokeWidth="2.4" />
+      <ellipse cx="138" cy="144" rx="10" ry="8" fill="#F2EEE6" />
+      <rect x="136" y="114" width="8" height="26" rx="3" transform="rotate(20 140 127)" fill="#3A3550" />
+      <circle cx="148" cy="110" r="10" fill="#6E7A74" />
+      <path d="M142 106h12M141 111h14M143 116h10" fill="none" stroke="#A8B4AE" strokeWidth="1.4" />
+      <path d="M160 92l8-6M162 102h10M158 82l4-8" fill="none" strokeWidth="2.4" />
+    </>
+  ),
+  cumi: () => (
+    <>
+      {[64, 78, 92, 108, 122, 136].map((x, i) => (
+        <Line key={i} d={`M${x} 148Q${x - 9} 166 ${x} 178Q${x + 9} 190 ${x - 2} 196`} color={i % 2 ? '#F7B8D3' : '#F49AC1'} w={7} />
+      ))}
+      <path d="M74 62L48 54L66 86Z" fill="#F49AC1" />
+      <path d="M126 62L152 54L134 86Z" fill="#F49AC1" />
+      <Shaded id="ms-cumi" d="M100 22Q142 68 140 120Q138 160 100 162Q62 160 60 120Q58 68 100 22Z" fill="#F49AC1" shade="rgba(160,40,90,.18)" cy={176} rx={70} ry={30} />
+      <g fill="#F7C2DA" stroke="none"><circle cx="90" cy="60" r="5" /><circle cx="110" cy="74" r="4" /><circle cx="96" cy="84" r="3" /></g>
+      <path d="M82 50q6-12 14-18" fill="none" stroke={SHINE} strokeWidth="3" />
+      <Line d="M58 108Q58 66 100 64Q142 66 142 108" color="#3A3550" w={5} />
+      <rect x="48" y="98" width="17" height="30" rx="7" fill="#4FB0A8" />
+      <rect x="135" y="98" width="17" height="30" rx="7" fill="#4FB0A8" />
+      <Eye x={86} y={118} r={8} /><Eye x={114} y={118} r={8} />
+      <path d="M90 138Q100 146 110 138" fill="none" strokeWidth="2.6" />
+      <Blush at={[[78, 132], [122, 132]]} />
+      <circle cx="34" cy="150" r="17" fill={O} />
+      <circle cx="34" cy="150" r="11" fill="none" stroke="#5A5470" strokeWidth="1.4" />
+      <circle cx="34" cy="150" r="5" fill="#D2532A" strokeWidth="1.6" />
+      <path d="M160 40v-14l9-3v13" fill="none" strokeWidth="2.6" />
+      <ellipse cx="157" cy="40" rx="4" ry="3" fill={O} />
+      <ellipse cx="166" cy="36" rx="4" ry="3" fill={O} />
+    </>
+  ),
+  kodok: () => (
+    <>
+      <ellipse cx="62" cy="182" rx="23" ry="10" fill="#6DB35A" />
+      <ellipse cx="138" cy="182" rx="23" ry="10" fill="#6DB35A" />
+      <Shaded id="ms-kodok" d="M100 104Q150 106 150 148Q150 186 100 188Q50 186 50 148Q50 106 100 104Z" fill="#7CC46A" shade="rgba(30,80,20,.2)" cy={198} />
+      <ellipse cx="100" cy="160" rx="30" ry="22" fill="#DDF0C8" stroke="none" />
+      <path d="M68 110L100 128L132 110L130 124L100 142L70 124Z" fill="#2F7A5C" />
+      <path d="M84 120l16 9 16-9" fill="none" stroke="#C9F27A" strokeWidth="2.4" />
+      <ellipse cx="100" cy="94" rx="47" ry="30" fill="#7CC46A" />
+      <path d="M56 86Q58 46 100 44Q142 46 144 86Z" fill="#2F7A5C" />
+      <path d="M100 45v40" fill="none" stroke="#F2B63C" strokeWidth="5" />
+      <path d="M54 86Q100 95 146 86" fill="none" strokeWidth="4" />
+      <circle cx="72" cy="66" r="15" fill="#7CC46A" />
+      <circle cx="128" cy="66" r="15" fill="#7CC46A" />
+      <Eye x={72} y={66} r={7.5} /><Eye x={128} y={66} r={7.5} />
+      <path d="M72 104Q100 124 128 104" fill="none" strokeWidth="3" />
+      <path d="M94 113q6 5 12 0" fill="#F08CA8" strokeWidth="2" />
+      <Blush at={[[66, 102], [134, 102]]} />
+      <ellipse cx="142" cy="150" rx="10" ry="8" fill="#7CC46A" />
+      <rect x="140" y="128" width="20" height="30" rx="4" fill={O} />
+      <rect x="143" y="132" width="14" height="20" rx="2" fill="#9EC3F0" stroke="none" />
+      <path d="M150 136l1.6 3.4 3.6.4-2.7 2.4.8 3.6-3.3-1.9-3.3 1.9.8-3.6-2.7-2.4 3.6-.4Z" fill="#F2B63C" strokeWidth="1" />
+    </>
+  ),
+  buaya: () => (
+    <>
+      <path d="M58 172Q16 182 8 152Q26 164 48 152Z" fill="#5E8C4A" />
+      <ellipse cx="74" cy="188" rx="16" ry="7" fill="#5E8C4A" />
+      <ellipse cx="126" cy="188" rx="16" ry="7" fill="#5E8C4A" />
+      <Shaded id="ms-buaya" d="M100 110Q152 112 154 152Q154 190 100 190Q46 190 46 152Q48 112 100 110Z" fill="#5E8C4A" shade="rgba(20,40,10,.25)" cy={200} />
+      <ellipse cx="100" cy="162" rx="30" ry="25" fill="#C9D99A" />
+      <path d="M74 152h52M72 164h56M76 176h48" fill="none" stroke="#A6B878" strokeWidth="2" />
+      <Line d="M68 122Q100 148 132 122" color="#F2B63C" w={4} />
+      <circle cx="100" cy="137" r="8" fill="#F2B63C" />
+      <path d="M100 132v10M97 134h5a2 2 0 0 1 0 4h-4a2 2 0 0 0 0 4h5" fill="none" strokeWidth="1.4" />
+      <path d="M58 96Q58 56 100 54Q142 56 142 96Q142 112 100 114Q58 112 58 96Z" fill="#5E8C4A" />
+      <path d="M76 96Q76 80 100 80Q124 80 124 96V128Q124 142 100 142Q76 142 76 128Z" fill="#6E9C58" />
+      <path d="M78 112l4 5 4-5 4 5 4-5M106 112l4 5 4-5 4 5 4-5" fill="#FFF8EC" strokeWidth="1.8" />
+      <g fill={O} stroke="none"><ellipse cx="94" cy="133" rx="2.4" ry="3.4" /><ellipse cx="106" cy="133" rx="2.4" ry="3.4" /></g>
+      <circle cx="78" cy="58" r="14" fill="#5E8C4A" />
+      <circle cx="122" cy="58" r="14" fill="#5E8C4A" />
+      <Eye x={78} y={60} r={6} /><Eye x={122} y={60} r={6} />
+      <path d="M66 46L88 52M134 46L112 52" fill="none" strokeWidth="3.4" />
+      <path d="M86 86q6-4 14-3" fill="none" stroke={SHINE} strokeWidth="2.4" />
+      <ellipse cx="150" cy="150" rx="11" ry="9" fill="#5E8C4A" />
+      {[-24, -8, 8].map((r, i) => <rect key={i} x="146" y="112" width="22" height="34" rx="2" transform={`rotate(${r} 156 146)`} fill={i === 1 ? '#8FD6A8' : '#6FC48E'} strokeWidth="2.4" />)}
+      <path d="M160 6l3 7 7 .6-5.4 4.6 1.7 7-6.3-3.8-6.3 3.8 1.7-7-5.4-4.6 7-.6Z" fill="#F2B63C" strokeWidth="1.8" />
+    </>
+  ),
+  gajah: () => (
+    <>
+      <ellipse cx="46" cy="92" rx="30" ry="38" fill="#9AA3B5" />
+      <ellipse cx="46" cy="92" rx="19" ry="27" fill="#E6B8C8" stroke="none" />
+      <ellipse cx="154" cy="92" rx="30" ry="38" fill="#9AA3B5" />
+      <ellipse cx="154" cy="92" rx="19" ry="27" fill="#E6B8C8" stroke="none" />
+      <rect x="70" y="168" width="23" height="24" rx="7" fill="#8A93A6" />
+      <rect x="107" y="168" width="23" height="24" rx="7" fill="#8A93A6" />
+      <Shaded id="ms-gajah" d="M100 112Q148 114 148 156Q148 188 100 188Q52 188 52 156Q52 114 100 112Z" fill="#2E3A5C" shade="rgba(0,0,0,.22)" cy={198} />
+      <path d="M82 114L100 148L118 114Z" fill="#FFF8EC" />
+      <path d="M100 124L93 133L100 164L107 133Z" fill="#D2532A" strokeWidth="2.4" />
+      <path d="M70 124L88 146M130 124L112 146" fill="none" stroke="#4A5A85" strokeWidth="2.4" />
+      <ellipse cx="100" cy="80" rx="39" ry="37" fill="#9AA3B5" />
+      <path d="M92 44q-2-8 4-10M100 43q0-8 6-9" fill="none" strokeWidth="2.4" />
+      <Line d="M84 106Q76 122 86 130" color="#FFF8EC" w={5} />
+      <Line d="M116 106Q124 122 114 130" color="#FFF8EC" w={5} />
+      <Line d="M100 96Q100 140 118 148Q130 150 128 138" color="#9AA3B5" w={13} />
+      <path d="M96 116h8M96 126h8" fill="none" stroke="#7A8398" strokeWidth="1.8" />
+      <Eye x={86} y={76} r={5.5} /><Eye x={114} y={76} r={5.5} />
+      <circle cx="114" cy="76" r="10" fill="rgba(255,255,255,.25)" stroke="#F2B63C" strokeWidth="2.6" />
+      <path d="M124 80Q130 96 126 110" fill="none" stroke="#F2B63C" strokeWidth="1.6" />
+      <path d="M76 64L94 68M106 68L124 64" fill="none" strokeWidth="3" />
+      <Blush at={[[74, 92], [126, 92]]} />
+      <path d="M74 58q6-10 16-12" fill="none" stroke={SHINE} strokeWidth="2.6" />
+      <path d="M118 128h18v6q0 7-9 7t-9-7Z" fill="#FFF8EC" strokeWidth="2.4" />
+      <ellipse cx="127" cy="142" rx="13" ry="3" fill="#FFF8EC" strokeWidth="2.2" />
+      <path d="M124 122q-2-4 0-8M130 122q-2-4 0-8" fill="none" stroke="#A8B4AE" strokeWidth="1.8" />
+    </>
+  )
+});
+KINDS.push('kucing', 'kura', 'kambing', 'cumi', 'kodok', 'buaya', 'gajah');
+
 /** @param {{ kind?: string, flip?: boolean, still?: boolean }} props */
 export default function Musuh({ kind = 'tikus', flip = false, still = false }) {
   const Art = ART[kind] || ART.tikus;

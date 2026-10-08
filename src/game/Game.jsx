@@ -19,10 +19,12 @@ export default class Game extends Component {
     this.state = { ...this.state, ...this.energyPatch(this.state, Date.now()) };
     if (this.state.best.length < C.CHAPTERS.length) this.state.best = this.state.best.concat(Array(C.CHAPTERS.length - this.state.best.length).fill(0));
     // One-time gift of new gear for saves made before it existed.
-    const gift = C.NEW_GEAR_GIFT;
-    if (saved && !(saved.state.gifts || []).includes(gift.id)) {
-      this.state = { ...this.state, bag: this.state.bag.concat(gift.items), gifts: (saved.state.gifts || []).concat(gift.id),
-        toast: { id: this.uid(), text: `Kiriman datang: ${gift.items.map(id => C.ITEMS[id].name).join(' dan ')}. Pengirimnya tidak menulis nama.`, until: Date.now() + 5000 } };
+    const had = saved ? saved.state.gifts || [] : null;
+    const due = had ? C.GEAR_GIFTS.filter(g => !had.includes(g.id)) : [];
+    if (due.length) {
+      const items = due.flatMap(g => g.items);
+      this.state = { ...this.state, bag: this.state.bag.concat(items), gifts: had.concat(due.map(g => g.id)),
+        toast: { id: this.uid(), text: `Kiriman datang: ${items.map(id => C.ITEMS[id].name).join(', ')}. Pengirimnya tidak menulis nama.`, until: Date.now() + 5000 } };
     }
   }
   uid() { this._uid = (this._uid || 1000) + 1; return this._uid; }
@@ -98,7 +100,7 @@ export default class Game extends Component {
       best: [days, days, Math.round(days * 0.7)].concat(Array(C.CHAPTERS.length - 3).fill(0)),
       chests: { '0-0': 1, '0-1': 1, '0-2': 1, '1-0': 1, '1-1': 1, '1-2': 1, '2-0': 1 },
       equipped: { senjata: 'sumpit', topi: 'panci', baju: 'syal', kalung: 'tutup', sabuk: 'rafia', sepatu: 'sandal' },
-      bag: ['centong', 'raket', 'helm', 'caping', 'gesper', 'payung', 'pramuka', 'jashujan', 'cincin', 'kaoskaki', 'payung', 'cincin'], gifts: [C.NEW_GEAR_GIFT.id],
+      bag: ['centong', 'raket', 'helm', 'caping', 'gesper', 'payung', 'pramuka', 'jashujan', 'cincin', 'kaoskaki', 'payung', 'cincin', 'kipasangin', 'bawang'], gifts: C.GEAR_GIFTS.map(g => g.id),
       pity: 2, sold: {}, bubble: 0, speed: 1, daily: false, act: null, heroPoseIdx: 0, openJ: null, tick: 0, journal: this.seedJournal(days),
       run: null, offer: null, battle: null, result: null, pull: null, toast: null, shake: null
     };
@@ -122,7 +124,7 @@ export default class Game extends Component {
       if (screen === 'skill') { s.run.day = d - 1; s.offer = { kind: 'lvl', from: 5, to: 6, ids: ['kipas', 'tidur', 'statis'], rerolls: 1 }; }
     } else if (screen === 'battle') {
       s.screen = 'battle'; s.run = mkRun(); s.run.day = days; s.run.hp = 640; s.act = { who: 'hero', t: 0 };
-      const en = this.makeEnemy('angsa', days, 2); en.hp = Math.round(en.maxHp * 0.54);
+      const en = this.makeEnemy(p.enemy && C.ENEMIES[p.enemy] ? p.enemy : 'angsa', days, 2); en.hp = Math.round(en.maxHp * 0.54);
       s.battle = {
         enemy: en, final: true, turn: 7, heroTurn: true, ult: 80, hits: 6, firstDone: true, napUsed: false, over: null, proc: 'kipas',
         log: [
@@ -413,6 +415,9 @@ export default class Game extends Component {
       } else if (wid === 'ulekan') {
         for (const p of [0.45, 0.65, 0.85]) { const d = strike(p); total += d; push('enemy', `−${d}`, 'hit'); }
         const last = strike(1.7); total += last; push('enemy', `HALUS ${last}`, 'crit'); fxAt('tanah', true);
+      } else if (wid === 'kipasangin') {
+        for (let i = 0; i < 3; i++) { const d = strike(0.85); total += d; push('enemy', `WUSH ${d}`, 'skill'); }
+        b.quake = Math.min(3, (b.quake || 0) + 1); fxAt('angin', true);
       } else if (wid === 'gitar') {
         total = strike(2.8); const h = Math.round(r.maxHp * 0.2); r.hp = Math.min(r.maxHp, r.hp + h);
         b.stunGuard = false; stunFor(); push('enemy', `KONSER ${total}`, 'crit'); push('enemy', 'TERPESONA', 'miss'); push('hero', `+${h}`, 'heal');
@@ -438,9 +443,18 @@ export default class Game extends Component {
         if (!b.mocked) { b.mocked = true; banner = { id: this.uid(), text: 'Sindiran Halus!' }; say(`Santoni berkata pelan, "Oh, masih berdiri?" ${b.enemy.name} tersinggung secara fisik.`, 'skill'); }
       }
       let total = 0;
-      const dmg = Math.max(1, Math.round(r.atk * mult - b.enemy.def * 0.5)); hit(dmg); total += dmg;
-      push('enemy', crit ? `KRITIS ${dmg}` : `−${dmg}`, crit ? 'crit' : 'hit');
-      say(crit ? `Santoni menatap kosong, lalu memukul. Kritis. ${dmg}.` : `Santoni memukul ${b.enemy.name}. ${dmg}.`, crit ? 'crit' : 'plain');
+      // Enemy traits that soften Santoni's basic hit.
+      if (b.inked) { mult *= 0.5; b.inked = false; }
+      if (e.trait === 'CANGKANG' && b.enemy.hp > b.enemy.maxHp * 0.5) mult *= 0.65;
+      const posed = e.trait === 'BERPOSE' && Math.random() < 0.2;
+      const dmg = posed ? 0 : Math.max(1, Math.round(r.atk * mult - b.enemy.def * 0.5)); hit(dmg); total += dmg;
+      if (posed) {
+        push('enemy', 'BERPOSE', 'miss');
+        say(`${name} berpose untuk kamera. Pukulan Santoni hanya mengenai ring light.`, 'enemy');
+      } else {
+        push('enemy', crit ? `KRITIS ${dmg}` : `−${dmg}`, crit ? 'crit' : 'hit');
+        say(crit ? `Santoni menatap kosong, lalu memukul. Kritis. ${dmg}.` : `Santoni memukul ${b.enemy.name}. ${dmg}.`, crit ? 'crit' : 'plain');
+      }
       if (n('kembaran') && Math.random() < Math.min(0.6, 0.3 * n('kembaran')) && b.enemy.hp > 0) {
         const d = Math.round(r.atk * 0.7); hit(d); total += d; push('enemy', `KEMBARAN ${d}`, 'skill'); banner = { id: this.uid(), text: 'Kembaran!' }; proc = 'kembaran'; act.twin = true;
         say(`Panda merah yang mirip Santoni ikut memukul. Ia lalu pergi tanpa pamit. ${d}.`, 'skill');
@@ -516,6 +530,11 @@ export default class Game extends Component {
       } else {
         const enemyAtk = b.enemy.atk * (1 - 0.15 * (b.quake || 0));
         let dmg = Math.max(1, Math.round(enemyAtk * (0.9 + Math.random() * 0.2) - r.def * 0.5));
+        b.eTurns = (b.eTurns || 0) + 1;
+        let traitLine = null;
+        if (e.trait === 'ARGUMEN' && b.eTurns % 3 === 0) { dmg = Math.round(dmg * 1.6); traitLine = `${name} mengeluarkan argumen pamungkas. Santoni tidak bisa membantah.`; }
+        if (e.trait === 'INJAK' && b.eTurns % 3 === 0) { dmg = Math.round(dmg * 1.8); traitLine = `${name} menginjak dengan wibawa penuh. Tanah ikut rapat.`; fxAt('tanah', true); }
+        if (e.trait === 'NGEBUT') { dmg = Math.round(dmg * 1.2); traitLine = `${name} menabrak dua kali. Bintang lima, katanya.`; }
         const boxed = n('kardus') && !b.boxUsed;
         if (boxed) { dmg = Math.max(1, Math.round(dmg * 0.5)); b.boxUsed = true; proc = 'kardus'; softBanner('Kardus Bekas!'); push('hero', 'SETENGAH', 'miss'); }
         let absorbed = 0;
@@ -528,6 +547,13 @@ export default class Game extends Component {
           : absorbed && !b.shield ? `Perisai batu Santoni retak. Sisanya kena Santoni. ${dmg}.`
           : boxed ? `${b.enemy.name} memukul kardus. Kardusnya penyok, Santoni tidak terlalu. ${dmg}.`
           : Math.random() < 0.5 ? `${e.hit} ${dmg}.` : `${b.enemy.name} menyerang. ${dmg}.`, boxed || absorbed ? 'skill' : 'enemy');
+        if (traitLine) { say(traitLine, 'enemy'); push('enemy', e.trait, 'crit'); }
+        if (e.trait === 'BUNGA' && dmg > 0) {
+          const h = Math.round(dmg * 0.25); b.enemy.hp = Math.min(b.enemy.maxHp, b.enemy.hp + h); push('enemy', `+${h} BUNGA`, 'heal');
+        }
+        if (e.trait === 'TINTA' && !b.inked && Math.random() < 0.3) {
+          b.inked = true; push('hero', 'TINTA', 'miss'); say(`${name} menyemprot tinta. Pandangan Santoni gelap. Lebih gelap dari biasanya.`, 'enemy');
+        }
         if (n('sabar')) {
           b.rage = (b.rage || 0) + 1; proc = proc || 'sabar'; push('hero', `GERAM +${7 * n('sabar') * b.rage}%`, 'skill');
           if (b.rage === 1) { softBanner('Kesabaran Tipis!'); say('Santoni mulai menghitung sampai sepuluh. Ia berhenti di tujuh.', 'skill'); }
@@ -678,7 +704,7 @@ export default class Game extends Component {
       chests: chestFor(s.chapter), chestPct: pct(s.best[s.chapter], days), goRun: g(() => this.startRun()),
       toggleAuto: g(() => this.toggleAuto()), pauseIcon: 'pause', runChapterNo: 1, runChapterUpper: '', day: 0, maxDay: days, runCoins: '0', dayPct: '0%',
       weatherIcon: 'wb_sunny', weather: '', walkStatus: '', lvl: 1, hpPct: '100%', hpLabel: '', xpPct: '0%', xpLabel: '', atk: '0', def: '0',
-      logCount: 0, logRef: this.logRef, log: [], hasEvent: false, evTagBg: '#2B1E18', evTag: '', evIsEnemy: false, evIcon: 'help', evName: '', evSub: '', evText: '', evChoices: [], hasEvFoot: false, evFoot: '',
+      logCount: 0, logRef: this.logRef, log: [], evTrait: null, hasEvent: false, evTagBg: '#2B1E18', evTag: '', evIsEnemy: false, evIcon: 'help', evName: '', evSub: '', evText: '', evChoices: [], hasEvFoot: false, evFoot: '',
       noSkills: skillTiles.length === 0, ownedSkills: skillTiles, cycleSpeed: g(() => this.setState({ speed: (s.speed % 3) + 1 })), speedLabel: `×${s.speed}`, quitRun: g(() => this.quitRun()),
       hasOffer: false, burst: null, offerTitle: '', offerHasLvl: false, offerFrom: 0, offerTo: 0, offerSub: '', offerCards: [], reroll: g(() => this.reroll()), rerollDisabled: true, rerollOpacity: 0.4, rerollLeft: 0,
       bTurn: 1, bBoss: false, speeds: [1, 2, 3].map(n => ({ n, set: g(() => this.setState({ speed: n })), bg: s.speed === n ? '#F2B63C' : 'transparent', fg: s.speed === n ? '#2B1E18' : '#FFF8EC' })),
@@ -719,7 +745,7 @@ export default class Game extends Component {
         if (gOn) choices.push(e.boss
           ? { label: 'Pose Seram', icon: 'sports_martial_arts', hint: 'bos kebal', bg: '#EADBC5', opacity: 0.55, onClick: g(() => this.toast(e.immune)) }
           : { label: 'Pose Seram', icon: 'sports_martial_arts', hint: `${Math.round(this.bluffChance(r) * 100)}% kabur`, bg: '#FFF8EC', opacity: 1, onClick: g(() => this.choose('b')) });
-        Object.assign(v, { evKind: ev.enemy, hasEvent: true, evTag: e.boss ? 'BOS MENGHADANG' : 'ADA YANG MENGHADANG', evTagBg: '#D2532A', evIsEnemy: true, evIcon: e.icon, evName: e.name,
+        Object.assign(v, { evKind: ev.enemy, evTrait: e.trait ? { tag: e.trait, desc: e.traitDesc } : null, hasEvent: true, evTag: e.boss ? 'BOS MENGHADANG' : 'ADA YANG MENGHADANG', evTagBg: '#D2532A', evIsEnemy: true, evIcon: e.icon, evName: e.name,
           evSub: `LV ${en.lvl} · HP ${fmt(en.maxHp)} · ATK ${fmt(en.atk)}`, evText: e.intro, evChoices: choices, hasEvFoot: gOn,
           evFoot: e.boss ? e.immune : 'Pose Seram: Santoni berdiri dengan dua kaki. Kalau gagal, musuh tersinggung — menyerang duluan dengan ATK +20%.' });
       }
@@ -739,6 +765,9 @@ export default class Game extends Component {
       // Status chips + visual tells for skills whose effects build up over a fight.
       const n = id => this.stacks(r, id), mock = n('sindiran') && en.hp > 0 && en.hp < en.maxHp * 0.35;
       const eStatus = [], hStatus = [];
+      const eDef = C.ENEMIES[en.key];
+      if (eDef.trait) eStatus.push({ icon: 'info', label: eDef.trait, bg: '#3A3550' });
+      if (b.inked) hStatus.push({ icon: 'water_drop', label: 'TERKENA TINTA', bg: '#3A3550' });
       if (b.heat) eStatus.push({ icon: 'local_fire_department', label: `PEDAS ${b.heat}/5`, bg: '#D2532A' });
       if (mock) eStatus.push({ icon: 'sentiment_dissatisfied', label: 'TERSINDIR +' + 50 * n('sindiran') + '%', bg: '#7E43B5' });
       if (b.rage) hStatus.push({ icon: 'hourglass_bottom', label: `GERAM +${7 * n('sabar') * b.rage}%`, bg: '#B0620A' });
@@ -798,6 +827,8 @@ export default class Game extends Component {
           line: done ? `Selesai · ${days}/${days} hari` : un ? `Rekor: Hari ${s.best[i]} / ${days}` : `Selesaikan Bab ${i} dulu`,
           endIcon: done ? 'check_circle' : un ? 'chevron_right' : 'lock', endFg: done ? '#2F7A5C' : '#6E5A4E',
           cardBg: un ? '#FFF8EC' : '#EDE2D2', opacity: un ? 1 : 0.62, thumbBg: un ? (done ? '#CFE6D6' : '#FBE6B4') : '#E2D5C3',
+          lineup: c.pool.map(k => ({ kind: k, name: C.ENEMIES[k].name, role: '' })).concat([{ kind: c.mid, name: C.ENEMIES[c.mid].name, role: 'TENGAH' }, { kind: c.boss, name: C.ENEMIES[c.boss].name, role: 'BOS' }]),
+          bossName: C.ENEMIES[c.boss].name, bossTrait: C.ENEMIES[c.boss].traitDesc || C.ENEMIES[c.boss].intro, power: `KEKUATAN MUSUH +${i * 14}%`,
           select: g(() => this.selectChapter(i)), dayPct: pct(s.best[i], days), chests: chestFor(i), cta: done ? 'MAIN LAGI' : 'LANJUTKAN', play: g(() => this.startRun()) };
       });
     }

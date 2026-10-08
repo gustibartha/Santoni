@@ -142,6 +142,12 @@ export default function Run({ v }) {
             </div>
           )}
           <div style={{ marginTop: "11px", font: "500 15px/1.45 'Bricolage Grotesque'", textWrap: "pretty" }}>{v.evText}</div>
+          {v.evTrait && (
+            <div style={{ display: "flex", alignItems: "flex-start", gap: "7px", marginTop: "9px", padding: "7px 9px", borderRadius: "11px", background: "#EDE6F5", font: "500 12px/1.35 'Bricolage Grotesque'", color: "#3A3550" }}>
+              <span style={{ flex: "none", padding: "3px 6px", borderRadius: "6px", background: "#3A3550", color: "#FFF8EC", font: "500 9px/1 'DM Mono',monospace", letterSpacing: ".08em" }}>{v.evTrait.tag}</span>
+              <span>{v.evTrait.desc}</span>
+            </div>
+          )}
           <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "14px" }}>
             {v.evChoices.map((c, i) => (
                 <button key={c.key ?? c.id ?? i} onClick={c.onClick} className="dc-press" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px", minHeight: "52px", padding: "8px 10px 8px 14px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: c.bg, boxShadow: "0 4px 0 #2B1E18", color: "#2B1E18", font: "800 15px/1.2 'Bricolage Grotesque'", textAlign: "left", cursor: "pointer", opacity: c.opacity, '--press-tf': "translateY(3px)", '--press-sh': "0 1px 0 #2B1E18" }}>

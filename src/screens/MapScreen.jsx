@@ -1,4 +1,5 @@
 import ImageSlot from '../components/ImageSlot.jsx';
+import Musuh from '../characters/Musuh.jsx';
 
 export default function MapScreen({ v }) {
   return (
@@ -22,6 +23,18 @@ export default function MapScreen({ v }) {
                     <div style={{ padding: "12px 14px 14px" }}>
                       <div style={{ font: "22px/1.1 'Bagel Fat One',system-ui" }}>{ch.name}</div>
                       <div style={{ font: "500 13px/1.4 'Bricolage Grotesque'", color: "#5B4A40", marginTop: "5px", textWrap: "pretty" }}>{ch.desc}</div>
+                      <div style={{ marginTop: "10px", padding: "8px 10px 9px", borderRadius: "14px", background: "#F3E6D3" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", font: "500 9px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#6E5A4E" }}><span>PENGHUNI</span><span>{ch.power}</span></div>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginTop: "7px" }}>
+                          {ch.lineup.map(m => (
+                            <div key={m.role + m.kind} title={m.name} style={{ position: "relative", width: "38px", height: "38px", boxSizing: "border-box", border: `2px solid ${m.role === 'BOS' ? '#D2532A' : '#2B1E18'}`, borderRadius: "11px", background: m.role === 'BOS' ? "#FBE3D8" : "#FFF8EC" }}>
+                              <div style={{ position: "absolute", inset: "2px 2px 0" }}><Musuh kind={m.kind} still={true} /></div>
+                              {m.role && <span style={{ position: "absolute", left: "50%", bottom: "-7px", transform: "translateX(-50%)", padding: "1px 4px", borderRadius: "5px", background: m.role === 'BOS' ? "#D2532A" : "#2B1E18", color: "#FFF8EC", font: "500 7px/1.2 'DM Mono',monospace", letterSpacing: ".04em", whiteSpace: "nowrap" }}>{m.role}</span>}
+                            </div>
+                          ))}
+                        </div>
+                        <div style={{ marginTop: "11px", font: "600 11.5px/1.35 'Bricolage Grotesque'", color: "#5B4A40" }}><b>Bos: {ch.bossName}.</b> {ch.bossTrait}</div>
+                      </div>
                       <div style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".06em", color: "#6E5A4E", marginTop: "10px" }}>{ch.best}</div>
                       <div style={{ position: "relative", height: "46px", margin: "10px 16px 0 2px" }}>
                         <div style={{ position: "absolute", left: "0", right: "0", top: "11px", height: "10px", boxSizing: "border-box", border: "2px solid #2B1E18", borderRadius: "6px", background: "#EADBC5", overflow: "hidden" }}><div style={{ height: "100%", width: ch.dayPct, background: "#D2532A" }} /></div>

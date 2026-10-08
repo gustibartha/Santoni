@@ -65,6 +65,16 @@ export const ENEMIES = {
   lebah: { name: 'Lebah Notaris', icon: 'emoji_nature', hp: 1300, atk: 72, def: 16, boss: true, intro: 'Semua perkelahian harus dilegalisir.', hit: 'Lebah Notaris menyengat lalu mencap.', lose: 'Ia mengesahkan kekalahannya sendiri. Rapi.', immune: 'Notaris tidak bisa digertak. Semua sudah tercatat.' },
   angsa: { name: 'Angsa Pengacara', icon: 'gavel', hp: 2000, atk: 78, def: 20, boss: true, intro: 'Ia mewakili semua angsa yang pernah merasa dirugikan.', hit: 'Angsa Pengacara mengajukan keberatan. Dengan paruh.', lose: 'Ia mengajukan banding. Banding ditolak.', immune: 'Bos tidak bisa digertak. Bos punya pengacara. Bos adalah pengacara.' }
 };
+// Newer enemies have a battle trait (see Game.battleStep); `trait` is the short tag, `traitDesc` the rule.
+Object.assign(ENEMIES, {
+  kucing: { name: 'Kucing Influencer', icon: 'photo_camera', hp: 360, atk: 66, def: 8, trait: 'BERPOSE', traitDesc: '20% peluang menghindari serangan biasa Santoni. Ia sedang berpose.', intro: 'Ia sedang siaran langsung. Santoni masuk frame tanpa izin.', hit: 'Kucing Influencer mencakar sambil bilang "jangan lupa like".', lose: 'Ia mengakhiri siaran. Penontonnya tiga, termasuk ibunya.' },
+  kura: { name: 'Kura-Kura Birokrat', icon: 'description', hp: 520, atk: 46, def: 26, trait: 'CANGKANG', traitDesc: 'Serangan biasa Santoni berkurang 35% selama HP-nya di atas setengah.', intro: 'Formulir perkelahian harus diisi rangkap tiga dan dilegalisir.', hit: 'Kura-Kura Birokrat menunda kerusakan, lalu tetap memberikannya.', lose: 'Ia masuk ke cangkang. Urusan dilanjutkan hari Senin.' },
+  kambing: { name: 'Kambing Debat', icon: 'campaign', hp: 400, atk: 70, def: 10, trait: 'ARGUMEN', traitDesc: 'Tiap serangan ketiga adalah argumen pamungkas: kerusakan ×1,6.', intro: 'Ia tidak setuju dengan Santoni. Santoni belum bicara.', hit: 'Kambing Debat menanduk sambil bilang "menurut saya pribadi".', lose: 'Ia setuju untuk tidak setuju. Lalu pergi sambil mengunyah kertas.' },
+  cumi: { name: 'Cumi DJ', icon: 'headphones', hp: 330, atk: 74, def: 6, trait: 'TINTA', traitDesc: '30% peluang menyemprot tinta: serangan Santoni berikutnya hanya setengah.', intro: 'Ia memutar lagu yang sama sejak 2009. Dengan penuh percaya diri.', hit: 'Cumi DJ menyemprot tinta tepat saat bagian drop.', lose: 'Musiknya berhenti. Semua orang diam-diam lega.' },
+  kodok: { name: 'Kodok Ojek', icon: 'two_wheeler', hp: 350, atk: 58, def: 12, trait: 'NGEBUT', traitDesc: 'Menabrak dua kali sekaligus: kerusakan ×1,2.', intro: '"Ke mana, Mas?" Ia tidak menunggu jawaban.', hit: 'Kodok Ojek menyalip, menabrak, lalu minta bintang lima.', lose: 'Ia pergi mencari penumpang lain. Tarifnya naik saat hujan.' },
+  buaya: { name: 'Buaya Darat Rentenir', icon: 'payments', hp: 1700, atk: 80, def: 18, boss: true, trait: 'BUNGA', traitDesc: 'Memulihkan HP sebesar 25% kerusakan yang ia berikan. Bunganya berbunga.', intro: 'Ia meminjamkan uang dengan bunga yang tidak masuk akal. Santoni tidak meminjam.', hit: 'Buaya Darat menggigit. Bunganya ikut menggigit.', lose: 'Ia menghapus semua utang. Sambil menangis di atas tumpukan kuitansi.', immune: 'Rentenir tidak bisa digertak. Rentenir yang biasanya menggertak.' },
+  gajah: { name: 'Gajah Komisaris', icon: 'groups', hp: 2400, atk: 84, def: 24, boss: true, trait: 'INJAK', traitDesc: 'Tiap serangan ketiga menginjak: kerusakan ×1,8 dan tanah bergetar.', intro: 'Ia datang ke rapat hanya untuk menolak semua usulan.', hit: 'Gajah Komisaris menginjak. Dengan sangat berwibawa.', lose: 'Ia menyetujui kekalahannya sendiri. Rapat ditutup lebih awal.', immune: 'Komisaris tidak bisa digertak. Gertakan harus diajukan lewat sekretaris.' }
+});
 export const COMMON = ['tikus', 'bebek', 'kumbang', 'lele', 'kelinci'];
 export const EVENTS = [
   { id: 'batu', text: 'Seekor biawak menjual batu. Katanya batu itu bisa bicara. Batu itu diam saja.',
@@ -132,10 +142,22 @@ export const ITEMS = {
   peluit: { name: 'Kalung Peluit Satpam', type: 'kalung', rar: 'Langka', stat: 'ATK', val: 21, lvl: 8, icon: 'campaign', desc: 'Disita dari Bebek Satpam. Bebeknya masih mencari.' },
   kunci: { name: 'Gantungan Kunci Kenangan', type: 'kalung', rar: 'Epik', stat: 'ATK', val: 29, lvl: 12, icon: 'key', desc: 'Oleh-oleh dari kota yang tidak pernah Santoni datangi.' },
   pinggang: { name: 'Tas Pinggang Turis', type: 'sabuk', rar: 'Langka', stat: 'HP', val: 150, lvl: 7, icon: 'work', desc: 'Berisi permen, tiket bekas, dan rasa ingin tahu.' },
-  bakiak: { name: 'Bakiak Kayu', type: 'sepatu', rar: 'Epik', stat: 'DEF', val: 19, lvl: 10, icon: 'directions_walk', desc: 'Bunyinya terdengar dari tiga desa. Musuh tahu Santoni datang.' }
+  bakiak: { name: 'Bakiak Kayu', type: 'sepatu', rar: 'Epik', stat: 'DEF', val: 19, lvl: 10, icon: 'directions_walk', desc: 'Bunyinya terdengar dari tiga desa. Musuh tahu Santoni datang.' },
+  // Third wave of gear
+  kipasangin: { name: 'Kipas Angin Meja', type: 'senjata', rar: 'Epik', stat: 'ATK', val: 57, lvl: 14, icon: 'mode_fan', desc: 'Tiga kecepatan. Yang ketiga tidak pernah dipakai karena terlalu berisik.' },
+  peci: { name: 'Peci Hitam Licin', type: 'topi', rar: 'Langka', stat: 'HP', val: 165, lvl: 8, icon: 'face', desc: 'Licin sekali. Lalat pun tidak bisa hinggap.' },
+  mahkota: { name: 'Mahkota Kardus', type: 'topi', rar: 'Legendaris', stat: 'HP', val: 330, lvl: 20, icon: 'crown', desc: 'Dibuat dari kardus mi instan. Kewibawaannya asli.' },
+  jaketojek: { name: 'Jaket Ojek Hijau', type: 'baju', rar: 'Langka', stat: 'DEF', val: 16, lvl: 9, icon: 'checkroom', desc: 'Disita dari Kodok Ojek. Masih ada nomor antrean di saku.' },
+  jubah: { name: 'Jubah Mandi Hotel', type: 'baju', rar: 'Epik', stat: 'DEF', val: 23, lvl: 15, icon: 'dry_cleaning', desc: 'Bukan dicuri. Hanya belum dikembalikan.' },
+  bawang: { name: 'Kalung Bawang Putih', type: 'kalung', rar: 'Biasa', stat: 'ATK', val: 12, lvl: 5, icon: 'eco', desc: 'Mengusir vampir dan sebagian besar teman.' },
+  karate: { name: 'Sabuk Karate Pinjaman', type: 'sabuk', rar: 'Epik', stat: 'HP', val: 210, lvl: 14, icon: 'sports_martial_arts', desc: 'Sabuk hitam. Pemiliknya sabuk kuning. Jangan tanya.' },
+  sepaturoda: { name: 'Sepatu Roda Bekas', type: 'sepatu', rar: 'Langka', stat: 'DEF', val: 17, lvl: 11, icon: 'roller_skating', desc: 'Satu rodanya macet. Santoni berbelok ke kiri terus.' }
 };
 // Given once to existing saves so returning players get to try the new gear.
-export const NEW_GEAR_GIFT = { id: 'perlengkapan-baru-1', items: ['raket', 'caping'] };
+export const GEAR_GIFTS = [
+  { id: 'perlengkapan-baru-1', items: ['raket', 'caping'] },
+  { id: 'perlengkapan-baru-2', items: ['kipasangin', 'bawang'] }
+];
 // The weapon with the highest ATK gets the elegant floating animation.
 export const TOP_WEAPON = Object.keys(ITEMS).filter(id => ITEMS[id].type === 'senjata').sort((a, b) => ITEMS[b].val - ITEMS[a].val)[0];
 
@@ -148,6 +170,7 @@ export const ULTIMATES = {
   raket: { name: 'Setrum Massal', desc: '3 sabetan listrik 75% ATK. Musuh pasti lumpuh 1 giliran.', line: 'Santoni menekan tombol raket. Udara berbau gosong.' },
   sapu: { name: 'Sapu Bersih', desc: 'Sapuan 260% ATK. Musuh terhuyung dua kali lipat: ATK −30%.', line: 'Santoni menyapu. Musuh ikut tersapu, bersama debu dan harga dirinya.' },
   ulekan: { name: 'Ulek Sampai Halus', desc: '4 ulekan beruntun 45/65/85/170% ATK. Makin lama makin halus.', line: 'Santoni mengulek dengan irama nenek. Pelan, lalu tidak pelan.' },
+  kipasangin: { name: 'Putaran Tiga', desc: '3 hembusan 85% ATK di kecepatan tertinggi. ATK musuh −15%.', line: 'Santoni memutar kenop ke angka tiga. Untuk pertama kalinya.' },
   gitar: { name: 'Konser Tunggal', desc: 'Petikan 280% ATK. Musuh terpesona 1 giliran, Santoni pulih 20% HP.', line: 'Santoni memetik satu lagu galau. Musuh lupa sedang berkelahi.' },
   none: { name: 'Tamparan Malas', desc: 'Tamparan 220% ATK. Santoni tidak senang harus melakukannya.', line: 'Santoni menghela napas, lalu menampar. Sekali saja.' }
 };
@@ -172,7 +195,11 @@ export const CHAPTERS = [
   { name: 'Pantai Sandal Hilang', icon: 'beach_access', desc: 'Semua sandal kiri berakhir di sini. Yang kanan tidak pernah datang.', pool: ['lele', 'bebek', 'kumbang'], mid: 'kelinci', boss: 'angsa', theme: T('#D3ECF6', '#7FC4DC', '#F3DFA8', '#BFE3F1', '#86C7DE', '#F5E4B4', '#14293A') },
   { name: 'Kebun Durian Jatuh', icon: 'park', desc: 'Pakai helm. Duriannya tidak pilih-pilih kepala.', pool: ['kumbang', 'kelinci', 'tikus', 'lele'], mid: 'lebah', boss: 'angsa', theme: T('#F1EECB', '#A7C66A', '#8FB55A', '#E8E6B0', '#B4CF78', '#E6EDC4', '#1F2A14') },
   { name: 'Gunung Es Teh Manis', icon: 'ac_unit', desc: 'Dingin, manis, dan terlalu banyak gula. Dokter gigi tidak setuju.', pool: ['bebek', 'lele', 'kelinci', 'kumbang'], mid: 'lebah', boss: 'angsa', theme: T('#EAF6F8', '#CDE8EE', '#D9A36A', '#DDF0F4', '#C3E2EA', '#E9C58F', '#1E2A33') },
-  { name: 'Istana Angsa Pengacara', icon: 'castle', desc: 'Semua pintu terkunci. Kuncinya ada di pasal 47.', pool: ['tikus', 'bebek', 'kumbang', 'lele', 'kelinci'], mid: 'lebah', boss: 'angsa', theme: T('#F3E3F0', '#D8B4D8', '#C9A86A', '#EED3EA', '#D3A8D3', '#E8D6A8', '#2A1A2A') }
+  { name: 'Istana Angsa Pengacara', icon: 'castle', desc: 'Semua pintu terkunci. Kuncinya ada di pasal 47.', pool: ['tikus', 'bebek', 'kumbang', 'lele', 'kelinci'], mid: 'lebah', boss: 'angsa', theme: T('#F3E3F0', '#D8B4D8', '#C9A86A', '#EED3EA', '#D3A8D3', '#E8D6A8', '#2A1A2A') },
+  { name: 'Terminal Bus Abadi', icon: 'directions_bus', desc: 'Busnya berangkat "sebentar lagi" sejak 1998. Kodok Ojek menawarkan jalan pintas.', pool: ['kodok', 'kambing', 'tikus'], mid: 'kucing', boss: 'buaya', theme: T('#E4E8EC', '#AEB8C2', '#9AA0A8', '#D6DCE2', '#B4BEC8', '#C9CED4', '#1B2028') },
+  { name: 'Mal Diskon 90%', icon: 'shopping_bag', desc: 'Diskonnya nyata. Harganya dinaikkan dulu kemarin.', pool: ['kucing', 'cumi', 'kelinci', 'kambing'], mid: 'kodok', boss: 'buaya', theme: T('#FBE3EC', '#F2AFC8', '#E9D7C6', '#F8D0DF', '#EFA2BE', '#F3E2D2', '#2A1822') },
+  { name: 'Laut Dalam Karaoke', icon: 'scuba_diving', desc: 'Dua ribu meter di bawah laut. Mikrofonnya tetap menyala.', pool: ['cumi', 'lele', 'kura', 'kodok'], mid: 'buaya', boss: 'gajah', theme: T('#BFE4EA', '#4FA3B8', '#3E7F8F', '#A9D9E2', '#5DB0C2', '#7FC0CC', '#0E1E2A') },
+  { name: 'Menara Rapat Tanpa Akhir', icon: 'apartment', desc: 'Rapat tentang rapat berikutnya. Notulennya sudah 900 halaman.', pool: ['kura', 'kambing', 'kucing', 'cumi', 'tikus'], mid: 'buaya', boss: 'gajah', theme: T('#EEE8DC', '#C8B8A0', '#A8957A', '#E6DCCA', '#CBB89C', '#D8CBB4', '#211D18') }
 ];
 export const OFFERS = [
   { id: 'energi', name: 'Energi ×10', icon: 'bolt', rar: 'Langka', cur: 'gem', price: 50, give: { energy: 10 }, msg: 'Energi +10. Santoni tetap mengantuk.' },
