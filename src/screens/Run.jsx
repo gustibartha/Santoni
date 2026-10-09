@@ -8,11 +8,11 @@ export default function Run({ v }) {
   return (
     <div style={{ position: "absolute", inset: "0", display: "flex", flexDirection: "column", gap: "10px", padding: "14px 12px 12px" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "10px", flex: "none" }}>
-        <button onClick={v.toggleAuto} style={{ width: "42px", height: "42px", flex: "none", display: "grid", placeItems: "center", padding: "0", border: "2.5px solid #2B1E18", borderRadius: "14px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", color: "#2B1E18", font: "24px/1 'Material Symbols Rounded'", cursor: "pointer" }}>{v.pauseIcon}</button>
+        <button onClick={v.toggleAuto} style={{ width: "42px", height: "42px", flex: "none", display: "grid", placeItems: "center", padding: "0", border: "2.5px solid #2B1E18", borderRadius: "14px", background: "#FFF8EC", boxShadow: "var(--lift3)", color: "#2B1E18", font: "24px/1 'Material Symbols Rounded'", cursor: "pointer" }}>{v.pauseIcon}</button>
         <div style={{ flex: "1", minWidth: "0" }}>
           <div style={{ font: "500 10px/1.2 'DM Mono',monospace", letterSpacing: ".08em", color: "#A93D1C", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>BAB {v.runChapterNo} · {v.runChapterUpper}</div>
           <div style={{ display: "flex", alignItems: "baseline", gap: "5px", marginTop: "3px" }}>
-            <span style={{ font: "26px/1 'Bagel Fat One',system-ui" }}>Hari {v.day}</span>
+            <span style={{ font: "26px/1 var(--display)" }}>Hari {v.day}</span>
             <span style={{ font: "700 14px/1 'Bricolage Grotesque'", color: "#5E4A3F" }}>/ {v.maxDay}</span>
           </div>
         </div>
@@ -27,7 +27,7 @@ export default function Run({ v }) {
         <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)", width: "24px", height: "24px", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "8px", background: "#F2B63C", color: "#2B1E18", font: "14px/1 'Material Symbols Rounded'" }}>swords</div>
         <div style={{ position: "absolute", right: "-12px", top: "50%", transform: "translateY(-50%)", width: "28px", height: "28px", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "9px", background: "#2B1E18", color: "#F2B63C", font: "17px/1 'Material Symbols Rounded'" }}>local_fire_department</div>
       </div>
-      <div style={{ position: "relative", height: "168px", flex: "none", border: "2.5px solid #2B1E18", borderRadius: "22px", overflow: "hidden", backgroundColor: v.sceneSky, backgroundImage: "radial-gradient(rgba(43,30,24,.1) 1.2px,transparent 1.5px)", backgroundSize: "10px 10px", boxShadow: "0 3px 0 #2B1E18" }}>
+      <div style={{ position: "relative", height: "168px", flex: "none", border: "2.5px solid #2B1E18", borderRadius: "22px", overflow: "hidden", backgroundColor: v.sceneSky, backgroundImage: "radial-gradient(rgba(43,30,24,.1) 1.2px,transparent 1.5px)", backgroundSize: "10px 10px", boxShadow: "var(--lift3)" }}>
         <div style={{ position: "absolute", right: "120px", top: "22px", width: "30px", height: "30px", boxSizing: "border-box", borderRadius: "50%", border: "2.5px solid #2B1E18", background: "#F2B63C" }} />
         {v.cloudStrip}
         {v.farStrip}
@@ -45,7 +45,7 @@ export default function Run({ v }) {
           <div style={{ position: "absolute", right: "26px", bottom: "12px", width: "112px", height: "112px" }}><Musuh kind={v.sceneEnemyKind} still={v.still} flip={true} /></div>
         )}
         {v.sceneQuestion && (
-          <div style={{ position: "absolute", left: "156px", top: "34px", width: "34px", height: "34px", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "12px", background: "#F2B63C", font: "22px/1 'Bagel Fat One',system-ui", transform: "rotate(8deg)" }}>?</div>
+          <div style={{ position: "absolute", left: "156px", top: "34px", width: "34px", height: "34px", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "12px", background: "#F2B63C", font: "22px/1 var(--display)", transform: "rotate(8deg)" }}>?</div>
         )}
         <div style={{ position: "absolute", top: "10px", left: "10px", display: "flex", alignItems: "center", gap: "5px", padding: "5px 9px 5px 6px", borderRadius: "11px", border: "2px solid #2B1E18", background: "#FFF8EC", font: "700 11px/1 'Bricolage Grotesque'", pointerEvents: "none" }}>
           <span style={{ font: "15px/1 'Material Symbols Rounded'", color: "#C28A16" }}>{v.weatherIcon}</span>
@@ -63,10 +63,10 @@ export default function Run({ v }) {
         </div>
       )}
       <div style={{ display: "flex", alignItems: "center", gap: "10px", flex: "none" }}>
-        <div style={{ width: "50px", height: "50px", flex: "none", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "50%", background: "#F2B63C", boxShadow: "0 3px 0 #2B1E18", textAlign: "center" }}>
+        <div style={{ width: "50px", height: "50px", flex: "none", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "50%", background: "#F2B63C", boxShadow: "var(--lift3)", textAlign: "center" }}>
           <div>
             <div style={{ font: "500 9.5px/1 'DM Mono',monospace", letterSpacing: ".08em" }}>LV</div>
-            <div style={{ font: "20px/1 'Bagel Fat One',system-ui", marginTop: "1px" }}>{v.lvl}</div>
+            <div style={{ font: "20px/1 var(--display)", marginTop: "1px" }}>{v.lvl}</div>
           </div>
         </div>
         <div style={{ flex: "1", minWidth: "0", display: "flex", flexDirection: "column", gap: "6px" }}>
@@ -96,7 +96,7 @@ export default function Run({ v }) {
           </div>
         </div>
       </div>
-      <div style={{ position: "relative", flex: "1", minHeight: "0", border: "2.5px solid #2B1E18", borderRadius: "20px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", overflow: "hidden" }}>
+      <div style={{ position: "relative", flex: "1", minHeight: "0", border: "2.5px solid #2B1E18", borderRadius: "20px", background: "#FFF8EC", boxShadow: "var(--lift3)", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: "0", left: "0", right: "0", zIndex: "1", display: "flex", justifyContent: "space-between", padding: "9px 14px 7px", background: "#FFF8EC", borderBottom: "1.5px dashed rgba(43,30,24,.25)", font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#5E4A3F" }}>
           <span>CATATAN PERJALANAN</span>
           <span>{v.logCount} ENTRI</span>
@@ -125,7 +125,7 @@ export default function Run({ v }) {
         </div>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: "8px", flex: "none", height: "54px" }}>
-        <div style={{ flex: "1", minWidth: "0", height: "100%", boxSizing: "border-box", display: "flex", alignItems: "center", gap: "8px", padding: "0 9px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", overflowX: "auto", overflowY: "hidden", scrollbarWidth: "none" }}>
+        <div style={{ flex: "1", minWidth: "0", height: "100%", boxSizing: "border-box", display: "flex", alignItems: "center", gap: "8px", padding: "0 9px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#FFF8EC", boxShadow: "var(--lift3)", overflowX: "auto", overflowY: "hidden", scrollbarWidth: "none" }}>
           {v.noSkills && (
             <span style={{ font: "600 12px/1.25 'Bricolage Grotesque'", color: "#5E4A3F" }}>Belum ada skill. Santoni mengandalkan wajah.</span>
           )}
@@ -138,7 +138,7 @@ export default function Run({ v }) {
               </div>
           ))}
         </div>
-        <button onClick={v.cycleSpeed} className="dc-press" style={{ width: "54px", height: "54px", flex: "none", padding: "0", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", color: "#2B1E18", font: "18px/1 'Bagel Fat One',system-ui", cursor: "pointer", '--press-tf': "translateY(2px)", '--press-sh': "0 1px 0 #2B1E18" }}>{v.speedLabel}</button>
+        <button onClick={v.cycleSpeed} className="dc-press" style={{ width: "54px", height: "54px", flex: "none", padding: "0", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#FFF8EC", boxShadow: "var(--lift3)", color: "#2B1E18", font: "18px/1 var(--display)", cursor: "pointer", '--press-tf': "translateY(2px)", '--press-sh': "0 1px 0 #2B1E18" }}>{v.speedLabel}</button>
         <button onClick={v.quitRun} style={{ height: "54px", flex: "none", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "3px", padding: "0 12px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#2B1E18", boxShadow: "0 3px 0 #120C09", color: "#FFF8EC", font: "700 11px/1 'Bricolage Grotesque'", cursor: "pointer" }}>
           <span style={{ font: "20px/1 'Material Symbols Rounded'", color: "#F2B63C" }}>home</span>
           Pulang
@@ -152,9 +152,9 @@ export default function Run({ v }) {
           </div>
           {v.evIsEnemy && (
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginTop: "12px" }}>
-              <div style={{ position: "relative", width: "60px", height: "60px", flex: "none", boxSizing: "border-box", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#E7D9F5", boxShadow: "0 3px 0 #2B1E18", overflow: "hidden" }}><div style={{ position: "absolute", left: "2px", right: "2px", top: "3px", bottom: "-1px" }}><Musuh kind={v.evKind} still={true} /></div></div>
+              <div style={{ position: "relative", width: "60px", height: "60px", flex: "none", boxSizing: "border-box", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#E7D9F5", boxShadow: "var(--lift3)", overflow: "hidden" }}><div style={{ position: "absolute", left: "2px", right: "2px", top: "3px", bottom: "-1px" }}><Musuh kind={v.evKind} still={true} /></div></div>
               <div style={{ minWidth: "0" }}>
-                <div style={{ font: "22px/1.1 'Bagel Fat One',system-ui" }}>{v.evName}</div>
+                <div style={{ font: "22px/1.1 var(--display)" }}>{v.evName}</div>
                 <div style={{ font: "500 10.5px/1.3 'DM Mono',monospace", color: "#5E4A3F", marginTop: "4px" }}>{v.evSub}</div>
               </div>
             </div>
@@ -168,7 +168,7 @@ export default function Run({ v }) {
           )}
           <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "14px" }}>
             {v.evChoices.map((c, i) => (
-                <button key={c.key ?? c.id ?? i} onClick={c.onClick} className="dc-press" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px", minHeight: "52px", padding: "8px 10px 8px 14px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: c.bg, boxShadow: "0 4px 0 #2B1E18", color: "#2B1E18", font: "800 15px/1.2 'Bricolage Grotesque'", textAlign: "left", cursor: "pointer", opacity: c.opacity, '--press-tf': "translateY(3px)", '--press-sh': "0 1px 0 #2B1E18" }}>
+                <button key={c.key ?? c.id ?? i} onClick={c.onClick} className="dc-press" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px", minHeight: "52px", padding: "8px 10px 8px 14px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: c.bg, boxShadow: "var(--lift4)", color: "#2B1E18", font: "800 15px/1.2 'Bricolage Grotesque'", textAlign: "left", cursor: "pointer", opacity: c.opacity, '--press-tf': "translateY(3px)", '--press-sh': "0 1px 0 #2B1E18" }}>
                   <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                     <span style={{ font: "21px/1 'Material Symbols Rounded'" }}>{c.icon}</span>
                     {c.label}

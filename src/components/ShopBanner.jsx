@@ -65,8 +65,8 @@ export default function ShopBanner({ still = false }) {
 
       {/* Mystery: question marks and a gem peeking out */}
       <g style={{ animation: a('bnFloat 3s ease-in-out infinite') }}>
-        <text x="300" y="40" style={{ font: "26px 'Bagel Fat One',system-ui", fill: '#C9A8F0', stroke: O, strokeWidth: 3, paintOrder: 'stroke' }}>?</text>
-        <text x="244" y="30" style={{ font: "18px 'Bagel Fat One',system-ui", fill: '#C9A8F0', stroke: O, strokeWidth: 3, paintOrder: 'stroke' }}>?</text>
+        <text x="300" y="40" style={{ font: "26px var(--display)", fill: '#C9A8F0', stroke: O, strokeWidth: 3, paintOrder: 'stroke' }}>?</text>
+        <text x="244" y="30" style={{ font: "18px var(--display)", fill: '#C9A8F0', stroke: O, strokeWidth: 3, paintOrder: 'stroke' }}>?</text>
       </g>
       <path d="M266 84l6-10 6 10-6 6Z" fill="#9EC3F0" stroke={O} strokeWidth="2" />
 

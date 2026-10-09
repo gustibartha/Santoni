@@ -1,13 +1,13 @@
 const ICON = "'Material Symbols Rounded'";
-const BTN = { display: "flex", alignItems: "center", justifyContent: "center", gap: "5px", height: "38px", boxSizing: "border-box", padding: "0 12px", border: "2.5px solid #2B1E18", borderRadius: "12px", boxShadow: "0 3px 0 #2B1E18", color: "#2B1E18", font: "800 12.5px/1 'Bricolage Grotesque'", cursor: "pointer" };
+const BTN = { display: "flex", alignItems: "center", justifyContent: "center", gap: "5px", height: "38px", boxSizing: "border-box", padding: "0 12px", border: "2.5px solid #2B1E18", borderRadius: "12px", boxShadow: "var(--lift3)", color: "#2B1E18", font: "800 12.5px/1 'Bricolage Grotesque'", cursor: "pointer" };
 
 // Lobby mailbox: letters fold open on tap; attachments are claimed one by one or all at once.
 export default function SuratScreen({ v }) {
   return (
     <div style={{ position: "absolute", top: "66px", left: "0", right: "0", bottom: "84px", overflowY: "auto", scrollbarWidth: "none", padding: "6px 14px 20px" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <button onClick={v.mailBack} aria-label="Kembali" style={{ width: "38px", height: "38px", flex: "none", display: "grid", placeItems: "center", padding: "0", border: "2.5px solid #2B1E18", borderRadius: "12px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", color: "#2B1E18", font: `22px/1 ${ICON}`, cursor: "pointer" }}>chevron_left</button>
-        <div style={{ flex: "1", font: "28px/1 'Bagel Fat One',system-ui" }}>Surat</div>
+        <button onClick={v.mailBack} aria-label="Kembali" style={{ width: "38px", height: "38px", flex: "none", display: "grid", placeItems: "center", padding: "0", border: "2.5px solid #2B1E18", borderRadius: "12px", background: "#FFF8EC", boxShadow: "var(--lift3)", color: "#2B1E18", font: `22px/1 ${ICON}`, cursor: "pointer" }}>chevron_left</button>
+        <div style={{ flex: "1", font: "28px/1 var(--display)" }}>Surat</div>
         <div style={{ font: "500 10.5px/1 'DM Mono',monospace", letterSpacing: ".06em", color: "#5E4A3F" }}>{v.letters.length} SURAT</div>
       </div>
       <div style={{ font: "500 13px/1.4 'Bricolage Grotesque'", color: "#5B4A40", marginTop: "6px" }}>Kiriman untuk Santoni. Sebagian berisi hadiah, sebagian berisi bebek.</div>
@@ -26,7 +26,7 @@ export default function SuratScreen({ v }) {
 
       <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "14px" }}>
         {v.letters.map((l, i) => (
-          <div key={l.id} style={{ border: "2.5px solid #2B1E18", borderRadius: "18px", background: l.unread ? "#FFFFFF" : "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", overflow: "hidden", animation: v.still ? "none" : `cardUp .32s ${i * 0.05}s ease-out both` }}>
+          <div key={l.id} style={{ border: "2.5px solid #2B1E18", borderRadius: "18px", background: l.unread ? "#FFFFFF" : "#FFF8EC", boxShadow: "var(--lift3)", overflow: "hidden", animation: v.still ? "none" : `cardUp .32s ${i * 0.05}s ease-out both` }}>
             <div onClick={l.toggle} role="button" aria-expanded={l.open} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", cursor: "pointer" }}>
               <span style={{ position: "relative", width: "40px", height: "40px", flex: "none", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2px solid #2B1E18", borderRadius: "12px", background: l.color, color: "#FFF8EC", font: `21px/1 ${ICON}` }}>
                 {l.icon}

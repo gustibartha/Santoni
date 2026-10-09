@@ -29,7 +29,7 @@ function Limb({ deg = 0, anim, origin, still, children }) {
   );
 }
 
-const zStyle = (size, w, anim, origin) => ({ font: `${size}px 'Bagel Fat One',system-ui`, fill: '#FFF8EC', stroke: '#2B1E18', strokeWidth: w, paintOrder: 'stroke', animation: anim, transformOrigin: origin });
+const zStyle = (size, w, anim, origin) => ({ font: `${size}px var(--display)`, fill: '#FFF8EC', stroke: '#2B1E18', strokeWidth: w, paintOrder: 'stroke', animation: anim, transformOrigin: origin });
 
 function SantoniSide({ pose, flip, still }) {
   const p = SIDE[pose] || SIDE.idle;
@@ -218,8 +218,8 @@ export default function Santoni({ pose = 'idle', expr = 'auto', flip = false, st
           </g>
         </g>
         <g style={{ display: v.dZ }}>
-          <text x="146" y="54" style={{ font: "24px 'Bagel Fat One',system-ui", fill: "#FFF8EC", stroke: "#2B1E18", strokeWidth: "4", paintOrder: "stroke", animation: v.aZ, transformOrigin: "150px 48px" }}>z</text>
-          <text x="166" y="34" style={{ font: "17px 'Bagel Fat One',system-ui", fill: "#FFF8EC", stroke: "#2B1E18", strokeWidth: "3.5", paintOrder: "stroke", animation: v.aZ2, transformOrigin: "170px 30px" }}>z</text>
+          <text x="146" y="54" style={{ font: "24px var(--display)", fill: "#FFF8EC", stroke: "#2B1E18", strokeWidth: "4", paintOrder: "stroke", animation: v.aZ, transformOrigin: "150px 48px" }}>z</text>
+          <text x="166" y="34" style={{ font: "17px var(--display)", fill: "#FFF8EC", stroke: "#2B1E18", strokeWidth: "3.5", paintOrder: "stroke", animation: v.aZ2, transformOrigin: "170px 30px" }}>z</text>
         </g>
       </svg>
     </div>

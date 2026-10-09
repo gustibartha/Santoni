@@ -27,7 +27,7 @@ import SuratScreen from '../screens/SuratScreen.jsx';
 // The 390×844 phone frame. Layer order matters: offers, pulls and toasts sit above screens.
 export default function GameView({ v }) {
   return (
-    <div className="phone" data-screen-label={v.screenLabel}>
+    <div className="phone" data-theme={v.theme} data-screen-label={v.screenLabel}>
       <SvgDefs />
       {v.showHud && <Hud v={v} />}
       <div key={v.screenKey} className="screen-in">

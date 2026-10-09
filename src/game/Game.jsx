@@ -321,6 +321,9 @@ export default class Game extends Component {
       s.screen = 'result';
       s.result = { win: false, day: Math.round(days * 0.8), maxDay: days, kills: 6, skills: 4, coins: 3420, gems: 40, xp: 312, item: 'centong', record: true, chapter: 2, quote: C.QUOTES[0] };
     } else if (screen === 'hero' || screen === 'map' || screen === 'shop') s.screen = screen;
+    // Preview helpers: ?team=kucing,merak,bebek&pet=ayam put a ready team into the demo state.
+    if (p.team) { const owned = {}; p.team.forEach(id => { owned[id] = { lv: 10, star: 1, shards: 0 }; }); s.comp = { owned, team: [0, 1, 2].map(i => p.team[i] || null) }; }
+    if (p.pet) s.pets = { owned: { [p.pet]: { lv: 8, star: 0, xp: 0 } }, active: p.pet };
     return s;
   }
 
@@ -666,7 +669,7 @@ export default class Game extends Component {
     }
     const B = b.bless;
     const charge = amt => { b.ult = Math.min(100, (b.ult || 0) + amt); };
-    let ultFired = false;
+    let ultFired = false, allies = [], rush = false;
     if (b.heroTurn && (b.ult || 0) >= 100) {
       // Jurus pamungkas: the equipped weapon's ultimate, infused with every element the run owns.
       const wid = this.weaponOf(r), W = C.ULTIMATES[wid] || C.ULTIMATES.none;
@@ -704,6 +707,10 @@ export default class Game extends Component {
       if (els.includes('petir')) { b.stunGuard = false; stunFor(); fxAt('petir', true); }
       if (els.includes('tanah')) { b.quake = Math.min(3, (b.quake || 0) + 1); fxAt('tanah', true); }
       if (els.includes('angin')) fxAt('angin', true);
+      if (b.enemy.hp > 0 && (this.team().length || this.petState().active)) {
+        const ts = this.teamStrike(r, b, { hit, push, stunFor, burnFor, rush: true });
+        if (ts.who.length) { total += ts.dmg; allies = ts.who; rush = true; say(`Serbu Bersama! Seluruh tim menyerang sekaligus: ${ts.lines.join(', ')}.`, 'crit'); }
+      }
       b.ultFx = { id: this.uid(), weapon: wid, name: W.name, els };
       say(`${W.line} ${W.name}${els.length ? ` · ${els.map(el => C.ELEMENTS[el].label).join(' + ')}` : ''}! ${total}.`, 'crit');
     } else if (b.heroTurn) {
@@ -792,8 +799,9 @@ export default class Game extends Component {
         const d = Math.round(r.atk * 0.5); hit(d); total += d; push('enemy', `ANTAR ${d}`, 'skill');
         say(`Kodok Ojek mengantar Santoni ke depan ${name} sekali lagi. ${d}.`, 'skill');
       }
-      if (this.team()[0] && b.hits % 3 === 0 && b.enemy.hp > 0) {
-        const d = Math.round(r.atk * 0.4); hit(d); total += d; push('enemy', `BANTUAN ${d}`, 'skill'); act.assist = true;
+      if (b.enemy.hp > 0) {
+        const ts = this.teamStrike(r, b, { hit, push, stunFor, burnFor });
+        if (ts.who.length) { total += ts.dmg; allies = ts.who; say(`Tim ikut menyerang: ${ts.lines.join(', ')}.`, 'skill'); }
       }
       if (B.majemuk && r.hp < r.maxHp && total > 0) { const h = Math.round(total * B.majemuk / 100); r.hp = Math.min(r.maxHp, r.hp + h); push('hero', `+${h}`, 'heal'); }
       if (n('ngemil') && r.hp < r.maxHp) { const h = Math.round(total * 0.15 * n('ngemil')); if (h > 0) { r.hp = Math.min(r.maxHp, r.hp + h); push('hero', `+${h}`, 'heal'); proc = proc || 'ngemil'; } }
@@ -921,7 +929,9 @@ export default class Game extends Component {
     b.log = log.slice(-5); b.pops = pops.slice(-8); b.banner = banner; b.proc = proc || b.proc; b.efx = efx;
     // What the stage should animate for this step; outlives the short-lived shake/act flags.
     const dashWho = act ? (act.who === 'enemy' || proc === 'menguap' ? 'enemy' : !act.seram && !act.pose ? 'hero' : null) : null;
-    b.fx = act ? { t: act.t, dash: dashWho, hit: shake, crit: !!act.crit || ultFired } : null;
+    if (allies.length) { b.allyT = { ...(b.allyT || {}) }; allies.forEach((w, k) => { b.allyT[w] = now; b.allyT[`${w}d`] = rush ? k * 0.09 : 0.04; }); }
+    if (allies.length && dashWho === 'hero') b.comboShow = { n: allies.length + 1, t: now, rush };
+    b.fx = act ? { t: act.t, dash: dashWho, hit: shake, crit: !!act.crit || ultFired, allies, rush, combo: allies.length && dashWho === 'hero' ? allies.length + 1 : 0 } : null;
     this.setState({ battle: b, run: r, shake, act });
     // Hold the next turn so the ultimate cinematic (~1.3 s) plays out at any battle speed.
     if (ultFired) { this._acc = -1200 * (s.speed || 1); this.track({ ults: 1 }); music.sfx('ult'); }
@@ -1157,6 +1167,7 @@ export default class Game extends Component {
       if (b.quake) eStatus.push({ icon: 'landslide', label: `ATK −${15 * b.quake}%`, bg: '#8E5A2B' });
       if (b.shield > 0) hStatus.unshift({ icon: 'shield', label: `PERISAI ${fmt(b.shield)}`, bg: '#6E5A4E' });
       for (const c of C.COMBOS) if (this.hasCombo(r, c.id)) hStatus.unshift({ icon: 'auto_awesome', label: `KOMBO ${c.name.toUpperCase()}`, bg: '#7E43B5' });
+      for (const tc of this.teamCombos()) hStatus.push({ icon: 'diversity_3', label: `TIM ${tc.name.toUpperCase()}`, bg: '#2F7A5C' });
       const glow = b.burn ? 'rgba(255,110,30,.9)' : b.heat ? 'rgba(255,96,40,.85)' : b.stun ? 'rgba(255,228,92,.95)' : null;
       Object.assign(v, { eStatus, hStatus,
         eFilter: glow ? `drop-shadow(0 0 ${b.burn || b.stun ? 12 : 4 + b.heat * 3}px ${glow})` : 'none',
@@ -1164,7 +1175,12 @@ export default class Game extends Component {
         flashKey: (b.efx || []).some(x => x.el === 'petir' && x.big) ? b.efx[0].id : 0,
         quakeAnim: !still && (b.efx || []).some(x => x.el === 'tanah' && x.big) ? `fxQuake${b.efx[0].id % 2} .45s ease-out` : 'none',
         twin: !!(act && act.twin), twinKey: act ? act.t : 0, assist: !!(act && act.assist), assistKey: act ? act.t : 0 });
-      const fx = b.fx || {}, dash = Math.min(0.46, 0.62 / (s.speed || 1));
+      const fx = b.fx || {}, dash = Math.min(0.46, 0.62 / (s.speed || 1)), struck = fx.allies || [];
+      const at = b.allyT || {}, cs = b.comboShow, live = cs && Date.now() - cs.t < 1100;
+      v.allies = this.teamKinds().map((kind, i) => ({ slot: i, kind, t: at[i] || 0, delay: at[`${i}d`] || 0 }));
+      v.petT = at.pet || 0; v.petDelay = at.petd || 0; v.allyTime = `${Math.min(0.62, 0.95 / (s.speed || 1)).toFixed(2)}s`;
+      v.comboN = live ? cs.n : 0; v.comboKey = live ? cs.t : 0; v.rushOn = !!(live && cs.rush);
+      v.teamCombosOn = this.teamCombos().map(tc => tc.name);
       Object.assign(v, { heroAct: fx.dash === 'hero' ? fx.t : 0, enemyAct: fx.dash === 'enemy' ? fx.t : 0,
         enemyHit: fx.hit === 'enemy', heroHit: fx.hit === 'hero', hitKey: fx.t || 0, critShake: fx.hit === 'enemy' && !!fx.crit,
         dashTime: `${dash.toFixed(2)}s`, hitDelay: `${(dash * 0.3).toFixed(2)}s`, stageTheme: (r ? C.CHAPTERS[r.chapter] : ch).theme,
@@ -1323,6 +1339,8 @@ export default class Game extends Component {
     Object.assign(v, this.companionsView(s, { g, fmt, pct }));
     Object.assign(v, this.accountView(s, { g, fmt }));
     v.itemSheet = this.itemSheetView(s, { g, fmt });
+    v.theme = s.theme === 'klasik' ? 'klasik' : 'modern';
+    v.themes = [['modern', 'Modern', 'Font tegas, kartu berbayang lembut'], ['klasik', 'Klasik', 'Tampilan awal yang bulat dan lucu']].map(([id, label, desc]) => ({ id, label, desc, on: v.theme === id, pick: g(() => this.setState({ theme: id })) }));
     Object.assign(v, this.mailView(s, { g, fmt }));
     const cf = s.confirm;
     v.confirm = cf && cf.kind === 'cloud' ? v.cloudConfirm || null : cf ? {

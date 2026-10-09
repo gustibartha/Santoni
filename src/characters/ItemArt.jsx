@@ -378,7 +378,7 @@ const ART = {
       <path d="M19 36H45" fill="none" stroke="#E8DCCB" strokeWidth="4" />
       <path d="M32 36q-6 6-4 14M32 36q6 6 4 12" fill="none" stroke="#C9B9A2" strokeWidth="2.4" />
       <g fill="#E8DCCB" stroke="none">{[[24, 46], [40, 48], [26, 54], [38, 54], [22, 22]].map(([x, y]) => <circle key={`${x}-${y}`} cx={x} cy={y} r="1.3" />)}</g>
-      <text x="40" y="24" textAnchor="middle" style={{ font: "700 7px 'Bagel Fat One',system-ui", fill: '#C28A16', stroke: 'none' }}>H</text>
+      <text x="40" y="24" textAnchor="middle" style={{ font: "700 7px var(--display)", fill: '#C28A16', stroke: 'none' }}>H</text>
       <Sparkles color="#C9A8F0" at={[[56, 48, 5]]} />
     </>
   ),

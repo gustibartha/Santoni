@@ -5,7 +5,7 @@ const ICON = "'Material Symbols Rounded'";
 function QuestCard({ q }) {
   const state = q.claimed ? 'claimed' : q.done ? 'ready' : 'progress';
   return (
-    <div style={{ display: "flex", gap: "11px", alignItems: "center", padding: "11px 12px", border: "2.5px solid #2B1E18", borderRadius: "18px", background: state === 'ready' ? "#FFF3D6" : "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", opacity: state === 'claimed' ? 0.6 : 1 }}>
+    <div style={{ display: "flex", gap: "11px", alignItems: "center", padding: "11px 12px", border: "2.5px solid #2B1E18", borderRadius: "18px", background: state === 'ready' ? "#FFF3D6" : "#FFF8EC", boxShadow: "var(--lift3)", opacity: state === 'claimed' ? 0.6 : 1 }}>
       <div style={{ width: "44px", height: "44px", flex: "none", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2px solid #2B1E18", borderRadius: "13px", background: state === 'progress' ? "#EADBC5" : "#F2B63C", color: "#2B1E18", font: `24px/1 ${ICON}` }}>{q.icon}</div>
       <div style={{ flex: "1", minWidth: "0" }}>
         <div style={{ font: "800 14px/1.15 'Bricolage Grotesque'" }}>{q.title}</div>
@@ -23,7 +23,7 @@ function QuestCard({ q }) {
           <span>{q.reward}</span>
         </div>
         <button onClick={q.claim} disabled={state !== 'ready'} className={state === 'ready' ? 'dc-press' : undefined}
-          style={{ width: "100%", height: "30px", padding: "0", border: "2px solid #2B1E18", borderRadius: "10px", background: state === 'ready' ? "#4FAE72" : "#EADBC5", color: state === 'ready' ? "#FFF8EC" : "#5E4A3F", boxShadow: state === 'ready' ? "0 3px 0 #2B1E18" : "none", font: "800 12px/1 'Bricolage Grotesque'", cursor: state === 'ready' ? "pointer" : "default", '--press-tf': "translateY(2px)", '--press-sh': "0 1px 0 #2B1E18" }}>
+          style={{ width: "100%", height: "30px", padding: "0", border: "2px solid #2B1E18", borderRadius: "10px", background: state === 'ready' ? "#4FAE72" : "#EADBC5", color: state === 'ready' ? "#FFF8EC" : "#5E4A3F", boxShadow: state === 'ready' ? "var(--lift3)" : "none", font: "800 12px/1 'Bricolage Grotesque'", cursor: state === 'ready' ? "pointer" : "default", '--press-tf': "translateY(2px)", '--press-sh': "0 1px 0 #2B1E18" }}>
           {state === 'claimed' ? 'Diklaim' : state === 'ready' ? 'Klaim' : 'Belum'}
         </button>
       </div>
@@ -36,7 +36,7 @@ export default function MisiScreen({ v }) {
   return (
     <div style={{ position: "absolute", top: "66px", left: "0", right: "0", bottom: "84px", overflowY: "auto", scrollbarWidth: "none", padding: "6px 14px 20px" }}>
       <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "8px" }}>
-        <div style={{ font: "28px/1 'Bagel Fat One',system-ui" }}>Misi</div>
+        <div style={{ font: "28px/1 var(--display)" }}>Misi</div>
         <div style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#5E4A3F" }}>{v.misiSummary}</div>
       </div>
       <div style={{ font: "500 13px/1.4 'Bricolage Grotesque'", color: "#5B4A40", marginTop: "6px" }}>Misi harian berganti tiap tengah malam. Misi petualangan menunggu dengan sabar.</div>

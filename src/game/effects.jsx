@@ -28,7 +28,7 @@ const POP_COLORS = { hit: '#FFF8EC', crit: '#F2B63C', skill: '#C9A8F0', heal: '#
 
 export function popEl(x, still) {
   return (
-    <div key={x.id} style={{ position: 'absolute', left: `calc(50% + ${x.dx}px)`, top: `${34 + x.dy}px`, transform: 'translate(-50%,0)', font: `${x.kind === 'crit' ? 32 : 25}px/1 'Bagel Fat One', system-ui`, color: POP_COLORS[x.kind] || '#FFF8EC', textShadow: OUT, whiteSpace: 'nowrap', pointerEvents: 'none', animation: still ? 'none' : x.kind === 'crit' ? 'critPop 1.15s ease-out forwards' : 'panduPop 1.05s ease-out forwards' }}>
+    <div key={x.id} style={{ position: 'absolute', left: `calc(50% + ${x.dx}px)`, top: `${34 + x.dy}px`, transform: 'translate(-50%,0)', font: `${x.kind === 'crit' ? 32 : 25}px/1 var(--display)`, color: POP_COLORS[x.kind] || '#FFF8EC', textShadow: OUT, whiteSpace: 'nowrap', pointerEvents: 'none', animation: still ? 'none' : x.kind === 'crit' ? 'critPop 1.15s ease-out forwards' : 'panduPop 1.05s ease-out forwards' }}>
       {x.text}
     </div>
   );
@@ -36,7 +36,7 @@ export function popEl(x, still) {
 
 export function bannerEl(bn, still) {
   return (
-    <div key={bn.id} style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%) rotate(-3deg)', padding: '10px 22px 12px', border: '3px solid #2B1E18', borderRadius: '16px', background: '#F2B63C', color: '#2B1E18', font: "24px/1 'Bagel Fat One', system-ui", whiteSpace: 'nowrap', boxShadow: '0 5px 0 #2B1E18', pointerEvents: 'none', animation: still ? 'none' : 'panduBanner 1.2s ease-out forwards' }}>
+    <div key={bn.id} style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%) rotate(-3deg)', padding: '10px 22px 12px', border: '3px solid #2B1E18', borderRadius: '16px', background: '#F2B63C', color: '#2B1E18', font: "24px/1 var(--display)", whiteSpace: 'nowrap', boxShadow: '0 5px 0 #2B1E18', pointerEvents: 'none', animation: still ? 'none' : 'panduBanner 1.2s ease-out forwards' }}>
       {bn.text}
     </div>
   );
@@ -108,7 +108,7 @@ export function pullCardsEl(pull) {
     return (
       <div key={`${pull.id}-${i}`} style={{ width: one ? '170px' : '58px', height: one ? '208px' : '76px', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: one ? '10px' : '4px', border: '3px solid #2B1E18', borderRadius: one ? '22px' : '14px', background: rr.bg, boxShadow: '0 4px 0 #2B1E18', animation: `panduFlip .45s ${i * 0.09}s both cubic-bezier(.2,1.4,.4,1)` }}>
         <ItemArt id={id} size={one ? 104 : 38} />
-        {one && <span style={{ font: "18px/1.1 'Bagel Fat One', system-ui", color: '#2B1E18', textAlign: 'center', padding: '0 10px' }}>{it.name}</span>}
+        {one && <span style={{ font: "18px/1.1 var(--display)", color: '#2B1E18', textAlign: 'center', padding: '0 10px' }}>{it.name}</span>}
         <span style={{ padding: '2px 5px', borderRadius: '6px', background: rr.fg, color: '#FFF8EC', font: `500 ${one ? 10 : 7}px/1.2 'DM Mono', monospace`, letterSpacing: '.04em' }}>{one ? rr.label : rr.label.slice(0, 4)}</span>
       </div>
     );

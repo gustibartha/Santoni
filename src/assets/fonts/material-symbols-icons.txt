@@ -1,6 +1,7 @@
 ac_unit
 account_balance
 add
+add_link
 agriculture
 air
 alarm
@@ -68,6 +69,7 @@ description
 diamond
 directions_bus
 directions_walk
+diversity_3
 do_not_disturb_on
 domain
 done
@@ -131,6 +133,7 @@ inventory_2
 join
 keep
 key
+keyboard_double_arrow_right
 label
 landscape
 landslide
@@ -138,6 +141,7 @@ layers
 leaderboard
 light
 link
+link_off
 list
 local_fire_department
 local_parking
@@ -174,6 +178,7 @@ opacity
 pace
 padding
 paid
+palette
 pan_tool
 park
 password
@@ -251,6 +256,7 @@ stars
 start
 step
 steps
+sticker
 stop
 storage
 store
@@ -277,6 +283,7 @@ transform
 translate
 travel
 travel_explore
+trending_down
 trip
 trip_origin
 try

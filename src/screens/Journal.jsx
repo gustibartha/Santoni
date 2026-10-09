@@ -1,5 +1,5 @@
 const FIELD = { width: "100%", height: "40px", boxSizing: "border-box", padding: "0 12px", border: "2.5px solid #2B1E18", borderRadius: "12px", background: "#FFFFFF", color: "#2B1E18", font: "600 14px/1 'Bricolage Grotesque'", outline: "none" };
-const BTN = { display: "flex", alignItems: "center", justifyContent: "center", gap: "5px", height: "40px", boxSizing: "border-box", border: "2.5px solid #2B1E18", borderRadius: "12px", boxShadow: "0 3px 0 #2B1E18", color: "#2B1E18", font: "800 13px/1 'Bricolage Grotesque'", cursor: "pointer" };
+const BTN = { display: "flex", alignItems: "center", justifyContent: "center", gap: "5px", height: "40px", boxSizing: "border-box", border: "2.5px solid #2B1E18", borderRadius: "12px", boxShadow: "var(--lift3)", color: "#2B1E18", font: "800 13px/1 'Bricolage Grotesque'", cursor: "pointer" };
 
 const ICON = { font: "17px/1 'Material Symbols Rounded'" };
 const NOTE = { font: "600 12px/1.4 'Bricolage Grotesque'", color: "#A93D1C", marginTop: "8px", textWrap: "pretty" };
@@ -19,10 +19,10 @@ function Submit({ a, icon, label }) {
 function AccountCard({ a }) {
   const reset = a.user && a.mode === 'reset';
   return (
-    <div style={{ marginTop: "14px", padding: "12px 14px 14px", border: "2.5px solid #2B1E18", borderRadius: "18px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18" }}>
+    <div style={{ marginTop: "14px", padding: "12px 14px 14px", border: "2.5px solid #2B1E18", borderRadius: "18px", background: "#FFF8EC", boxShadow: "var(--lift3)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
         <span style={{ font: "22px/1 'Material Symbols Rounded'", color: "#3C78C8" }}>{reset ? 'key' : a.user ? 'cloud_done' : 'cloud'}</span>
-        <div style={{ font: "16px/1.1 'Bagel Fat One',system-ui" }}>{reset ? 'Buat sandi baru' : a.mode === 'lupa' && !a.user ? 'Lupa sandi' : 'Akun online'}</div>
+        <div style={{ font: "16px/1.1 var(--display)" }}>{reset ? 'Buat sandi baru' : a.mode === 'lupa' && !a.user ? 'Lupa sandi' : 'Akun online'}</div>
       </div>
       {a.checking && !a.user && <div style={{ ...TEXT, marginTop: "6px" }}>Memeriksa akun…</div>}
       {reset ? (
@@ -78,18 +78,32 @@ export default function Journal({ v }) {
   return (
     <div style={{ position: "absolute", top: "66px", left: "0", right: "0", bottom: "84px", overflowY: "auto", scrollbarWidth: "none", padding: "6px 14px 20px" }}>
       <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "8px" }}>
-        <div style={{ font: "28px/1 'Bagel Fat One',system-ui" }}>Jurnal</div>
+        <div style={{ font: "28px/1 var(--display)" }}>Jurnal</div>
         <div style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#5E4A3F" }}>{v.journalSummary}</div>
       </div>
       <div style={{ font: "500 13px/1.4 'Bricolage Grotesque'", color: "#5B4A40", marginTop: "6px" }}>Semua yang terjadi di perjalanan. Santoni tidak pernah membacanya.</div>
       {v.acct.online && <AccountCard a={v.acct} />}
+      <div style={{ marginTop: "12px", padding: "11px 14px 13px", border: "2.5px solid #2B1E18", borderRadius: "18px", background: "#FFF8EC", boxShadow: "var(--lift3)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <span style={{ font: "21px/1 'Material Symbols Rounded'", color: "#7E43B5" }}>palette</span>
+          <div style={{ font: "16px/1.1 var(--display)" }}>Tampilan</div>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginTop: "9px" }}>
+          {v.themes.map(t => (
+            <button key={t.id} onClick={t.pick} aria-pressed={t.on} style={{ padding: "9px 10px", textAlign: "left", border: `2.5px solid ${t.on ? '#2B1E18' : 'rgba(43,30,24,.2)'}`, borderRadius: "13px", background: t.on ? "#F2B63C" : "#FFF8EC", color: "#2B1E18", cursor: "pointer", boxShadow: t.on ? "var(--lift2)" : "none" }}>
+              <span style={{ display: "block", font: `17px/1 ${t.id === 'klasik' ? "'Bagel Fat One',system-ui" : "'Lilita One',system-ui"}` }}>{t.label}</span>
+              <span style={{ display: "block", font: "500 10.5px/1.3 'Bricolage Grotesque'", color: "#5B4A40", marginTop: "4px" }}>{t.desc}</span>
+            </button>
+          ))}
+        </div>
+      </div>
       <div style={{ display: "flex", flexDirection: "column", gap: "14px", marginTop: "14px" }}>
         {v.journal.map((j, i) => (
-            <div key={j.key ?? j.id ?? i} style={{ border: "2.5px solid #2B1E18", borderRadius: "20px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", overflow: "hidden" }}>
+            <div key={j.key ?? j.id ?? i} style={{ border: "2.5px solid #2B1E18", borderRadius: "20px", background: "#FFF8EC", boxShadow: "var(--lift3)", overflow: "hidden" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", borderBottom: "2px dashed rgba(43,30,24,.2)", background: j.headBg }}>
                 <span style={{ width: "34px", height: "34px", flex: "none", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2px solid #2B1E18", borderRadius: "10px", background: "#FFF8EC", font: "19px/1 'Material Symbols Rounded'" }}>{j.icon}</span>
                 <div style={{ flex: "1", minWidth: "0" }}>
-                  <div style={{ font: "16px/1.1 'Bagel Fat One',system-ui" }}>{j.title}</div>
+                  <div style={{ font: "16px/1.1 var(--display)" }}>{j.title}</div>
                   <div style={{ font: "500 10.5px/1.2 'DM Mono',monospace", letterSpacing: ".06em", color: "#5B4A40", marginTop: "3px" }}>{j.sub}</div>
                 </div>
                 <span style={{ padding: "4px 8px", borderRadius: "8px", background: "#2B1E18", color: "#FFF8EC", font: "500 10.5px/1 'DM Mono',monospace", letterSpacing: ".06em" }}>{j.badge}</span>
@@ -121,11 +135,11 @@ export default function Journal({ v }) {
         ))}
       </div>
       <div style={{ marginTop: "18px", padding: "12px 14px", border: "2.5px dashed #2B1E18", borderRadius: "18px", background: "#F3E6D3" }}>
-        <div style={{ font: "16px/1.1 'Bagel Fat One',system-ui" }}>Cadangan progres</div>
+        <div style={{ font: "16px/1.1 var(--display)" }}>Cadangan progres</div>
         <div style={{ font: "500 12px/1.4 'Bricolage Grotesque'", color: "#5B4A40", marginTop: "4px" }}>Tanpa akun, progres hanya tersimpan di browser ini. Kode ini bisa dipakai untuk pindah perangkat tanpa login.</div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginTop: "10px" }}>
-          <button onClick={v.copyBackup} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "5px", height: "38px", border: "2.5px solid #2B1E18", borderRadius: "12px", background: "#F2B63C", boxShadow: "0 3px 0 #2B1E18", color: "#2B1E18", font: "800 12.5px/1 'Bricolage Grotesque'", cursor: "pointer" }}><span style={{ font: "17px/1 'Material Symbols Rounded'" }}>content_copy</span>Salin kode</button>
-          <button onClick={v.loadBackup} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "5px", height: "38px", border: "2.5px solid #2B1E18", borderRadius: "12px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", color: "#2B1E18", font: "800 12.5px/1 'Bricolage Grotesque'", cursor: "pointer" }}><span style={{ font: "17px/1 'Material Symbols Rounded'" }}>upload</span>Muat kode</button>
+          <button onClick={v.copyBackup} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "5px", height: "38px", border: "2.5px solid #2B1E18", borderRadius: "12px", background: "#F2B63C", boxShadow: "var(--lift3)", color: "#2B1E18", font: "800 12.5px/1 'Bricolage Grotesque'", cursor: "pointer" }}><span style={{ font: "17px/1 'Material Symbols Rounded'" }}>content_copy</span>Salin kode</button>
+          <button onClick={v.loadBackup} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "5px", height: "38px", border: "2.5px solid #2B1E18", borderRadius: "12px", background: "#FFF8EC", boxShadow: "var(--lift3)", color: "#2B1E18", font: "800 12.5px/1 'Bricolage Grotesque'", cursor: "pointer" }}><span style={{ font: "17px/1 'Material Symbols Rounded'" }}>upload</span>Muat kode</button>
         </div>
       </div>
     </div>

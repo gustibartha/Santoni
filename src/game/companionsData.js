@@ -67,3 +67,52 @@ export const PET_MAX_STAR = 5;
 export const EGG_WEIGHTS = { Biasa: 45, Langka: 35, Epik: 15, Legendaris: 5 };
 export const EGG_PRICE = 90;
 export const PAKAN_XP = 10;
+
+// --- Team battle ------------------------------------------------------------------------------
+// Every companion in the team strikes on its own beat (Game.teamStrike); `role` picks the rider
+// effect and `move` names the attack in the battle log. Pets bite every other turn.
+export const ROLES = {
+  stun: { label: 'Pelumpuh', desc: '20% peluang musuh lumpuh 1 giliran.', icon: 'electric_bolt' },
+  koin: { label: 'Pemungut', desc: 'Tiap serangan menambah koin perjalanan.', icon: 'paid' },
+  ganda: { label: 'Beruntun', desc: 'Menyerang dua kali beruntun.', icon: 'keyboard_double_arrow_right' },
+  kritis: { label: 'Penembak jitu', desc: '35% peluang kritis ×2.', icon: 'target' },
+  perisai: { label: 'Penjaga', desc: 'Memberi Santoni perisai 6% HP maks.', icon: 'shield' },
+  pulih: { label: 'Penyembuh', desc: 'Memulihkan HP Santoni 5% HP maks.', icon: 'favorite' },
+  lemah: { label: 'Pelemah', desc: 'Musuh terhuyung: ATK −15%, menumpuk sampai 3.', icon: 'trending_down' },
+  bakar: { label: 'Pembakar', desc: 'Membakar musuh 2 giliran.', icon: 'local_fire_department' }
+};
+export const COMP_ATTACK = {
+  bebek: { role: 'stun', move: 'Peluit Razia' }, kelinci: { role: 'koin', move: 'Tendangan Tagihan' },
+  kodok: { role: 'ganda', move: 'Tabrak Lari' }, kucing: { role: 'kritis', move: 'Cakar Viral' },
+  kura: { role: 'perisai', move: 'Tameng Formulir' }, lebah: { role: 'ganda', move: 'Sengat Stempel' },
+  tikus: { role: 'ganda', move: 'Lempar Stapler' }, lele: { role: 'pulih', move: 'Tamparan Motivasi' },
+  kumbang: { role: 'lemah', move: 'Curhat Panjang' }, kambing: { role: 'lemah', move: 'Tanduk Argumen' },
+  cumi: { role: 'lemah', move: 'Semprot Tinta' }, buaya: { role: 'koin', move: 'Gigitan Bunga' },
+  gajah: { role: 'perisai', move: 'Injak Rapat' }, angsa: { role: 'pulih', move: 'Gugatan Paruh' },
+  monyet: { role: 'koin', move: 'Pungut Parkir' }, kelelawar: { role: 'ganda', move: 'Kentongan Ganda' },
+  merak: { role: 'kritis', move: 'Kibas Pesona' }, babi: { role: 'stun', move: 'Seruduk Razia' },
+  kudanil: { role: 'perisai', move: 'Duduki Musuh' }
+};
+// Strike strength as a share of Santoni's ATK, by rarity; +1.2% per level and +8% per star.
+export const STRIKE_PCT = { Biasa: 0.26, Langka: 0.32, Epik: 0.42, Legendaris: 0.55 };
+export const PET_ATTACK = {
+  ayam: { role: 'ganda', move: 'Patuk Kilat' }, siput: { role: 'perisai', move: 'Lendir Pelindung' },
+  kepiting: { role: 'lemah', move: 'Capit Kantor' }, hantu: { role: 'kritis', move: 'Tatapan Tengah Malam' },
+  bebekkaret: { role: 'stun', move: 'Cicit Nyaring' }, kucingoren: { role: 'ganda', move: 'Cakar Oren' },
+  cupang: { role: 'pulih', move: 'Gelembung Segar' }, naga: { role: 'bakar', move: 'Napas Mini' }
+};
+// Two companions in the team together unlock a team combo; `add` stacks onto the blessings.
+export const TEAM_COMBOS = [
+  { id: 'viral', name: 'Konten Viral', pair: ['kucing', 'merak'], desc: 'Peluang kritis +10%.', add: { siaran: 10 } },
+  { id: 'razia', name: 'Razia Gabungan', pair: ['bebek', 'babi'], desc: 'Musuh pasti kaget dan melewatkan giliran pertamanya.', add: { peluit: 100 } },
+  { id: 'birokrasi', name: 'Lembur Birokrasi', pair: ['tikus', 'kura'], desc: 'Kerusakan diterima −10%, Jam Lembur +10%.', add: { formulir: 10, lembur: 10 } },
+  { id: 'penagih', name: 'Tagih Berbunga', pair: ['kelinci', 'buaya'], desc: 'Koin +15%, curi nyawa +4%.', add: { tagih: 15, majemuk: 4 } },
+  { id: 'motivasi', name: 'Sesi Motivasi', pair: ['lele', 'kumbang'], desc: 'Pulih 2% HP tiap giliran, ATK musuh −5%.', add: { semangat: 2, curhat: 5 } },
+  { id: 'antarparkir', name: 'Antar-Parkir', pair: ['kodok', 'monyet'], desc: 'Peluang serangan tambahan +12%.', add: { antar: 12 } },
+  { id: 'rapatproyek', name: 'Rapat Proyek', pair: ['gajah', 'kudanil'], desc: 'Perisai awal +10% HP dan Veto +1.', add: { mandor: 10, veto: 1 } },
+  { id: 'pestamalam', name: 'Pesta Malam', pair: ['cumi', 'kelelawar'], desc: 'Serangan musuh 10% lebih sering meleset.', add: { tinta: 10 } },
+  { id: 'aktabanding', name: 'Akta Banding', pair: ['angsa', 'lebah'], desc: 'Pukulan pertama +40%, Banding +10%.', add: { stempel: 40, banding: 10 } },
+  { id: 'sidang', name: 'Sidang Debat', pair: ['kambing', 'angsa'], desc: 'Peluang membantah +15%.', add: { bantah: 15 } },
+  { id: 'posronda', name: 'Pos Ronda', pair: ['kelelawar', 'monyet'], desc: 'Musuh mulai battle dengan HP −5%.', add: { ronda: 5 } },
+  { id: 'notulen', name: 'Notulen Rapat', pair: ['tikus', 'gajah'], desc: 'Semua Serangan Tim +20%.', add: { tim: 20 } }
+];

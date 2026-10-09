@@ -27,6 +27,8 @@ const props = {
   skills: q.get('skills') ? q.get('skills').split(',') : null,
   weapon: q.get('weapon'),
   enemy: q.get('enemy'),
+  team: q.get('team') ? q.get('team').split(',').slice(0, 3) : null,
+  pet: q.get('pet'),
   persist: !q.has('screen') && q.get('still') !== '1'
 };
 

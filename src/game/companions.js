@@ -35,6 +35,48 @@ export const companionMethods = {
       const d = compDef(id), c = this.compOf(id, s);
       out[d.bless.id] = (out[d.bless.id] || 0) + (d.bless.id === 'veto' ? (c.star >= 3 ? 2 : 1) : this.blessValue(id, s));
     }
+    for (const tc of this.teamCombos(s)) for (const [k, val] of Object.entries(tc.add)) out[k] = (out[k] || 0) + val;
+    return out;
+  },
+  teamKinds(s = this.state) { return this.team(s).map(id => compDef(id).kind); },
+  // Pair synergies active for the current team.
+  teamCombos(s = this.state) { const t = this.team(s); return P.TEAM_COMBOS.filter(c => c.pair.every(id => t.includes(id))); },
+
+  // Allies strike: each companion on its own beat (every 3rd hero turn, staggered by slot), the pet
+  // every other turn. With `rush` (Serbu Bersama, fired with the ultimate) everyone strikes harder.
+  // Returns the damage dealt and who struck: slot numbers and/or 'pet'.
+  teamStrike(r, b, fx) {
+    const out = { dmg: 0, who: [], lines: [] };
+    const B = b.bless || {}, boost = (1 + (B.tim || 0) / 100) * (fx.rush ? 1.5 : 1);
+    const strike = (pct, role, label, move, who) => {
+      if (b.enemy.hp <= 0) return;
+      const times = role === 'ganda' ? 2 : 1;
+      let dealt = 0, crit = false;
+      for (let k = 0; k < times && b.enemy.hp > 0; k++) {
+        crit = role === 'kritis' && Math.random() < 0.35;
+        const d = Math.max(1, Math.round(r.atk * pct * boost * (times === 2 ? 0.62 : 1) * (crit ? 2 : 1) * (0.9 + Math.random() * 0.2) - b.enemy.def * 0.25));
+        fx.hit(d); dealt += d;
+      }
+      fx.push('enemy', `${label} ${dealt}`, crit ? 'crit' : 'skill');
+      if (role === 'stun' && Math.random() < 0.2 && fx.stunFor()) fx.push('enemy', 'LUMPUH', 'miss');
+      if (role === 'koin') { const c = (3 + 2 * (r.chapter || 0)) * (fx.rush ? 2 : 1); r.coins = (r.coins || 0) + c; fx.push('hero', `+${c} KOIN`, 'heal'); }
+      if (role === 'perisai') { const sh = Math.round(r.maxHp * 0.06); b.shield = (b.shield || 0) + sh; fx.push('hero', `PERISAI +${sh}`, 'skill'); }
+      if (role === 'pulih' && r.hp < r.maxHp) { const h = Math.round(r.maxHp * 0.05); r.hp = Math.min(r.maxHp, r.hp + h); fx.push('hero', `+${h}`, 'heal'); }
+      if (role === 'lemah') b.quake = Math.min(3, (b.quake || 0) + 1);
+      if (role === 'bakar') fx.burnFor(2);
+      out.dmg += dealt; out.who.push(who); out.lines.push(`${move} ${dealt}`);
+    };
+    this.team().forEach((id, i) => {
+      if (!fx.rush && (b.hits + i) % 3 !== 0) return;
+      const d = compDef(id), c = this.compOf(id), atk = P.COMP_ATTACK[id] || { role: 'ganda', move: 'Serangan' };
+      strike(P.STRIKE_PCT[d.rar] * (1 + 0.012 * (c.lv - 1) + 0.08 * c.star), atk.role, d.name.split(' ')[0].toUpperCase(), atk.move, i);
+    });
+    const pet = this.petState().active;
+    if (pet && (fx.rush || b.hits % 2 === 0)) {
+      const pd = petDef(pet), p = this.petState().owned[pet], atk = P.PET_ATTACK[pet] || { role: 'ganda', move: 'Gigitan' };
+      const pct = 0.16 + 0.006 * ((p && p.lv) || 1) + 0.04 * ((p && p.star) || 0);
+      strike(pct, atk.role, pd.name.split(' ')[0].toUpperCase(), atk.move, 'pet');
+    }
     return out;
   },
   // Team % bonuses applied on top of gear in heroBase().
@@ -152,10 +194,17 @@ export const companionMethods = {
       const need = unlocked ? P.COMP_STAR_SHARDS[c.star] : P.COMP_UNLOCK;
       return { id: d.id, kind: d.kind, name: d.name, rar: d.rar, rarBg: C.RAR[d.rar].bg, rarFg: C.RAR[d.rar].fg, stat: d.stat, unlocked, inTeam, lv: c.lv, star: c.star,
         shards: c.shards, need, shardPct: pct(c.shards, need || 1), bonus: this.compBonus(d.id, s), blessName: d.bless.name,
-        blessText: d.blessDesc(this.blessValue(d.id, s), c.star), open: pick === d.id, select: g(() => this.setState({ rekanPick: pick === d.id ? null : d.id })),
+        blessText: d.blessDesc(this.blessValue(d.id, s), c.star), open: pick === d.id,
+        strike: (() => { const a = P.COMP_ATTACK[d.id], ro = a && P.ROLES[a.role]; return ro ? { move: a.move, role: ro.label, icon: ro.icon, desc: ro.desc, pct: Math.round(P.STRIKE_PCT[d.rar] * (1 + 0.012 * Math.max(0, (c.lv || 1) - 1) + 0.08 * c.star) * 100) } : null; })(), select: g(() => this.setState({ rekanPick: pick === d.id ? null : d.id })),
         levelCost: unlocked ? fmt(this.compLevelCost(d.id)) : '', canStar: unlocked && need && c.shards >= need, maxStar: unlocked && !need,
         toggle: g(() => this.toggleTeam(d.id)), level: g(() => this.levelComp(d.id)), starUp: g(() => this.starComp(d.id)) };
     });
+    const inTeam = this.team(s);
+    v.teamCombos = P.TEAM_COMBOS.map(tc => {
+      const have = tc.pair.filter(id => inTeam.includes(id)).length;
+      return { id: tc.id, name: tc.name, desc: tc.desc, active: have === 2, have, members: tc.pair.map(id => { const d = compDef(id); return { id, kind: d.kind, name: d.name, inTeam: inTeam.includes(id), owned: this.compUnlocked(id, s) }; }) };
+    }).sort((a, b2) => b2.have - a.have);
+    v.activeCombos = v.teamCombos.filter(x => x.active).length;
     v.recruit1 = g(() => this.recruit(1)); v.recruit10 = g(() => this.recruit(10));
     v.recruitCost = { one: P.RECRUIT.one, ten: fmt(P.RECRUIT.ten) };
     const tp = this.teamPct(s);
@@ -167,6 +216,7 @@ export const companionMethods = {
       return { id: d.id, name: d.name, rar: d.rar, rarBg: C.RAR[d.rar].bg, rarFg: C.RAR[d.rar].fg, desc: d.desc, owned: !!p, active: ps.active === d.id,
         lv: p ? p.lv : 0, star: p ? p.star : 0, xpPct: p ? pct(p.xp, p.lv * 10) : '0%', xpLabel: p ? `${p.xp}/${p.lv * 10}` : '',
         statLabel: [stats.atk && `ATK +${stats.atk}`, stats.hp && `HP +${stats.hp}`, stats.def && `DEF +${stats.def}`].filter(Boolean).join(' · '),
+        strike: (() => { const a = P.PET_ATTACK[d.id], ro = a && P.ROLES[a.role]; return ro ? { move: a.move, role: ro.label, icon: ro.icon, desc: ro.desc } : null; })(),
         feed: g(() => this.feedPet(d.id, 1)), feed5: g(() => this.feedPet(d.id, 5)), activate: g(() => this.setActivePet(d.id)) };
     });
     v.activePet = ps.active;

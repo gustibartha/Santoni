@@ -18,7 +18,7 @@ function BattleSummary({ s, still }) {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4,minmax(0,1fr))", gap: "6px", marginTop: "9px" }}>
         {s.stats.map((st, i) => (
           <div key={st.label} style={{ padding: "7px 4px 6px", borderRadius: "11px", background: "rgba(0,0,0,.28)", textAlign: "center" }}>
-            <div style={{ font: "20px/1 'Bagel Fat One',system-ui", color: st.color }}><CountUp value={st.value} delay={450 + i * 120} still={still} /></div>
+            <div style={{ font: "20px/1 var(--display)", color: st.color }}><CountUp value={st.value} delay={450 + i * 120} still={still} /></div>
             <div style={{ font: "500 9.5px/1.15 'DM Mono',monospace", color: "#C9C2B6", marginTop: "4px" }}>{st.label}</div>
           </div>
         ))}
@@ -48,7 +48,7 @@ function UltimateCinematic({ u }) {
       </div>
       <div style={{ position: "absolute", left: "0", right: "0", top: "50%", textAlign: "center", animation: "ultTitle 1.5s ease-out both" }}>
         <div style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".3em", color: "#F2B63C" }}>JURUS PAMUNGKAS</div>
-        <div style={{ marginTop: "8px", font: "34px/1.05 'Bagel Fat One',system-ui", color: "#FFF8EC", textShadow: OUTLINE }}>{u.name}</div>
+        <div style={{ marginTop: "8px", font: "34px/1.05 var(--display)", color: "#FFF8EC", textShadow: OUTLINE }}>{u.name}</div>
         {u.chips.length > 0 && (
           <div style={{ display: "flex", justifyContent: "center", gap: "6px", marginTop: "12px" }}>
             {u.chips.map(c => (
@@ -76,7 +76,7 @@ function Nameplate({ name, lvl, pct, label, color, chips, width }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", width, pointerEvents: "none" }}>
       {chips && chips.length > 0 && <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "3px" }}>{chips.map(s => <StatusChip key={s.label} s={s} />)}</div>}
-      <div style={{ display: "flex", alignItems: "baseline", gap: "5px", font: "15px/1 'Bagel Fat One',system-ui", color: "#FFF8EC", textShadow: OUTLINE, whiteSpace: "nowrap" }}>
+      <div style={{ display: "flex", alignItems: "baseline", gap: "5px", font: "15px/1 var(--display)", color: "#FFF8EC", textShadow: OUTLINE, whiteSpace: "nowrap" }}>
         {name}<span style={{ font: "800 10px/1 'Bricolage Grotesque'", padding: "2px 5px", borderRadius: "6px", background: "#2B1E18", textShadow: "none" }}>Lv {lvl}</span>
       </div>
       <div style={{ position: "relative", width: "100%", height: "14px", boxSizing: "border-box", border: "2.5px solid #2B1E18", borderRadius: "8px", background: "#2B1E18", overflow: "hidden", boxShadow: "0 2px 0 rgba(43,30,24,.4)" }}>
@@ -181,6 +181,12 @@ function Coins() {
   );
 }
 
+const ALLY_POS = [
+  { left: 4, top: 200, size: 66, run: 222 },
+  { left: -2, top: 268, size: 72, run: 220 },
+  { left: 50, top: 238, size: 58, run: 186 }
+];
+
 export default function Battle({ v }) {
   const enemySize = v.bBoss ? 186 : 166;
   return (
@@ -190,14 +196,20 @@ export default function Battle({ v }) {
         <Stage theme={v.stageTheme} still={v.still} />
         {!v.still && <Motes />}
 
-        {v.leaderKind && (
-          <div key={v.assist ? v.assistKey : 'leader'} style={{ position: "absolute", left: "2px", top: "262px", width: "84px", height: "84px", pointerEvents: "none", animation: v.assist && !v.still ? "assistRun .5s ease-in-out" : "none" }}>
-            <Musuh kind={v.leaderKind} still={v.still} />
-          </div>
-        )}
+        {/* The team waits behind Santoni and runs in on its beat. */}
+        {v.allies.map(a => {
+          const p = ALLY_POS[a.slot];
+          return (
+            <div key={a.slot} style={{ position: "absolute", left: `${p.left}px`, top: `${p.top}px`, width: `${p.size}px`, height: `${p.size}px`, pointerEvents: "none", animation: v.still ? "none" : `allyEnter .7s ${0.25 + a.slot * 0.12}s ease-out both` }}>
+              <div key={a.t} style={{ position: "absolute", inset: "0", '--run': `${p.run}px`, animation: a.t && !v.still ? `allyDash ${v.allyTime} ${a.delay}s ease-in-out` : "none" }}>
+                <Musuh kind={a.kind} still={v.still} />
+              </div>
+            </div>
+          );
+        })}
 
         {/* Santoni */}
-        <div style={{ position: "absolute", left: "26px", top: "172px", width: "150px", height: "170px", animation: v.still ? "none" : ["heroEnter .8s ease-out both", v.koHero ? "koHero .9s .15s ease-out forwards" : null].filter(Boolean).join(", ") }}>
+        <div style={{ position: "absolute", left: "74px", top: "172px", width: "150px", height: "170px", animation: v.still ? "none" : ["heroEnter .8s ease-out both", v.koHero ? "koHero .9s .15s ease-out forwards" : null].filter(Boolean).join(", ") }}>
           <div key={`hd${v.heroAct}`} style={{ position: "absolute", inset: "0", animation: v.heroAct && !v.still ? `heroDash ${v.dashTime} ease-in-out` : "none" }}>
             <div key={`hk${v.hitKey}`} style={{ position: "absolute", inset: "0", animation: v.heroHit && !v.still ? `knockL .36s ${v.hitDelay} ease-out` : "none" }}>
               {v.hShield && (
@@ -213,7 +225,11 @@ export default function Battle({ v }) {
           </div>
           <div style={{ position: "absolute", inset: "0", pointerEvents: "none" }}>{v.heroPops}</div>
         </div>
-        {v.activePet && <div style={{ position: "absolute", left: "150px", top: "292px", pointerEvents: "none" }}><PetArt id={v.activePet} size={50} still={v.still} /></div>}
+        {v.activePet && (
+          <div style={{ position: "absolute", left: "190px", top: "298px", pointerEvents: "none" }}>
+            <div key={v.petT} style={{ '--run': "86px", animation: v.petT && !v.still ? `allyDash ${v.allyTime} ${v.petDelay}s ease-in-out` : "none" }}><PetArt id={v.activePet} size={48} still={v.still} /></div>
+          </div>
+        )}
 
         {/* Enemy */}
         <div style={{ position: "absolute", right: "14px", top: `${342 - enemySize}px`, width: `${enemySize}px`, height: `${enemySize}px`, animation: v.still ? "none" : ["enemyEnter .85s .1s ease-out both", v.koEnemy ? "koEnemy 1s .15s ease-in forwards" : null].filter(Boolean).join(", ") }}>
@@ -231,13 +247,18 @@ export default function Battle({ v }) {
         </div>
 
         {/* Nameplates over the fighters */}
-        <div style={{ position: "absolute", left: "26px", top: "142px" }}>
+        <div style={{ position: "absolute", left: "74px", top: "142px" }}>
           <Nameplate name="Santoni" lvl={v.lvl} pct={v.hpPct} label={v.hpLabel} color="#4FAE72" width="150px" />
         </div>
         <div style={{ position: "absolute", right: "10px", top: `${(342 - enemySize) - 30 - (v.eStatus.length ? 21 : 0)}px` }}>
           <Nameplate name={v.eName} lvl={v.eLvl} pct={v.eHpPct} label={v.eHpLabel} color="#E0503A" chips={v.eStatus} width={`${enemySize}px`} />
         </div>
 
+        {v.comboN >= 2 && !v.still && (
+          <div key={v.comboKey} style={{ position: "absolute", left: "50%", top: "112px", zIndex: "4", padding: "6px 14px 8px", border: "3px solid #2B1E18", borderRadius: "14px", background: v.rushOn ? "linear-gradient(180deg,#FFE45C,#F2B63C)" : "linear-gradient(180deg,#FFFFFF,#FFE9B8)", color: "#2B1E18", font: "22px/1 var(--display)", whiteSpace: "nowrap", boxShadow: "0 4px 0 #2B1E18, 0 0 24px rgba(255,214,90,.7)", pointerEvents: "none", animation: "comboStamp 1.1s ease-out both" }}>
+            {v.rushOn ? 'SERBU BERSAMA' : 'COMBO'} <span style={{ color: "#D2532A" }}>×{v.comboN}</span>
+          </div>
+        )}
         {v.lowHp && !v.still && <div style={{ position: "absolute", inset: "0", zIndex: "3", pointerEvents: "none", boxShadow: "inset 0 0 70px 16px rgba(214,40,40,.62)", animation: "lowHp 1.2s ease-in-out infinite" }} />}
         <div style={{ position: "absolute", left: "0", right: "0", top: "70px", height: "44px", zIndex: "4", pointerEvents: "none" }}>{v.banner}</div>
       </div>
@@ -303,7 +324,7 @@ export default function Battle({ v }) {
       {v.koEnemy && !v.still && <Coins />}
       {v.bSummary && <BattleSummary s={v.bSummary} still={v.still} />}
       {v.bOver && (
-        <div style={{ position: "absolute", left: "50%", top: "250px", zIndex: "6", transform: "translate(-50%,-50%) rotate(-6deg)", padding: "10px 26px 12px", border: "3.5px solid #2B1E18", borderRadius: "18px", background: v.bOverColor, color: "#2B1E18", font: "40px/1 'Bagel Fat One',system-ui", boxShadow: "0 6px 0 #2B1E18", pointerEvents: "none" }}>{v.bOverText}</div>
+        <div style={{ position: "absolute", left: "50%", top: "250px", zIndex: "6", transform: "translate(-50%,-50%) rotate(-6deg)", padding: "10px 26px 12px", border: "3.5px solid #2B1E18", borderRadius: "18px", background: v.bOverColor, color: "#2B1E18", font: "40px/1 var(--display)", boxShadow: "var(--lift6)", pointerEvents: "none" }}>{v.bOverText}</div>
       )}
     </div>
   );

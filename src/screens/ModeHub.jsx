@@ -6,10 +6,10 @@ const OUT = "2px 0 0 #2B1E18,-2px 0 0 #2B1E18,0 2px 0 #2B1E18,0 -2px 0 #2B1E18,1
 // A big banner card: title, a pill of info, two stats, art on the right, action buttons.
 function ModeCard({ color, title, pill, pillIcon, stats, art, actions, onClick }) {
   return (
-    <div onClick={onClick} style={{ position: "relative", flex: "none", overflow: "hidden", minHeight: "118px", border: "3px solid #2B1E18", borderRadius: "20px", background: `linear-gradient(110deg, ${color} 55%, rgba(255,255,255,.18) 55.2%, ${color} 70%)`, boxShadow: "0 5px 0 #2B1E18", color: "#FFF8EC", cursor: onClick ? "pointer" : "default" }}>
+    <div onClick={onClick} style={{ position: "relative", flex: "none", overflow: "hidden", minHeight: "118px", border: "3px solid #2B1E18", borderRadius: "20px", background: `linear-gradient(110deg, ${color} 55%, rgba(255,255,255,.18) 55.2%, ${color} 70%)`, boxShadow: "var(--lift5)", color: "#FFF8EC", cursor: onClick ? "pointer" : "default" }}>
       <div style={{ position: "absolute", right: "-6px", bottom: "-8px", width: "128px", height: "128px", pointerEvents: "none" }}>{art}</div>
       <div style={{ position: "relative", padding: "11px 12px 11px", maxWidth: "70%" }}>
-        <div style={{ font: "21px/1.05 'Bagel Fat One',system-ui", textShadow: OUT }}>{title}</div>
+        <div style={{ font: "21px/1.05 var(--display)", textShadow: OUT }}>{title}</div>
         {pill && (
           <div style={{ display: "inline-flex", alignItems: "center", gap: "5px", marginTop: "7px", padding: "4px 9px 4px 5px", borderRadius: "10px", background: "rgba(0,0,0,.28)", font: "700 11.5px/1.2 'Bricolage Grotesque'" }}>
             <span style={{ font: `15px/1 ${ICON}`, color: "#FFE9A8" }}>{pillIcon}</span>{pill}
@@ -33,7 +33,7 @@ function ModeCard({ color, title, pill, pillIcon, stats, art, actions, onClick }
 
 function Btn({ onClick, children, light, disabled }) {
   return (
-    <button onClick={e => { e.stopPropagation(); onClick && onClick(); }} disabled={disabled} style={{ height: "32px", padding: "0 12px", border: "2px solid #2B1E18", borderRadius: "11px", background: disabled ? "#EADBC5" : light ? "#FFF8EC" : "#F2B63C", color: "#2B1E18", boxShadow: disabled ? "none" : "0 2px 0 #2B1E18", font: "800 12px/1 'Bricolage Grotesque'", cursor: disabled ? "default" : "pointer", whiteSpace: "nowrap" }}>{children}</button>
+    <button onClick={e => { e.stopPropagation(); onClick && onClick(); }} disabled={disabled} style={{ height: "32px", padding: "0 12px", border: "2px solid #2B1E18", borderRadius: "11px", background: disabled ? "#EADBC5" : light ? "#FFF8EC" : "#F2B63C", color: "#2B1E18", boxShadow: disabled ? "none" : "var(--lift2)", font: "800 12px/1 'Bricolage Grotesque'", cursor: disabled ? "default" : "pointer", whiteSpace: "nowrap" }}>{children}</button>
   );
 }
 
@@ -57,7 +57,7 @@ export default function ModeHub({ v }) {
               stats={[{ label: 'PERINGKAT', value: `${v.arena.rank}/${v.arena.total}`, icon: 'leaderboard' }, { label: 'POIN', value: v.arena.points, icon: 'military_tech' }, { label: 'DUEL', value: `${v.arena.triesLeft}/5`, icon: 'swords' }]} />
             <div style={{ font: "500 10.5px/1 'DM Mono',monospace", letterSpacing: ".06em", color: "#5E4A3F" }}>PILIH LAWAN · LAWAN BERGANTI SETELAH TIAP DUEL</div>
             {v.arena.opponents.map(o => (
-              <div key={o.name} style={{ display: "flex", alignItems: "center", gap: "11px", padding: "9px 11px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18" }}>
+              <div key={o.name} style={{ display: "flex", alignItems: "center", gap: "11px", padding: "9px 11px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#FFF8EC", boxShadow: "var(--lift3)" }}>
                 <div style={{ position: "relative", width: "48px", height: "48px", flex: "none", border: "2px solid #2B1E18", borderRadius: "12px", background: "#F3E6D3", overflow: "hidden" }}><div style={{ position: "absolute", inset: "2px 2px 0" }}><Musuh kind={o.kind} still /></div></div>
                 <div style={{ flex: "1", minWidth: "0" }}>
                   <div style={{ font: "800 14px/1.15 'Bricolage Grotesque'" }}>{o.name}</div>
