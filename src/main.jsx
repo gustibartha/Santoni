@@ -29,6 +29,7 @@ const props = {
   enemy: q.get('enemy'),
   team: q.get('team') ? q.get('team').split(',').slice(0, 3) : null,
   pet: q.get('pet'),
+  elite: q.get('elite') === '1',
   persist: !q.has('screen') && q.get('still') !== '1'
 };
 

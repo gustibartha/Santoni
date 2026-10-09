@@ -8,15 +8,17 @@ const SHINE = 'rgba(255,255,255,.7)';
 
 // Eyes blink on a slow loop (paused by the .ms-still class on still renders).
 function Eye({ x, y, r = 6.5 }) {
+  const d = x <= 100 ? 1 : -1;
   return (
     <g stroke="none" className="ms-blink" style={{ transformOrigin: `${x}px ${y}px`, animationDelay: `${(x * 37 + y * 13) % 30 / 10}s` }}>
-      <circle cx={x} cy={y} r={r} fill={O} />
-      <circle cx={x + r * 0.32} cy={y - r * 0.38} r={r * 0.36} fill="#FFF" />
-      <circle cx={x - r * 0.4} cy={y + r * 0.35} r={r * 0.16} fill="#FFF" />
+      <path d={`M${x - d * r * 1.05} ${y - r * 0.5}L${x + d * r} ${y + r * 0.05}Q${x + d * r * 0.1} ${y + r * 1.3} ${x - d * r * 1.05} ${y - r * 0.5}Z`} fill={O} />
+      <circle cx={x + d * r * 0.12} cy={y + r * 0.2} r={r * 0.27} fill="#FFF" />
+      <path d={`M${x - d * r * 1.35} ${y - r * 1.1}L${x + d * r * 1.15} ${y - r * 0.38}`} fill="none" stroke={O} strokeWidth={r * 0.62} strokeLinecap="round" />
     </g>
   );
 }
-const Blush = ({ at }) => <g stroke="none" fill={BLUSH}>{at.map(([x, y], i) => <ellipse key={i} cx={x} cy={y} rx="9" ry="5.5" />)}</g>;
+// No rosy cheeks: the cast is meant to look tough, not cuddly.
+const Blush = () => null;
 // Fills `d`, then layers a feathered shade along its bottom, a soft vertical falloff and a
 // gloss highlight (shared gradients from SvgDefs) before redrawing the outline on top.
 function Shaded({ id, d, fill, shade = 'rgba(43,30,24,.14)', cy = 200, rx = 80, ry = 40 }) {
@@ -560,7 +562,6 @@ Object.assign(ART, {
       <path d="M58 64L44 38L76 50Z" fill="#8E6A4E" />
       <path d="M142 64L156 38L124 50Z" fill="#8E6A4E" />
       <Shaded id="ms-babi-h" d="M100 42Q150 42 150 86Q150 128 100 128Q50 128 50 86Q50 42 100 42Z" fill="#8E6A4E" shade="rgba(60,30,10,.18)" cy={144} rx={70} ry={30} />
-      <path d="M72 66L90 72M128 66L110 72" fill="none" strokeWidth="3.4" />
       <Eye x={84} y={80} r={6} /><Eye x={116} y={80} r={6} />
       <ellipse cx="100" cy="102" rx="21" ry="15" fill="#C99A7A" />
       <ellipse cx="93" cy="102" rx="3.2" ry="4.6" fill={O} stroke="none" />

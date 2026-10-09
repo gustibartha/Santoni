@@ -24,6 +24,9 @@ export default function Run({ v }) {
       </div>
       <div style={{ position: "relative", height: "14px", flex: "none", margin: "2px 14px 2px 4px" }}>
         <div style={{ position: "absolute", inset: "0", boxSizing: "border-box", border: "2.5px solid #2B1E18", borderRadius: "8px", background: "#EADBC5", overflow: "hidden" }}><div style={{ height: "100%", width: v.dayPct, background: "#D2532A", transition: "width .4s" }} /></div>
+        {(v.miniMarks || []).map(m => (
+          <div key={m.d} title={`Minibos hari ${m.d}`} style={{ position: "absolute", left: m.left, top: "50%", transform: "translate(-50%,-50%)", width: "18px", height: "18px", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2px solid #2B1E18", borderRadius: "6px", background: m.done ? "#B9A994" : "#7E43B5", color: "#FFF8EC", font: "12px/1 'Material Symbols Rounded'" }}>skull</div>
+        ))}
         <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)", width: "24px", height: "24px", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "8px", background: "#F2B63C", color: "#2B1E18", font: "14px/1 'Material Symbols Rounded'" }}>swords</div>
         <div style={{ position: "absolute", right: "-12px", top: "50%", transform: "translateY(-50%)", width: "28px", height: "28px", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "9px", background: "#2B1E18", color: "#F2B63C", font: "17px/1 'Material Symbols Rounded'" }}>local_fire_department</div>
       </div>

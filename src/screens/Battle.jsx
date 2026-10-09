@@ -188,7 +188,7 @@ const ALLY_POS = [
 ];
 
 export default function Battle({ v }) {
-  const enemySize = v.bBoss ? 186 : 166;
+  const enemySize = v.bBoss ? 186 : v.bElite ? 178 : 166;
   return (
     <div style={{ position: "absolute", inset: "0", backgroundColor: v.battleBg, backgroundImage: "radial-gradient(rgba(255,248,236,.06) 1.2px,transparent 1.5px)", backgroundSize: "10px 10px", color: "#FFF8EC" }}>
       {/* Stage: scenery, fighters, effects */}
@@ -234,6 +234,7 @@ export default function Battle({ v }) {
         {/* Enemy */}
         <div style={{ position: "absolute", right: "14px", top: `${342 - enemySize}px`, width: `${enemySize}px`, height: `${enemySize}px`, animation: v.still ? "none" : ["enemyEnter .85s .1s ease-out both", v.koEnemy ? "koEnemy 1s .15s ease-in forwards" : null].filter(Boolean).join(", ") }}>
           {!v.still && <div style={{ position: "absolute", left: "50%", bottom: "6px", width: "0", height: "0", pointerEvents: "none" }}>{[-70, -40, 40, 70].map((dx, i) => <span key={i} style={{ position: "absolute", left: "-12px", top: "-12px", width: "24px", height: "24px", borderRadius: "50%", background: "rgba(255,248,236,.92)", border: "2px solid rgba(43,30,24,.35)", "--dx": `${dx}px`, animation: `dustPuff .7s ${0.56 + i * 0.03}s ease-out both` }} />)}</div>}
+          {v.bElite && !v.koEnemy && <div style={{ position: "absolute", left: "-14%", right: "-14%", bottom: "-6%", height: "70%", borderRadius: "50%", background: "radial-gradient(closest-side, rgba(160,90,235,.85), rgba(126,67,181,.35) 55%, rgba(126,67,181,0))", animation: v.still ? "none" : "eliteAura 1.6s ease-in-out infinite", pointerEvents: "none" }} />}
           <div key={`ed${v.enemyAct}`} style={{ position: "absolute", inset: "0", animation: v.enemyAct && !v.still ? `enemyDash ${v.dashTime} ease-in-out` : "none" }}>
             <div key={`ek${v.hitKey}`} style={{ position: "absolute", inset: "0", animation: v.enemyHit && !v.still ? `knockR .38s ${v.hitDelay} ease-out` : "none", filter: v.eFilter, transition: "filter .3s" }}>
               <Musuh kind={v.eKind} still={v.still} flip={true} mood={v.eMood} moodKey={v.eMoodKey} />
@@ -267,6 +268,7 @@ export default function Battle({ v }) {
       <div style={{ position: "absolute", top: "12px", left: "12px", right: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
         <div style={{ padding: "8px 10px", borderRadius: "12px", border: "2px solid #0F1411", background: "#2E3A34", font: "500 10.5px/1 'DM Mono',monospace", letterSpacing: ".08em" }}>GILIRAN {v.bTurn}</div>
         {v.bBoss && <div style={{ padding: "8px 10px", borderRadius: "12px", border: "2px solid #0F1411", background: "#D2532A", font: "500 10.5px/1 'DM Mono',monospace", letterSpacing: ".08em" }}>BOS</div>}
+        {v.bElite && <div aria-label="Minibos" title="Minibos" style={{ width: "32px", height: "30px", flex: "none", display: "grid", placeItems: "center", borderRadius: "11px", border: "2px solid #0F1411", background: "#7E43B5", color: "#FFE45C", font: "17px/1 'Material Symbols Rounded'" }}>skull</div>}
         {v.bFloor > 0 && <div style={{ padding: "8px 10px", borderRadius: "12px", border: "2px solid #0F1411", background: "#7E43B5", font: "500 10.5px/1 'DM Mono',monospace", letterSpacing: ".08em" }}>LANTAI {v.bFloor}</div>}
         <div style={{ flex: "1" }} />
         <button onClick={v.askQuit} aria-label="Kabur dari battle" style={{ width: "36px", height: "36px", flex: "none", display: "grid", placeItems: "center", padding: "0", boxSizing: "border-box", border: "2px solid #0F1411", borderRadius: "10px", background: "#2E3A34", color: "#FF9C8A", font: "19px/1 'Material Symbols Rounded'", cursor: "pointer" }}>logout</button>

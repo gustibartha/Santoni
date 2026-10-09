@@ -84,6 +84,15 @@ function SantoniSide({ pose, flip, still }) {
                     <ellipse cx="124" cy="70" rx="9" ry="5.5" fill="#FFF8EC" stroke="none" />
                     <ellipse cx="106" cy="90" rx="47" ry="42" fill="url(#g-shade)" stroke="none" />
                     <ellipse cx="106" cy="90" rx="47" ry="42" fill="url(#g-sheen)" stroke="none" />
+                    <g style={{ animation: a('bandFlow 1.3s ease-in-out infinite'), transformOrigin: '70px 62px' }}>
+                      <path d="M70 60Q48 50 30 60Q50 59 70 66Z" fill="#26283A" />
+                      <path d="M70 63Q52 70 40 86Q55 73 72 68Z" fill="#3A3D55" />
+                    </g>
+                    <path d="M82 53Q106 46 130 53L145 66Q106 57 67 66Z" fill="#26283A" />
+                    <path d="M84 55Q106 50 128 55" fill="none" stroke="rgba(255,255,255,.28)" strokeWidth="2" />
+                    <rect x="110" y="50" width="20" height="12" rx="3" transform="rotate(14 120 56)" fill="#C9D2D8" strokeWidth="2.4" />
+                    <path d="M114 55l5 3 5-1" transform="rotate(14 120 56)" fill="none" stroke="#26283A" strokeWidth="2" />
+                    <circle cx="70" cy="63" r="4.5" fill="#26283A" strokeWidth="2.4" />
                     <path d="M122 98Q117 108 121 118" fill="none" stroke="#8E3418" strokeWidth="6" />
                     <path d="M126 92Q150 82 161 96Q164 112 147 117Q129 120 121 108Z" fill="#FFF8EC" />
                     <ellipse cx="158" cy="96" rx="6.5" ry="5" fill="#2B1E18" strokeWidth="1.5" />
@@ -91,10 +100,10 @@ function SantoniSide({ pose, flip, still }) {
                     {p.eye === 'datar' && (
                       <>
                         <g style={{ animation: a('pdBlink 4.2s ease-in-out infinite'), transformOrigin: '127px 87px' }}>
-                          <path d="M119 84L136 84Q135 94 127.5 94Q120 94 119 84Z" fill="#2B1E18" stroke="none" />
-                          <circle cx="130" cy="88.5" r="1.8" fill="#FFF8EC" stroke="none" />
+                          <path d="M118 81L137 86Q135 94 127.5 94Q120 94 118 81Z" fill="#2B1E18" stroke="none" />
+                          <circle cx="131" cy="89" r="1.9" fill="#FFF8EC" stroke="none" />
                         </g>
-                        <path d="M116 83.5L138 83.5" fill="none" strokeWidth="3" />
+                        <path d="M114 76L140 84" fill="none" strokeWidth="4.4" />
                       </>
                     )}
                     {p.eye === 'sakit' && (
@@ -137,7 +146,7 @@ export default function Santoni({ pose = 'idle', expr = 'auto', flip = false, st
   const v = {
     flipTf: flip ? 'scaleX(-1)' : N, tBody: c.tBody, tTail: c.tTail, tHead: c.tHead, armL: c.armL, armR: c.armR,
     aBody: a(c.aBody), aTail: a(c.aTail), aArmL: a(c.aArm), aArmR: a(c.aArm), aFootL: a(c.aFootL), aFootR: a(c.aFootR),
-    aBlink: a('pdBlink 4.2s ease-in-out infinite'),
+    aBlink: a('pdBlink 4.2s ease-in-out infinite'), aBand: a('bandFlow 1.3s ease-in-out infinite'),
     dDatar: show('datar'), dKaget: show('kaget'), dTidur: show('tidur'), dSakit: show('sakit'),
     dZ: face === 'tidur' ? 'inline' : N, aZ: a('pdZ 2.4s ease-out infinite'), aZ2: a('pdZ 2.4s 1.2s ease-out infinite')
   };
@@ -187,14 +196,23 @@ export default function Santoni({ pose = 'idle', expr = 'auto', flip = false, st
                   <ellipse cx="100" cy="88" rx="60" ry="47" style={{ fill: "url(#g-shade)", stroke: "none" }} />
                   <ellipse cx="100" cy="88" rx="60" ry="47" style={{ fill: "url(#g-sheen)", stroke: "none" }} />
                   <ellipse cx="100" cy="88" rx="60" ry="47" style={{ fill: "none" }} />
+                  <g style={{ animation: v.aBand, transformOrigin: "156px 64px" }}>
+                    <path d="M156 62 Q178 52 194 62 Q178 61 158 69 Z" style={{ fill: "#26283A" }} />
+                    <path d="M156 66 Q176 72 186 88 Q172 76 157 71 Z" style={{ fill: "#3A3D55" }} />
+                  </g>
+                  <path d="M51 58 Q100 43 149 58 L156 71 Q100 56 44 71 Z" style={{ fill: "#26283A" }} />
+                  <path d="M55 59 Q100 47 145 59" style={{ fill: "none", stroke: "rgba(255,255,255,.28)", strokeWidth: "2" }} />
+                  <rect x="89" y="49" width="22" height="13" rx="3" style={{ fill: "#C9D2D8", strokeWidth: "2.4" }} />
+                  <path d="M94 54 L100 58 L106 54" style={{ fill: "none", stroke: "#26283A", strokeWidth: "2" }} />
+                  <circle cx="156" cy="65" r="4.5" style={{ fill: "#26283A", strokeWidth: "2.4" }} />
                   <g style={{ display: v.dDatar }}>
                     <g style={{ animation: v.aBlink, transformOrigin: "100px 89px" }}>
-                      <path d="M71 89 L87 89 Q86 98 79 98 Q72 98 71 89 Z" style={{ fill: "#2B1E18", stroke: "none" }} />
-                      <path d="M113 89 L129 89 Q128 98 121 98 Q114 98 113 89 Z" style={{ fill: "#2B1E18", stroke: "none" }} />
+                      <path d="M70 86 L88 90 Q87 98 79.5 98 Q72 98 70 86 Z" style={{ fill: "#2B1E18", stroke: "none" }} />
+                      <path d="M130 86 L112 90 Q113 98 120.5 98 Q128 98 130 86 Z" style={{ fill: "#2B1E18", stroke: "none" }} />
                       <circle cx="82" cy="93" r="1.8" style={{ fill: "#FFF8EC", stroke: "none" }} />
                       <circle cx="124" cy="93" r="1.8" style={{ fill: "#FFF8EC", stroke: "none" }} />
                     </g>
-                    <path d="M69 88.5 L89 88.5 M111 88.5 L131 88.5" style={{ fill: "none", strokeWidth: "3" }} />
+                    <path d="M66 81 L90 88 M134 81 L110 88" style={{ fill: "none", strokeWidth: "4.4" }} />
                     <path d="M94 121 L106 121" style={{ fill: "none", strokeWidth: "2.8" }} />
                   </g>
                   <g style={{ display: v.dKaget }}>

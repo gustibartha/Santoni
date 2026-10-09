@@ -324,6 +324,8 @@ export default class Game extends Component {
     // Preview helpers: ?team=kucing,merak,bebek&pet=ayam put a ready team into the demo state.
     if (p.team) { const owned = {}; p.team.forEach(id => { owned[id] = { lv: 10, star: 1, shards: 0 }; }); s.comp = { owned, team: [0, 1, 2].map(i => p.team[i] || null) }; }
     if (p.pet) s.pets = { owned: { [p.pet]: { lv: 8, star: 0, xp: 0 } }, active: p.pet };
+    if (p.elite && s.run && s.run.event && s.run.event.kind === 'enemy') s.run.event = { ...s.run.event, enemy: p.enemy && C.ENEMIES[p.enemy] ? p.enemy : s.run.event.enemy, elite: true };
+    if (p.elite && s.battle) { s.battle = { ...s.battle, elite: true, final: false, enemy: this.makeElite(this.makeEnemy(p.enemy && C.ENEMIES[p.enemy] && !C.ENEMIES[p.enemy].boss ? p.enemy : 'tikus', days, 2)) }; }
     return s;
   }
 
@@ -419,6 +421,9 @@ export default class Game extends Component {
   }
   power(st) { return st.atk * 40 + st.hp * 4 + st.def * 60; }
   itemScore(id) { const it = C.ITEMS[id]; return !it ? 0 : it.stat === 'HP' ? it.val / 6 : it.stat === 'DEF' ? it.val * 1.6 : it.val; }
+  makeElite(en) {
+    return { ...en, elite: true, lvl: en.lvl + 3, hp: Math.round(en.hp * 2.1), maxHp: Math.round(en.maxHp * 2.1), atk: Math.round(en.atk * 1.3), def: Math.round(en.def * 1.25) };
+  }
   makeEnemy(key, day, chapter = 0) {
     const e = C.ENEMIES[key], f = (1 + day * 0.06) * (1 + 0.14 * chapter), hp = Math.round(e.hp * f);
     return { key, name: e.name, icon: e.icon, boss: !!e.boss, lvl: Math.max(1, Math.round(day * 1.1) + (e.boss ? 4 : 0) + chapter * 3), hp, maxHp: hp, atk: Math.round(e.atk * f), def: Math.round(e.def * f) };
@@ -520,6 +525,10 @@ export default class Game extends Component {
     if (r.route && r.day > r.route.until) r.route = null;
     if (r.day >= r.maxDay) { r.day = r.maxDay; r.event = { kind: 'enemy', enemy: ch.boss, final: true }; return this.setState({ run: r }); }
     if (!r.midDone && r.day >= Math.round(r.maxDay / 2)) { r.midDone = true; r.event = { kind: 'enemy', enemy: ch.mid }; return this.setState({ run: r }); }
+    if (r.day % 5 === 0 && !(r.minis || []).includes(r.day)) {
+      r.minis = (r.minis || []).concat(r.day); r.event = { kind: 'enemy', enemy: this.pick(ch.pool), elite: true };
+      return this.setState({ run: r });
+    }
     if ((r.forks || []).includes(r.day)) { r.event = { kind: 'fork' }; return this.setState({ run: r }); }
     const fest = this.festNow();
     if (fest.id === 'lomba' && r.day === 4 && !r.lombaDone) { r.lombaDone = true; r.event = { kind: 'lomba' }; return this.setState({ run: r }); }
@@ -567,7 +576,7 @@ export default class Game extends Component {
     r.event = null;
     if (r.hp <= 0 && this.tryRevive(r)) r.log = r.log.concat({ id: this.uid(), day: r.day, text: 'Santoni pingsan. Lalu bangun lagi, mengira masih pagi.', fx: [{ k: 'hp', v: r.hp }], tone: 'skill' });
     if (r.hp <= 0) return this.finishRun(r, false);
-    let offer = o.skill ? { kind: 'bonus', ids: this.rollSkills(3), rerolls: 0 } : null;
+    let offer = o.skill ? { kind: o.skill === 'elite' ? 'elite' : 'bonus', ids: this.rollSkills(3), rerolls: o.skill === 'elite' ? 1 : 0 } : null;
     if (r.xp >= r.xpNext) {
       const from = r.lvl; r.xp -= r.xpNext; r.lvl += 1; r.xpNext = Math.round(r.xpNext * 1.3);
       r.atk = Math.round(r.atk * 1.05); r.hp = Math.min(r.maxHp, r.hp + Math.round(r.maxHp * 0.15));
@@ -596,8 +605,8 @@ export default class Game extends Component {
       return this.applyOutcome(r, o, o.t, { tone: o.skill ? 'skill' : undefined });
     }
     const e = C.ENEMIES[ev.enemy];
-    if (which === 'a') return this.startBattle(r, ev.enemy, false, ev.final);
-    if (e.boss || (this.props || {}).gertak === false || this.ruleOf(r) === 'pasal') return;
+    if (which === 'a') return this.startBattle(r, ev.enemy, false, ev.final, ev.elite);
+    if (e.boss || ev.elite || (this.props || {}).gertak === false || this.ruleOf(r) === 'pasal') return;
     if (Math.random() < this.bluffChance(r)) { this.track({ bluffs: 1 }); return this.applyOutcome(r, { coins: 20 + r.day * 3, xp: 25 }, `Santoni berdiri dengan dua kaki. ${e.name} memutuskan punya urusan lain.`, { tone: 'win' }); }
     this.startBattle(r, ev.enemy, true, ev.final);
   }
@@ -622,13 +631,13 @@ export default class Game extends Component {
     this._acc = 0;
     this.setState({ run: r });
   }
-  startBattle(r, key, offended, final = false) {
-    const e = C.ENEMIES[key], en = this.makeEnemy(key, r.day, r.chapter);
-    const log = [{ id: this.uid(), text: `${e.name} menghadang. ${e.intro}`, tone: 'enemy' }];
+  startBattle(r, key, offended, final = false, elite = false) {
+    const e = C.ENEMIES[key], base = this.makeEnemy(key, r.day, r.chapter), en = elite ? this.makeElite(base) : base;
+    const log = [{ id: this.uid(), text: elite ? `Minibos ${e.name} menghadang. Lebih besar, lebih galak, sama-sama tidak sopan.` : `${e.name} menghadang. ${e.intro}`, tone: 'enemy' }];
     if (offended) { en.atk = Math.round(en.atk * 1.2); log.push({ id: this.uid(), text: `Santoni berdiri dengan dua kaki. ${e.name} tidak terkesan. ATK musuh +20%.`, tone: 'bad' }); }
     this._acc = 0;
     this.setState({ run: Object.assign({}, r, { event: null }), screen: 'battle', shake: null,
-      battle: { enemy: en, final: !!final, turn: 1, heroTurn: !offended, hits: 0, firstDone: false, napUsed: false, over: null, log, pops: [], banner: null, proc: null } });
+      battle: { enemy: en, final: !!final, elite: !!elite, turn: 1, heroTurn: !offended, hits: 0, firstDone: false, napUsed: false, over: null, log, pops: [], banner: null, proc: null } });
   }
   battleStep() {
     const s = this.state; if (!s.battle || s.battle.over) return;
@@ -947,7 +956,8 @@ export default class Game extends Component {
     r.kills += 1;
     if (b.final) return this.finishRun(r, true);
     this.setState({ screen: 'run', battle: null, shake: null });
-    this.applyOutcome(r, { coins: Math.round(((e.boss ? 160 : 40) + r.day * 4) * (1 + 0.15 * r.chapter)) + (this.blessings().parkir || 0), xp: e.boss ? 90 : 30 + r.day * 2 }, `${b.enemy.name} kalah. ${e.lose}`, { tone: 'win', noDaily: true, danger: !!(r.route && r.route.kind === 'bahaya') });
+    if (b.elite) this.track({ elites: 1 });
+    this.applyOutcome(r, { coins: Math.round(((e.boss ? 160 : b.elite ? 120 : 40) + r.day * 4) * (1 + 0.15 * r.chapter)) + (this.blessings().parkir || 0), xp: e.boss ? 90 : b.elite ? 70 + r.day * 2 : 30 + r.day * 2, skill: b.elite ? 'elite' : undefined }, b.elite ? `Minibos ${b.enemy.name} tumbang. ${e.lose} Santoni memungut rampasannya.` : `${b.enemy.name} kalah. ${e.lose}`, { tone: 'win', noDaily: true, danger: !!(r.route && r.route.kind === 'bahaya') });
   }
   finishRun(r, win) {
     const s = this.state;
@@ -1090,7 +1100,7 @@ export default class Game extends Component {
       const W = [['wb_sunny', 'Cerah, agak ambigu'], ['cloud', 'Berawan. Awannya diam.'], ['water_drop', 'Gerimis tipis'], ['air', 'Berangin, arah salah']][Math.floor(r.day / 4) % 4];
       Object.assign(v, {
         pauseIcon: r.auto ? 'pause' : 'play_arrow', runChapterNo: r.chapter + 1, runChapterUpper: C.CHAPTERS[r.chapter].name.toUpperCase(),
-        day: r.day, maxDay: r.maxDay, runCoins: fmt(r.coins), dayPct: pct(r.day, r.maxDay), weatherIcon: W[0], weather: W[1],
+        day: r.day, maxDay: r.maxDay, runCoins: fmt(r.coins), dayPct: pct(r.day, r.maxDay), miniMarks: Array.from({ length: Math.floor((r.maxDay - 1) / 5) }, (_, i) => (i + 1) * 5).filter(d => d !== Math.round(r.maxDay / 2)).map(d => ({ d, left: pct(d, r.maxDay), done: r.day >= d })), weatherIcon: W[0], weather: W[1],
         walkStatus: r.event ? 'BERHENTI' : o ? 'MENUNGGU' : r.auto ? 'BERJALAN…' : 'JEDA',
         lvl: r.lvl, hpPct: pct(r.hp, r.maxHp), hpLabel: `${fmt(r.hp)} / ${fmt(r.maxHp)}`, xpPct: pct(r.xp, r.xpNext), xpLabel: `${r.xp}/${r.xpNext}`, atk: fmt(r.atk), def: fmt(r.def),
         logCount: r.log.length,
@@ -1124,20 +1134,20 @@ export default class Game extends Component {
             { label: 'Jadi penonton', icon: 'visibility', hint: `+3 ${fl.token}`, bg: '#FFF8EC', opacity: 1, onClick: g(() => this.choose('b')) }
           ], hasEvFoot: true, evFoot: `Berhasil: koin dan +10 ${fl.token}. Gagal: −10% HP dan +2 ${fl.token}.` });
       } else if (ev && ev.kind === 'enemy') {
-        const e = C.ENEMIES[ev.enemy], en = this.makeEnemy(ev.enemy, r.day, r.chapter), gOn = p.gertak !== false;
+        const e = C.ENEMIES[ev.enemy], en0 = this.makeEnemy(ev.enemy, r.day, r.chapter), en = ev.elite ? this.makeElite(en0) : en0, gOn = p.gertak !== false;
         const choices = [{ label: 'Lawan', icon: 'swords', hint: 'auto-battle', bg: '#F2B63C', opacity: 1, onClick: g(() => this.choose('a')) }];
         const pasal = this.ruleOf(r) === 'pasal';
         if (gOn && pasal) choices.push({ label: 'Pose Seram', icon: 'gavel', hint: 'pasal 47', bg: '#EADBC5', opacity: 0.55, onClick: g(() => this.toast(C.CHAPTERS[r.chapter].rule.desc)) });
-        else if (gOn) choices.push(e.boss
-          ? { label: 'Pose Seram', icon: 'sports_martial_arts', hint: 'bos kebal', bg: '#EADBC5', opacity: 0.55, onClick: g(() => this.toast(e.immune)) }
+        else if (gOn) choices.push(e.boss || ev.elite
+          ? { label: 'Pose Seram', icon: 'sports_martial_arts', hint: ev.elite ? 'minibos kebal' : 'bos kebal', bg: '#EADBC5', opacity: 0.55, onClick: g(() => this.toast(ev.elite ? 'Minibos tidak mempan digertak. Ia sudah sering melihat panda berdiri.' : e.immune)) }
           : { label: 'Pose Seram', icon: 'sports_martial_arts', hint: `${Math.round(this.bluffChance(r) * 100)}% kabur`, bg: '#FFF8EC', opacity: 1, onClick: g(() => this.choose('b')) });
-        Object.assign(v, { evKind: ev.enemy, evTrait: e.trait ? { tag: e.trait, desc: e.traitDesc } : null, hasEvent: true, evTag: e.boss ? 'BOS MENGHADANG' : 'ADA YANG MENGHADANG', evTagBg: '#D2532A', evIsEnemy: true, evIcon: e.icon, evName: e.name,
+        Object.assign(v, { evKind: ev.enemy, evTrait: e.trait ? { tag: e.trait, desc: e.traitDesc } : null, hasEvent: true, evTag: e.boss ? 'BOS MENGHADANG' : ev.elite ? 'MINIBOS MENGHADANG' : 'ADA YANG MENGHADANG', evTagBg: ev.elite ? '#7E43B5' : '#D2532A', evIsEnemy: true, evIcon: e.icon, evName: ev.elite ? `${e.name} · Minibos` : e.name,
           evSub: `LV ${en.lvl} · HP ${fmt(en.maxHp)} · ATK ${fmt(en.atk)}`, evText: e.intro, evChoices: choices, hasEvFoot: gOn,
-          evFoot: e.boss ? e.immune : 'Pose Seram: Santoni berdiri dengan dua kaki. Kalau gagal, musuh tersinggung — menyerang duluan dengan ATK +20%.' });
+          evFoot: ev.elite ? 'Minibos: HP ×2, ATK +30%, tidak bisa digertak. Menang: koin besar dan satu jurus pilihan.' : e.boss ? e.immune : 'Pose Seram: Santoni berdiri dengan dua kaki. Kalau gagal, musuh tersinggung — menyerang duluan dengan ATK +20%.' });
       }
     }
     if (o && scr === 'run') {
-      const T = { start: ['BEKAL AWAL', 'Pilih satu untuk dibawa. Ransel Santoni kecil.'], bonus: ['SESUATU BERUBAH', 'Tombol merah memberi pilihan. Tombol merah tidak menjelaskan.'], lvl: ['NAIK LEVEL!', 'Pilih satu. Dua lainnya akan baik-baik saja. Mungkin.'] }[o.kind];
+      const T = { start: ['BEKAL AWAL', 'Pilih satu untuk dibawa. Ransel Santoni kecil.'], bonus: ['SESUATU BERUBAH', 'Tombol merah memberi pilihan. Tombol merah tidak menjelaskan.'], elite: ['RAMPASAN MINIBOS', 'Minibos menjatuhkan gulungan jurus. Pilih satu untuk dipelajari.'], lvl: ['NAIK LEVEL!', 'Pilih satu. Dua lainnya akan baik-baik saja. Mungkin.'] }[o.kind];
       Object.assign(v, { hasOffer: true, burst: burstEl('b1', 120), offerTitle: T[0], offerSub: T[1], offerHasLvl: o.kind === 'lvl', offerFrom: o.from || 0, offerTo: o.to || 0,
         offerCards: o.ids.map(id => { const k = C.SKILLS.find(x => x.id === id), rr = R[k.rar], have = counts[id] || 0;
           return { id, name: k.name, icon: k.icon, desc: k.desc, rarity: rr.label, bg: rr.bg, fg: rr.fg, tag: have ? `LV ${have} → ${have + 1}` : 'BARU', el: k.el ? C.ELEMENTS[k.el] : null, pick: g(() => this.pickSkill(id)) }; }),
@@ -1152,6 +1162,7 @@ export default class Game extends Component {
       const n = id => this.stacks(r, id), mock = n('sindiran') && en.hp > 0 && en.hp < en.maxHp * 0.35;
       const eStatus = [], hStatus = [];
       const eDef = C.ENEMIES[en.key];
+      if (b.elite) eStatus.push({ icon: 'skull', label: 'MINIBOS', bg: '#7E43B5' });
       if (eDef.trait) eStatus.push({ icon: 'info', label: eDef.trait, bg: '#3A3550' });
       if (b.inked) hStatus.push({ icon: 'water_drop', label: 'TERKENA TINTA', bg: '#3A3550' });
       if (b.charmed) hStatus.push({ icon: 'auto_awesome', label: `TERPESONA ${b.charmed}`, bg: '#B04A8E' });
@@ -1170,7 +1181,7 @@ export default class Game extends Component {
       for (const tc of this.teamCombos()) hStatus.push({ icon: 'diversity_3', label: `TIM ${tc.name.toUpperCase()}`, bg: '#2F7A5C' });
       const glow = b.burn ? 'rgba(255,110,30,.9)' : b.heat ? 'rgba(255,96,40,.85)' : b.stun ? 'rgba(255,228,92,.95)' : null;
       Object.assign(v, { eStatus, hStatus,
-        eFilter: glow ? `drop-shadow(0 0 ${b.burn || b.stun ? 12 : 4 + b.heat * 3}px ${glow})` : 'none',
+        eFilter: glow ? `drop-shadow(0 0 ${b.burn || b.stun ? 12 : 4 + b.heat * 3}px ${glow})` : b.elite ? 'drop-shadow(0 0 7px rgba(160,90,235,.95))' : 'none',
         efx: elementFx(b.efx || [], still), eAura: auraEl(b, still), hShield: b.shield > 0,
         flashKey: (b.efx || []).some(x => x.el === 'petir' && x.big) ? b.efx[0].id : 0,
         quakeAnim: !still && (b.efx || []).some(x => x.el === 'tanah' && x.big) ? `fxQuake${b.efx[0].id % 2} .45s ease-out` : 'none',
@@ -1189,7 +1200,7 @@ export default class Game extends Component {
       if (b.parry) hStatus.unshift({ icon: 'beach_access', label: `TANGKIS ×${b.parry}`, bg: '#3C78C8' });
       Object.assign(v, { ultWeapon: wid, ultName: ult.name, ultPct: pct(b.ult || 0, 100), ultReady: (b.ult || 0) >= 100,
         ultCine: b.ultFx && !still ? { ...b.ultFx, chips: b.ultFx.els.map(el => C.ELEMENTS[el]) } : null });
-      Object.assign(v, { bTurn: b.turn, bFloor: b.tower || 0, askQuit: g(() => this.askQuit()), bBoss: en.boss, eIcon: en.icon, eName: en.name, eLvl: en.lvl, eHpPct: pct(en.hp, en.maxHp), eHpLabel: `${fmt(en.hp)} / ${fmt(en.maxHp)}`,
+      Object.assign(v, { bElite: !!b.elite, bTurn: b.turn, bFloor: b.tower || 0, askQuit: g(() => this.askQuit()), bBoss: en.boss, eIcon: en.icon, eName: en.name, eLvl: en.lvl, eHpPct: pct(en.hp, en.maxHp), eHpLabel: `${fmt(en.hp)} / ${fmt(en.maxHp)}`,
         eTf: s.shake === 'enemy' ? 'translate(10px,-4px) rotate(4deg)' : 'none', hTf: s.shake === 'hero' ? 'translate(-10px,4px) rotate(-4deg)' : 'none',
         eArtId: `art-musuh-${en.key}`, eArtLabel: `Ilustrasi musuh — ${en.name}`,
         enemyPops: b.pops.filter(x => x.side === 'enemy').map(x => popEl(x, still)), heroPops: b.pops.filter(x => x.side === 'hero').map(x => popEl(x, still)),

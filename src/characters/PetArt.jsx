@@ -4,14 +4,16 @@ const O = '#2B1E18';
 const SHINE = 'rgba(255,255,255,.7)';
 
 function Eye({ x, y, r = 4.5 }) {
+  const d = x <= 50 ? 1 : -1;
   return (
     <g stroke="none">
-      <circle cx={x} cy={y} r={r} fill={O} />
-      <circle cx={x + r * 0.35} cy={y - r * 0.35} r={r * 0.38} fill="#FFF" />
+      <path d={`M${x - d * r * 1.05} ${y - r * 0.5}L${x + d * r} ${y + r * 0.05}Q${x + d * r * 0.1} ${y + r * 1.3} ${x - d * r * 1.05} ${y - r * 0.5}Z`} fill={O} />
+      <circle cx={x + d * r * 0.12} cy={y + r * 0.2} r={r * 0.27} fill="#FFF" />
+      <path d={`M${x - d * r * 1.35} ${y - r * 1.1}L${x + d * r * 1.15} ${y - r * 0.38}`} fill="none" stroke={O} strokeWidth={r * 0.62} strokeLinecap="round" />
     </g>
   );
 }
-const Blush = ({ at }) => <g stroke="none" fill="rgba(240,110,130,.42)">{at.map(([x, y], i) => <ellipse key={i} cx={x} cy={y} rx="5.5" ry="3.5" />)}</g>;
+const Blush = () => null;
 
 const ART = {
   ayam: () => (
