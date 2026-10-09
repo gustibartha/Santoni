@@ -39,7 +39,7 @@ button:disabled { cursor: default !important; }
   --lift6: 0 6px 0 #2B1E18, 0 18px 28px -14px rgba(43, 30, 24, .6);
   position: relative;
   width: 390px;
-  height: 844px;
+  height: var(--phone-h, 844px);
   overflow: hidden;
   border-radius: 34px;
   background-color: #EFE0CA;
@@ -206,3 +206,7 @@ button:disabled { cursor: default !important; }
 /* Mode Hemat: drop costly filters and decorative particles on low-end phones. */
 .phone[data-lite="1"] * { filter: none !important; }
 .phone[data-lite="1"] .fx-ambient { display: none !important; }
+/* Full-screen on phones: no frame, rounded corners or drop shadow; content clears the notch. */
+.stage-full { background: #2B1E18; }
+.stage-full .phone { border-radius: 0; box-shadow: none; }
+.stage-full .phone-rim { display: none; }

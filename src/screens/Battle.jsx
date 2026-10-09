@@ -314,7 +314,7 @@ export default function Battle({ v }) {
           {v.hStatus.map(s => <StatusChip key={s.label} s={s} />)}
         </div>
       )}
-      <div style={{ position: "absolute", left: "12px", right: "12px", bottom: "12px", height: "216px", boxSizing: "border-box", padding: "10px 12px", borderRadius: "18px", border: "2px solid #0F1411", background: "#141A17", display: "flex", flexDirection: "column", justifyContent: "flex-end", gap: "7px", overflow: "hidden" }}>
+      <div style={{ position: "absolute", left: "12px", right: "12px", bottom: "12px", top: "616px", boxSizing: "border-box", padding: "10px 12px", borderRadius: "18px", border: "2px solid #0F1411", background: "#141A17", display: "flex", flexDirection: "column", justifyContent: "flex-end", gap: "7px", overflow: "hidden" }}>
         {v.bLog.map((l, i) => <div key={l.key ?? l.id ?? i} style={{ font: "500 11.5px/1.4 'DM Mono',monospace", color: l.color, opacity: l.opacity, textWrap: "pretty" }}>{l.text}</div>)}
       </div>
 

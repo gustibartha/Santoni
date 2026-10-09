@@ -43,20 +43,30 @@ if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   });
 }
 
-const W = 390, H = 844, MARGIN = 24;
-// Fits the window; on large screens it grows up to 1.5× instead of staying phone-sized.
-const fit = () => Math.min(1.5, (innerWidth - MARGIN) / W, (innerHeight - MARGIN) / H);
+const W = 390, H = 844, MARGIN = 24, MIN_H = 720, MAX_H = 1100;
+// Phones (portrait / narrow screens): fill the whole screen. The game keeps its 390-unit width
+// and the height follows the screen's shape. Desktops keep the framed phone, up to 1.5×.
+function layout() {
+  const vw = innerWidth, vh = innerHeight;
+  if (vw <= 600 || vh > vw) {
+    let scale = vw / W, h = vh / scale;
+    if (h < MIN_H) { scale = vh / MIN_H; h = MIN_H; }
+    return { full: true, scale, h: Math.min(MAX_H, h) };
+  }
+  return { full: false, scale: Math.min(1.5, (vw - MARGIN) / W, (vh - MARGIN) / H), h: H };
+}
 
 function Stage({ children }) {
-  const [scale, setScale] = useState(fit);
+  const [box, setBox] = useState(layout);
   useEffect(() => {
-    const onResize = () => setScale(fit());
+    const onResize = () => setBox(layout());
     addEventListener('resize', onResize);
-    return () => removeEventListener('resize', onResize);
+    addEventListener('orientationchange', onResize);
+    return () => { removeEventListener('resize', onResize); removeEventListener('orientationchange', onResize); };
   }, []);
   return (
-    <div className="stage">
-      <div className="stage-scaler" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>{children}</div>
+    <div className={box.full ? 'stage stage-full' : 'stage'}>
+      <div className="stage-scaler" style={{ '--phone-h': `${Math.round(box.h)}px`, transform: `translate(-50%, -50%) scale(${box.scale})` }}>{children}</div>
     </div>
   );
 }

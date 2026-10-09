@@ -426,11 +426,11 @@ export default class Game extends Component {
     const step = 100 * (s.speed || 1);
     if (s.screen === 'run' && s.run && !s.run.event && !s.offer && s.run.auto) {
       this._acc += step;
-      if (this._acc >= 1400) { this._acc = 0; this.advanceDay(); }
+      if (this._acc >= 1000) { this._acc = 0; this.advanceDay(); }
     } else if (s.screen === 'battle' && s.battle) {
       this._acc += step;
-      if (s.battle.over) { if (this._acc >= 3400) { this._acc = 0; this.endBattle(); } }
-      else if (this._acc >= 650) { this._acc = 0; this.battleStep(); }
+      if (s.battle.over) { if (this._acc >= 2600) { this._acc = 0; this.endBattle(); } }
+      else if (this._acc >= 480) { this._acc = 0; this.battleStep(); }
     } else this._acc = 0;
   }
 
@@ -1123,9 +1123,9 @@ export default class Game extends Component {
       toggleAuto: g(() => this.toggleAuto()), pauseIcon: 'pause', runChapterNo: 1, runChapterUpper: '', day: 0, maxDay: days, runCoins: '0', dayPct: '0%',
       weatherIcon: 'wb_sunny', weather: '', walkStatus: '', lvl: 1, hpPct: '100%', hpLabel: '', xpPct: '0%', xpLabel: '', atk: '0', def: '0',
       logCount: 0, logRef: this.logRef, log: [], runChips: [], evTrait: null, hasEvent: false, evTagBg: '#2B1E18', evTag: '', evIsEnemy: false, evIcon: 'help', evName: '', evSub: '', evText: '', evChoices: [], hasEvFoot: false, evFoot: '',
-      noSkills: skillTiles.length === 0, ownedSkills: skillTiles, cycleSpeed: g(() => this.setState({ speed: (s.speed % 3) + 1 })), speedLabel: `×${s.speed}`, quitRun: g(() => this.askQuit()),
+      noSkills: skillTiles.length === 0, ownedSkills: skillTiles, cycleSpeed: g(() => this.setState({ speed: s.speed === 1 ? 2 : s.speed === 2 ? 4 : 1 })), speedLabel: `×${s.speed}`, quitRun: g(() => this.askQuit()),
       hasOffer: false, burst: null, offerTitle: '', offerHasLvl: false, offerFrom: 0, offerTo: 0, offerSub: '', offerCards: [], reroll: g(() => this.reroll()), rerollDisabled: true, rerollOpacity: 0.4, rerollLeft: 0,
-      bTurn: 1, bBoss: false, speeds: [1, 2, 3].map(n => ({ n, set: g(() => this.setState({ speed: n })), bg: s.speed === n ? '#F2B63C' : 'transparent', fg: s.speed === n ? '#2B1E18' : '#FFF8EC' })),
+      bTurn: 1, bBoss: false, speeds: [1, 2, 4].map(n => ({ n, set: g(() => this.setState({ speed: n })), bg: s.speed === n ? '#F2B63C' : 'transparent', fg: s.speed === n ? '#2B1E18' : '#FFF8EC' })),
       eIcon: 'help', eName: '', eLvl: 1, eHpPct: '100%', eHpLabel: '', eTf: 'none', hTf: 'none', eArtId: 'art-musuh', eArtLabel: '', enemyPops: null, heroPops: null, banner: null, battleSkills: skillTiles, bTile,bLog: [], bOver: false, bOverColor: '#F2B63C', bOverText: '',
       slotsL: [], slotsR: [], heroStats: [], autoEquip: g(() => this.autoEquip()), mergeItems: g(() => this.go('bengkel')), bagCount: s.bag.length, bag: [],
       mapSummary: `${s.best.filter(x => x >= days).length} DARI ${C.CHAPTERS.length} SELESAI`, chapters: [],
@@ -1230,10 +1230,10 @@ export default class Game extends Component {
         flashKey: (b.efx || []).some(x => x.el === 'petir' && x.big) ? b.efx[0].id : 0,
         quakeAnim: !still && (b.efx || []).some(x => x.el === 'tanah' && x.big) ? `fxQuake${b.efx[0].id % 2} .45s ease-out` : 'none',
         twin: !!(act && act.twin), twinKey: act ? act.t : 0, assist: !!(act && act.assist), assistKey: act ? act.t : 0 });
-      const fx = b.fx || {}, dash = Math.min(0.46, 0.62 / (s.speed || 1)), struck = fx.allies || [];
+      const fx = b.fx || {}, dash = Math.min(0.4, 0.46 / (s.speed || 1)), struck = fx.allies || [];
       const at = b.allyT || {}, cs = b.comboShow, live = cs && Date.now() - cs.t < 1100;
       v.allies = this.teamKinds().map((kind, i) => ({ slot: i, kind, t: at[i] || 0, delay: at[`${i}d`] || 0 }));
-      v.petT = at.pet || 0; v.petDelay = at.petd || 0; v.allyTime = `${Math.min(0.62, 0.95 / (s.speed || 1)).toFixed(2)}s`;
+      v.petT = at.pet || 0; v.petDelay = at.petd || 0; v.allyTime = `${Math.min(0.55, 0.7 / (s.speed || 1)).toFixed(2)}s`;
       v.comboN = live ? cs.n : 0; v.comboKey = live ? cs.t : 0; v.rushOn = !!(live && cs.rush);
       v.teamCombosOn = this.teamCombos().map(tc => tc.name);
       Object.assign(v, { heroAct: fx.dash === 'hero' ? fx.t : 0, enemyAct: fx.dash === 'enemy' ? fx.t : 0,
