@@ -327,3 +327,30 @@ export const QUOTES = ['Santoni tidak sampai ujung. Tapi Santoni sampai di suatu
 export const QUOTES_WIN = ['Bab selesai. Santoni mengangguk sekali. Itu sudah perayaan.', 'Angsa Pengacara kalah. Santoni tidak menyewa pengacara. Tidak perlu.'];
 export const POSES = [['idle', 'Diam'], ['seram', 'Pose Seram'], ['walk', 'Jalan'], ['attack', 'Serang'], ['hurt', 'Terkena'], ['sleep', 'Tidur']];
 export const BUBBLES = ['Hari ini saya pergi. Mungkin besok juga.', 'Saya tidak marah. Wajah saya memang begini.', 'Ransel sudah siap. Saya belum.', 'Rawanya renyah, katanya. Kita lihat saja.', 'Ketuk saya lagi. Tidak akan terjadi apa-apa.'];
+
+// Lobby features opened over a new player's first runs (index = tier reached − 1).
+export const UNLOCKS = ['Gaya Jalan dan Misi', 'Festival, Musim, dan Teman', 'Tantangan (dungeon, arena, tambang, menara)'];
+
+// Daily challenge: same map for everyone (seeded by the WIB date), standard stats, no team or pet.
+export const DAILY = {
+  days: 12,
+  stats: { atk: 190, hp: 1300, def: 55 },
+  chapters: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12],
+  weapons: ['sumpit', 'payung', 'raket', 'sapu', 'ulekan', 'kipasangin', 'centong']
+};
+
+// Seasonal events tied to real dates (WIB). While one runs it replaces the festival rotation; it
+// reuses a festival's mechanics (`base`) with its own name and story. Ramadan and Lebaran dates
+// are estimates for 1448 H and may shift a day with the official announcement.
+export const SEASONS = [
+  { id: 'harbolnas26', base: 'diskon', start: '2026-12-10', end: '2026-12-14', look: { name: 'Harbolnas 12.12', icon: 'shopping_bag', color: '#D2532A', token: 'Kupon 12.12',
+    desc: 'Mal Diskon 90% buka 24 jam. Santoni datang hanya untuk melihat-lihat, lalu pulang membawa tiga panci.', rule: 'Toko Harian setengah harga dan membuka peti 20% lebih murah, selama Harbolnas.' } },
+  { id: 'tahunbaru27', base: 'karaoke', start: '2026-12-29', end: '2027-01-02', look: { name: 'Malam Tahun Baru', icon: 'celebration', color: '#3A3550', token: 'Kembang Api',
+    desc: 'Kembang api dari tukang sate. Semua makhluk begadang, tidak ada yang tahu kenapa, termasuk Santoni.', rule: 'Musuh 12% sibuk menonton kembang api dan melewatkan giliran.' } },
+  { id: 'ramadan27', base: 'bambu', start: '2027-02-08', end: '2027-03-08', look: { name: 'Ngabuburit Ramadan', icon: 'nightlight', color: '#2F7A5C', token: 'Takjil',
+    desc: 'Menjelang magrib semua menunggu takjil. Santoni menunggu dengan khusyuk sambil mencium aroma kolak.', rule: 'Tiap 4 hari perjalanan, Santoni berbuka dengan takjil: pulih 8% HP. Bos memberi token ×2.' } },
+  { id: 'lebaran27', base: 'lomba', start: '2027-03-09', end: '2027-03-16', look: { name: 'Mudik Lebaran', icon: 'directions_bus', color: '#3C78C8', token: 'Ketupat',
+    desc: 'Terminal Bus Abadi penuh pemudik. Santoni ikut antre walau tidak punya kampung. Ia hanya suka suasananya.', rule: 'Kejadian lomba muncul di perjalanan. Mohon maaf lahir dan batin, termasuk kepada Angsa Pengacara.' } },
+  { id: 'agustusan27', base: 'lomba', start: '2027-08-14', end: '2027-08-20', look: { name: 'Lomba 17-an', icon: 'flag', color: '#C0392B', token: 'Pita Merah Putih',
+    desc: 'Panjat pinang, balap karung, makan kerupuk. Santoni ikut semuanya demi kemerdekaan dari rasa malas.', rule: 'Kejadian lomba muncul di perjalanan. Hadiahnya pita, kebanggaannya gratis.' } }
+];

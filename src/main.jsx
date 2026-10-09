@@ -33,8 +33,19 @@ const props = {
   persist: !q.has('screen') && q.get('still') !== '1'
 };
 
+// Offline play and "add to home screen" (production builds only).
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').then(() => navigator.serviceWorker.ready).then(reg => {
+      const urls = performance.getEntriesByType('resource').map(e => e.name).filter(u => u.startsWith(location.origin + '/assets/'));
+      if (reg.active) reg.active.postMessage({ type: 'precache', urls: ['/', ...urls] });
+    }).catch(() => {});
+  });
+}
+
 const W = 390, H = 844, MARGIN = 24;
-const fit = () => Math.min(1, (innerWidth - MARGIN) / W, (innerHeight - MARGIN) / H);
+// Fits the window; on large screens it grows up to 1.5× instead of staying phone-sized.
+const fit = () => Math.min(1.5, (innerWidth - MARGIN) / W, (innerHeight - MARGIN) / H);
 
 function Stage({ children }) {
   const [scale, setScale] = useState(fit);

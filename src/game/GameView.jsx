@@ -23,6 +23,7 @@ import PetScreen from '../screens/PetScreen.jsx';
 import SvgDefs from '../components/SvgDefs.jsx';
 import ItemSheet from '../screens/ItemSheet.jsx';
 import SuratScreen from '../screens/SuratScreen.jsx';
+import HarianScreen from '../screens/HarianScreen.jsx';
 
 // The 390×844 phone frame. Layer order matters: offers, pulls and toasts sit above screens.
 export default function GameView({ v }) {
@@ -43,6 +44,7 @@ export default function GameView({ v }) {
         {v.isFestival && <FestivalScreen v={v} />}
         {v.isTeman && <TemanScreen v={v} />}
         {v.isSurat && <SuratScreen v={v} />}
+        {v.isHarian && <HarianScreen v={v} />}
         {v.isMode && <ModeHub v={v} />}
         {v.isTambang && <TambangScreen v={v} />}
         {v.isBengkel && <BengkelScreen v={v} />}

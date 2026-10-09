@@ -44,6 +44,24 @@ export default function FestivalScreen({ v }) {
           </div>
         ))}
       </div>
+      {v.seasons && v.seasons.length > 0 && (
+        <div style={{ marginTop: "16px" }}>
+          <div style={{ font: "18px/1 var(--display)" }}>Kalender event</div>
+          <div style={{ font: "500 12px/1.4 'Bricolage Grotesque'", color: "#5B4A40", marginTop: "4px" }}>Event musiman mengikuti tanggal sungguhan dan menggantikan festival biasa selama berlangsung.</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "9px" }}>
+            {v.seasons.map(se => (
+              <div key={se.id} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "9px 11px", border: "2.5px solid #2B1E18", borderRadius: "15px", background: se.live ? "#FFF3D6" : "#FFF8EC", boxShadow: "var(--lift2)" }}>
+                <span style={{ width: "34px", height: "34px", flex: "none", display: "grid", placeItems: "center", border: "2px solid #2B1E18", borderRadius: "10px", background: se.color, color: "#FFF8EC", font: `19px/1 ${ICON}` }}>{se.icon}</span>
+                <div style={{ flex: "1", minWidth: "0" }}>
+                  <div style={{ font: "800 13.5px/1.2 'Bricolage Grotesque'" }}>{se.name}</div>
+                  <div style={{ font: "500 10.5px/1.2 'DM Mono',monospace", letterSpacing: ".04em", color: "#5E4A3F", marginTop: "3px" }}>{se.when}</div>
+                </div>
+                {se.live && <span style={{ padding: "4px 8px", borderRadius: "8px", background: "#2F7A5C", color: "#FFF8EC", font: "500 10px/1 'DM Mono',monospace" }}>BERLANGSUNG</span>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

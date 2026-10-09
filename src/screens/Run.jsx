@@ -68,7 +68,7 @@ export default function Run({ v }) {
       <div style={{ display: "flex", alignItems: "center", gap: "10px", flex: "none" }}>
         <div style={{ width: "50px", height: "50px", flex: "none", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "50%", background: "#F2B63C", boxShadow: "var(--lift3)", textAlign: "center" }}>
           <div>
-            <div style={{ font: "500 9.5px/1 'DM Mono',monospace", letterSpacing: ".08em" }}>LV</div>
+            <div title="Level perjalanan (mulai dari 1 di setiap perjalanan)" style={{ font: "500 7.5px/1.05 'DM Mono',monospace", letterSpacing: ".04em" }}>LV<br />JALAN</div>
             <div style={{ font: "20px/1 var(--display)", marginTop: "1px" }}>{v.lvl}</div>
           </div>
         </div>

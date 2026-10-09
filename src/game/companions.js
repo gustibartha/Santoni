@@ -47,6 +47,7 @@ export const companionMethods = {
   // Returns the damage dealt and who struck: slot numbers and/or 'pet'.
   teamStrike(r, b, fx) {
     const out = { dmg: 0, who: [], lines: [] };
+    if (r.daily) return out;
     const B = b.bless || {}, boost = (1 + (B.tim || 0) / 100) * (fx.rush ? 1.5 : 1);
     const strike = (pct, role, label, move, who) => {
       if (b.enemy.hp <= 0) return;

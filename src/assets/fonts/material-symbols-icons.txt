@@ -5,7 +5,9 @@ add_link
 agriculture
 air
 alarm
+analytics
 animation
+announcement
 apartment
 api
 arrow_back
@@ -73,6 +75,7 @@ diversity_3
 do_not_disturb_on
 domain
 done
+download
 drafts
 draw
 dry_cleaning
@@ -130,6 +133,7 @@ image
 info
 input
 inventory_2
+ios
 join
 keep
 key
@@ -148,6 +152,7 @@ local_parking
 local_police
 local_post_office
 lock
+lock_open
 lock_reset
 login
 logout
@@ -196,13 +201,16 @@ pin
 place
 play_arrow
 pool
+post
 power
 preview
+public
 queue
 radio_button_checked
 radio_button_unchecked
 ramen_dining
 redeem
+refresh
 remove
 repeat
 replay
@@ -219,6 +227,7 @@ scale
 scene
 schedule
 school
+score
 scuba_diving
 search
 security
@@ -242,6 +251,7 @@ smart_display
 snooze
 sort
 soup_kitchen
+source
 speaker
 speed
 sports
@@ -261,12 +271,14 @@ stop
 storage
 store
 storefront
+stream
 style
 sunny
 switch
 swords
 sync
 tab
+table
 tabs
 tag
 target
@@ -290,6 +302,7 @@ try
 two_wheeler
 umbrella
 unsubscribe
+upcoming
 update
 upgrade
 upload
@@ -311,4 +324,3 @@ width
 wifi_off
 window
 work
-workspace_premium

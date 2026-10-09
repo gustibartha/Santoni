@@ -100,3 +100,25 @@ export async function setPassword(password) {
 const hash = typeof location === 'undefined' ? '' : location.hash + location.search;
 export const cameFromReset = /type=recovery/.test(hash);
 export const linkError = /error_code=|error=access_denied/.test(hash);
+
+// Daily challenge board. Reading is public (plain REST, no client library needed); submitting
+// needs a signed-in player. A second submission for the same day is ignored.
+export async function fetchBoard(day, myScore) {
+  const base = `${URL}/rest/v1/daily_scores`, headers = { apikey: KEY };
+  const res = await fetch(`${base}?select=name,score,detail&day=eq.${day}&order=score.desc,at.asc&limit=20`, { headers });
+  if (!res.ok) throw new Error('board');
+  const rows = await res.json();
+  let rank = null, total = null;
+  const head = await fetch(`${base}?select=score&day=eq.${day}`, { method: 'HEAD', headers: { ...headers, Prefer: 'count=exact' } });
+  total = Number((head.headers.get('content-range') || '/0').split('/')[1]) || 0;
+  if (myScore != null) {
+    const above = await fetch(`${base}?select=score&day=eq.${day}&score=gt.${myScore}`, { method: 'HEAD', headers: { ...headers, Prefer: 'count=exact' } });
+    rank = (Number((above.headers.get('content-range') || '/0').split('/')[1]) || 0) + 1;
+  }
+  return { rows, rank, total };
+}
+export async function submitDaily(row) {
+  const sb = await client();
+  const { error } = await sb.from('daily_scores').insert(row);
+  if (error && error.code !== '23505') throw error;
+}

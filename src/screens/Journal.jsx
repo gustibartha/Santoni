@@ -83,6 +83,16 @@ export default function Journal({ v }) {
       </div>
       <div style={{ font: "500 13px/1.4 'Bricolage Grotesque'", color: "#5B4A40", marginTop: "6px" }}>Semua yang terjadi di perjalanan. Santoni tidak pernah membacanya.</div>
       {v.acct.online && <AccountCard a={v.acct} />}
+      {v.install && (
+        <div style={{ marginTop: "12px", display: "flex", alignItems: "center", gap: "11px", padding: "11px 12px", border: "2.5px solid #2B1E18", borderRadius: "18px", background: "linear-gradient(90deg,#FBE3B8,#FFF8EC)", boxShadow: "var(--lift3)" }}>
+          <img src="/icons/icon-192.png" alt="" width="44" height="44" style={{ flex: "none", borderRadius: "12px", border: "2px solid #2B1E18" }} />
+          <div style={{ flex: "1", minWidth: "0" }}>
+            <div style={{ font: "16px/1.1 var(--display)" }}>Pasang ke layar utama</div>
+            <div style={{ font: "500 11.5px/1.35 'Bricolage Grotesque'", color: "#5B4A40", marginTop: "3px" }}>{v.install.ios ? 'Di Safari: ketuk tombol Bagikan, lalu "Tambah ke Layar Utama".' : 'Buka seperti aplikasi, tanpa bilah browser. Bisa dimainkan offline.'}</div>
+          </div>
+          {v.install.prompt && <button onClick={v.install.go} style={{ flex: "none", height: "38px", padding: "0 12px", border: "2.5px solid #2B1E18", borderRadius: "12px", background: "#F2B63C", color: "#2B1E18", boxShadow: "var(--lift2)", font: "800 12.5px/1 'Bricolage Grotesque'", cursor: "pointer" }}>Pasang</button>}
+        </div>
+      )}
       <div style={{ marginTop: "12px", padding: "11px 14px 13px", border: "2.5px solid #2B1E18", borderRadius: "18px", background: "#FFF8EC", boxShadow: "var(--lift3)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <span style={{ font: "21px/1 'Material Symbols Rounded'", color: "#7E43B5" }}>palette</span>
@@ -107,6 +117,7 @@ export default function Journal({ v }) {
                   <div style={{ font: "500 10.5px/1.2 'DM Mono',monospace", letterSpacing: ".06em", color: "#5B4A40", marginTop: "3px" }}>{j.sub}</div>
                 </div>
                 <span style={{ padding: "4px 8px", borderRadius: "8px", background: "#2B1E18", color: "#FFF8EC", font: "500 10.5px/1 'DM Mono',monospace", letterSpacing: ".06em" }}>{j.badge}</span>
+                <button onClick={j.share} aria-label="Bagikan catatan ini" style={{ width: "32px", height: "32px", flex: "none", display: "grid", placeItems: "center", padding: "0", border: "2px solid #2B1E18", borderRadius: "10px", background: "#3C78C8", color: "#FFF8EC", font: "17px/1 'Material Symbols Rounded'", cursor: "pointer" }}>share</button>
               </div>
               <div style={{ padding: "2px 12px 8px" }}>
                 {j.entries.map((e, i) => (

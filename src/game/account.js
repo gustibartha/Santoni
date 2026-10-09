@@ -26,6 +26,7 @@ export const accountMethods = {
         return this.setAcct({ note: 'Tautan dari email sudah kedaluwarsa atau sudah dipakai. Minta tautan baru di sini.' });
       }
       if (user && cloud.cameFromReset) return this.startRecovery(user);
+      if (user && this.submitDaily) this.submitDaily();
       if (user) await this.cloudReconcile(user);
     } catch {
       this.setAcct({ checking: false, status: 'Server akun tidak terjangkau. Progres tetap tersimpan di perangkat ini.' });
@@ -90,6 +91,7 @@ export const accountMethods = {
   async afterLogin(user) {
     this.setAcct({ busy: false, password: '', note: '', user });
     this.toast(`Masuk sebagai ${user.email}.`);
+    if (this.submitDaily) this.submitDaily();
     await this.cloudReconcile(user);
   },
 

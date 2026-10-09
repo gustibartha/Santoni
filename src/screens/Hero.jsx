@@ -7,7 +7,7 @@ export default function Hero({ v }) {
       <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "10px" }}>
         <div>
           <div style={{ font: "28px/1 var(--display)" }}>Santoni</div>
-          <div style={{ font: "600 12px/1.3 'Bricolage Grotesque'", color: "#5E4A3F", marginTop: "4px" }}>Panda merah · tidak ambisius</div>
+          <div style={{ font: "600 12px/1.3 'Bricolage Grotesque'", color: "#5E4A3F", marginTop: "4px" }}>Lv Akun {v.acctLv} · Panda merah · tidak ambisius</div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "6px", height: "36px", padding: "0 12px 0 9px", borderRadius: "18px", background: "#2B1E18", color: "#FFF8EC" }}>
           <span style={{ font: "19px/1 'Material Symbols Rounded'", color: "#F2B63C" }}>military_tech</span>

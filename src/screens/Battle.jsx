@@ -23,7 +23,10 @@ function BattleSummary({ s, still }) {
           </div>
         ))}
       </div>
-      <button onClick={s.cont} style={{ width: "100%", height: "38px", marginTop: "9px", border: "2.5px solid #0F1411", borderRadius: "12px", background: s.win ? "#F2B63C" : "#FFF8EC", color: "#2B1E18", font: "800 13.5px/1 'Bricolage Grotesque'", cursor: "pointer" }}>Lanjut</button>
+      <div style={{ display: "flex", gap: "8px", marginTop: "9px" }}>
+      {s.share && <button onClick={s.share} aria-label="Bagikan kemenangan" style={{ flex: "none", width: "46px", height: "38px", display: "grid", placeItems: "center", padding: "0", border: "2.5px solid #0F1411", borderRadius: "12px", background: "#3C78C8", color: "#FFF8EC", font: "19px/1 'Material Symbols Rounded'", cursor: "pointer" }}>share</button>}
+      <button onClick={s.cont} style={{ flex: "1", width: "100%", height: "38px", border: "2.5px solid #0F1411", borderRadius: "12px", background: s.win ? "#F2B63C" : "#FFF8EC", color: "#2B1E18", font: "800 13.5px/1 'Bricolage Grotesque'", cursor: "pointer" }}>Lanjut</button>
+      </div>
     </div>
   );
 }

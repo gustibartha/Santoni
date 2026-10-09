@@ -1,0 +1,18 @@
+{
+  "name": "Petualangan Santoni",
+  "short_name": "Santoni",
+  "description": "Roguelite santai: panda merah yang tidak ambisius, musuh yang terlalu serius, dan jurnal yang terlalu jujur.",
+  "lang": "id",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F4E8D6",
+  "theme_color": "#2B1E18",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

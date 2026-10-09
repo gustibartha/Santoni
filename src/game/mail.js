@@ -1,12 +1,14 @@
 // Lobby mailbox: read letters, claim their attachments once, tidy up finished ones.
 // Mixed into Game.prototype like modes.js. State: mail = { read, claimed, gone } keyed by letter id.
 import { MAIL, GIFTS } from './mailData.js';
+import { wibDay } from './daily.js';
 
 const hasGifts = m => m.gifts.length > 0;
 
 export const mailMethods = {
   mailState(s = this.state) { return { read: {}, claimed: {}, gone: {}, ...(s.mail || {}) }; },
-  mailList(s = this.state) { const m = this.mailState(s); return MAIL.filter(x => !m.gone[x.id]); },
+  // Seasonal letters only show inside their date window (WIB).
+  mailList(s = this.state) { const m = this.mailState(s), today = wibDay(); return MAIL.filter(x => !m.gone[x.id] && (!x.when || (today >= x.when[0] && today <= x.when[1]))); },
   // Letters that still want attention: unread, or with gifts not yet taken.
   mailBadge(s = this.state) {
     const m = this.mailState(s);

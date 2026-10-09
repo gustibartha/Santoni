@@ -1,7 +1,7 @@
 // Progress persistence in localStorage. Saves everything except short-lived UI
 // state (toasts, hit shakes, animations), so a reload resumes mid-run or mid-battle.
 const KEY = 'santoni:save:v1';
-const TRANSIENT = ['toast', 'shake', 'act', 'pull', 'tick', 'bubble', 'clock', 'musicOn', 'acct', 'itemPick', 'mailPick'];
+const TRANSIENT = ['toast', 'shake', 'act', 'pull', 'tick', 'bubble', 'clock', 'musicOn', 'acct', 'itemPick', 'mailPick', 'installTick', 'board'];
 
 // The persisted shape shared by local saves, backup codes and the cloud copy.
 export function snapshot(state, days, uid) {

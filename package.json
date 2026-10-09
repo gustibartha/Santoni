@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "icons": "node scripts/subset-icons.mjs"
+    "icons": "node scripts/subset-icons.mjs",
+    "app-icons": "node scripts/make-app-icons.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.3",
@@ -16,6 +17,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
+    "sharp": "^0.33.5",
     "vite": "^6.0.0"
   }
 }
