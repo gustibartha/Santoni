@@ -52,6 +52,7 @@ cloud_done
 cloud_off
 cloud_upload
 code
+compare
 confirmation_number
 content_copy
 cookie
@@ -70,6 +71,7 @@ directions_walk
 do_not_disturb_on
 domain
 done
+drafts
 draw
 dry_cleaning
 eco
@@ -140,6 +142,7 @@ list
 local_fire_department
 local_parking
 local_police
+local_post_office
 lock
 lock_reset
 login
@@ -292,6 +295,7 @@ volume_up
 watch
 water
 water_drop
+waves
 waving_hand
 wb_sunny
 weight

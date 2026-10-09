@@ -20,6 +20,7 @@ export default function Hero({ v }) {
               <div key={q.key ?? q.id ?? i} onClick={q.tap} style={{ position: "relative", height: "74px", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "18px", background: q.bg, boxShadow: "0 3px 0 #2B1E18", cursor: "pointer" }}>
                 {q.item ? <div style={{ marginTop: "6px" }}><ItemArt id={q.item} size={44} /></div> : <span style={{ font: "34px/1 'Material Symbols Rounded'", color: q.fg }}>{q.icon}</span>}
                 <span style={{ position: "absolute", left: "6px", top: "5px", font: "500 9px/1 'DM Mono',monospace", letterSpacing: ".04em", color: q.fg }}>{q.type}</span>
+                {q.el && <span title={q.el.label} style={{ position: "absolute", right: "-6px", top: "-6px", width: "18px", height: "18px", boxSizing: "border-box", display: "grid", placeItems: "center", borderRadius: "50%", border: "2px solid #2B1E18", background: q.el.color, color: "#FFF8EC", font: "11px/1 'Material Symbols Rounded'" }}>{q.el.icon}</span>}
                 <span style={{ position: "absolute", bottom: "-8px", left: "50%", transform: "translateX(-50%)", padding: "2px 6px", borderRadius: "7px", background: "#2B1E18", color: "#FFF8EC", font: "700 10px/1.2 'Bricolage Grotesque'", whiteSpace: "nowrap" }}>Lv {q.lvl}</span>
               </div>
           ))}
@@ -34,6 +35,7 @@ export default function Hero({ v }) {
               <div key={q.key ?? q.id ?? i} onClick={q.tap} style={{ position: "relative", height: "74px", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "18px", background: q.bg, boxShadow: "0 3px 0 #2B1E18", cursor: "pointer" }}>
                 {q.item ? <div style={{ marginTop: "6px" }}><ItemArt id={q.item} size={44} /></div> : <span style={{ font: "34px/1 'Material Symbols Rounded'", color: q.fg }}>{q.icon}</span>}
                 <span style={{ position: "absolute", left: "6px", top: "5px", font: "500 9px/1 'DM Mono',monospace", letterSpacing: ".04em", color: q.fg }}>{q.type}</span>
+                {q.el && <span title={q.el.label} style={{ position: "absolute", right: "-6px", top: "-6px", width: "18px", height: "18px", boxSizing: "border-box", display: "grid", placeItems: "center", borderRadius: "50%", border: "2px solid #2B1E18", background: q.el.color, color: "#FFF8EC", font: "11px/1 'Material Symbols Rounded'" }}>{q.el.icon}</span>}
                 <span style={{ position: "absolute", bottom: "-8px", left: "50%", transform: "translateX(-50%)", padding: "2px 6px", borderRadius: "7px", background: "#2B1E18", color: "#FFF8EC", font: "700 10px/1.2 'Bricolage Grotesque'", whiteSpace: "nowrap" }}>Lv {q.lvl}</span>
               </div>
           ))}
@@ -48,6 +50,16 @@ export default function Hero({ v }) {
               </div>
               <div style={{ font: "18px/1 'Bagel Fat One',system-ui", marginTop: "6px" }}>{st.value}</div>
             </div>
+        ))}
+      </div>
+      <div style={{ flex: "none", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px" }}>
+        <span style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#5E4A3F" }}>RESONANSI</span>
+        {v.resoChips.length === 0 && <span style={{ font: "600 11.5px/1.2 'Bricolage Grotesque'", color: "#5B4A40" }}>Belum ada equipment ber-elemen.</span>}
+        {v.resoChips.map(c => (
+          <span key={c.key} style={{ display: "inline-flex", alignItems: "center", gap: "4px", height: "24px", padding: "0 8px 0 4px", boxSizing: "border-box", borderRadius: "12px", border: `2px solid ${c.on ? '#2B1E18' : '#B9A994'}`, background: c.on ? c.color : "#FFF8EC", color: c.on ? "#FFF8EC" : "#2B1E18", font: "800 11px/1 'Bricolage Grotesque'", boxShadow: c.on ? "0 2px 0 #2B1E18" : "none" }}>
+            <span style={{ width: "17px", height: "17px", display: "grid", placeItems: "center", borderRadius: "50%", background: c.on ? "rgba(255,255,255,.25)" : c.color, color: "#FFF8EC", font: "11px/1 'Material Symbols Rounded'" }}>{c.icon}</span>
+            {c.label} ×{c.count} · {c.bonus}
+          </span>
         ))}
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
@@ -84,7 +96,7 @@ export default function Hero({ v }) {
       </div>
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: "8px" }}>
         <span style={{ font: "18px/1 'Bagel Fat One',system-ui" }}>Tas</span>
-        <span style={{ font: "500 10.5px/1 'DM Mono',monospace", letterSpacing: ".06em", color: "#5E4A3F" }}>{v.bagCount}/60 · KETUK UNTUK PASANG</span>
+        <span style={{ font: "500 10.5px/1 'DM Mono',monospace", letterSpacing: ".06em", color: "#5E4A3F" }}>{v.bagCount}/60 · KETUK UNTUK DETAIL</span>
       </div>
       <div style={{ flex: "none", margin: "-4px -6px 0", padding: "4px 6px 8px" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(5,minmax(0,1fr))", gap: "9px" }}>
@@ -92,6 +104,7 @@ export default function Hero({ v }) {
               <div key={it.key ?? it.id ?? i} onClick={it.equip} className="dc-press" style={{ position: "relative", aspectRatio: "1", boxSizing: "border-box", display: "grid", placeItems: "center", border: "2.5px solid #2B1E18", borderRadius: "14px", background: it.bg, boxShadow: "0 3px 0 #2B1E18", cursor: "pointer", '--press-tf': "translateY(2px)", '--press-sh': "0 1px 0 #2B1E18" }}>
                 <ItemArt id={it.item} size={38} />
                 <span style={{ position: "absolute", right: "5px", bottom: "4px", font: "500 10px/1 'DM Mono',monospace", color: it.fg }}>{it.lvl}</span>
+                {it.el && <span title={it.el.label} style={{ position: "absolute", left: "-5px", top: "-5px", width: "18px", height: "18px", boxSizing: "border-box", display: "grid", placeItems: "center", borderRadius: "50%", border: "2px solid #2B1E18", background: it.el.color, color: "#FFF8EC", font: "11px/1 'Material Symbols Rounded'" }}>{it.el.icon}</span>}
                 {it.better && (
                   <span style={{ position: "absolute", top: "-6px", right: "-6px", width: "19px", height: "19px", boxSizing: "border-box", display: "grid", placeItems: "center", borderRadius: "50%", border: "2px solid #2B1E18", background: "#4FAE72", color: "#FFF8EC", font: "13px/1 'Material Symbols Rounded'" }}>arrow_upward</span>
                 )}

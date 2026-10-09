@@ -48,6 +48,16 @@ export const ELEMENTS = {
   tanah: { label: 'TANAH', icon: 'landscape', color: '#8E5A2B' },
   angin: { label: 'ANGIN', icon: 'air', color: '#3C78C8' }
 };
+// Equipment elements: each equipped piece lends its element to combos and the ultimate, and
+// two or more pieces of one element resonate for a bonus (index by resoTier(count)).
+export const RESONANCE = {
+  api: { stat: 'ATK', vals: [6, 12, 20] },
+  tanah: { stat: 'HP', vals: [6, 12, 20] },
+  angin: { stat: 'DEF', vals: [8, 16, 26] },
+  petir: { stat: 'KRIT', vals: [3, 6, 10] }
+};
+export const resoTier = n => (n >= 4 ? 2 : n >= 3 ? 1 : n >= 2 ? 0 : -1);
+export const BASE_CRIT = 8;
 // Owning skills of both elements unlocks a combo.
 export const COMBOS = [
   { id: 'kobaran', els: ['api', 'angin'], name: 'Kobaran', desc: 'Angin meniup api: kerusakan terbakar ×1,5.' },
@@ -123,48 +133,48 @@ export const FLAVOR = [
   { t: 'Seseorang menjatuhkan dompet. Isinya struk belanja dan 12 koin.', coins: 12 }
 ];
 export const ITEMS = {
-  sumpit: { name: 'Sumpit Bambu', type: 'senjata', rar: 'Langka', stat: 'ATK', val: 36, lvl: 12, icon: 'ramen_dining', desc: 'Dua batang. Satu untuk menyerang, satu cadangan.' },
-  payung: { name: 'Payung Lipat', type: 'senjata', rar: 'Biasa', stat: 'ATK', val: 22, lvl: 8, icon: 'beach_access', desc: 'Bisa untuk menyerang. Bisa untuk hujan. Jarang keduanya.' },
-  centong: { name: 'Centong Nasi Kuno', type: 'senjata', rar: 'Epik', stat: 'ATK', val: 58, lvl: 1, icon: 'restaurant', desc: 'Pernah dipakai di tiga kenduri. Aura nasinya masih terasa.' },
-  panci: { name: 'Panci Antik', type: 'topi', rar: 'Epik', stat: 'HP', val: 260, lvl: 10, icon: 'soup_kitchen', desc: 'Dipakai di kepala. Masih bisa untuk merebus.' },
-  pramuka: { name: 'Topi Pramuka', type: 'topi', rar: 'Biasa', stat: 'HP', val: 120, lvl: 5, icon: 'school', desc: 'Siap sedia. Tidak jelas untuk apa.' },
-  helm: { name: 'Helm Proyek', type: 'topi', rar: 'Langka', stat: 'HP', val: 190, lvl: 4, icon: 'engineering', desc: 'Kuning. Membuat Santoni tampak bertanggung jawab.' },
-  syal: { name: 'Syal Rajut Nenek', type: 'baju', rar: 'Langka', stat: 'DEF', val: 14, lvl: 9, icon: 'checkroom', desc: 'Panjangnya empat meter. Nenek tidak tahu kapan berhenti.' },
-  jashujan: { name: 'Jas Hujan Plastik', type: 'baju', rar: 'Biasa', stat: 'DEF', val: 8, lvl: 6, icon: 'water_drop', desc: 'Berbunyi kresek setiap Santoni bergerak.' },
-  tutup: { name: 'Kalung Tutup Botol', type: 'kalung', rar: 'Langka', stat: 'ATK', val: 18, lvl: 7, icon: 'trip_origin', desc: 'Tutup botol limun. Dikoleksi dengan serius.' },
-  cincin: { name: 'Cincin Karet', type: 'kalung', rar: 'Biasa', stat: 'ATK', val: 10, lvl: 4, icon: 'radio_button_unchecked', desc: 'Bekas ikat bungkus nasi. Elastis secara emosional.' },
-  rafia: { name: 'Tali Rafia', type: 'sabuk', rar: 'Biasa', stat: 'HP', val: 90, lvl: 6, icon: 'cable', desc: 'Merah muda. Kuat menahan apa saja kecuali angin.' },
-  gesper: { name: 'Gesper Raksasa', type: 'sabuk', rar: 'Epik', stat: 'HP', val: 180, lvl: 2, icon: 'link', desc: 'Beratnya dua kilo. Gaya tetap nomor satu.' },
-  sandal: { name: 'Sandal Kiri', type: 'sepatu', rar: 'Legendaris', stat: 'DEF', val: 22, lvl: 15, icon: 'directions_walk', desc: 'Hanya yang kiri. Ternyata cukup.' },
-  kaoskaki: { name: 'Kaus Kaki Ganjil', type: 'sepatu', rar: 'Biasa', stat: 'DEF', val: 9, lvl: 3, icon: 'nordic_walking', desc: 'Satu motif bebek, satu motif galaksi.' },
+  sumpit: { name: 'Sumpit Bambu', type: 'senjata', el: 'angin', rar: 'Langka', stat: 'ATK', val: 36, lvl: 12, icon: 'ramen_dining', desc: 'Dua batang. Satu untuk menyerang, satu cadangan.' },
+  payung: { name: 'Payung Lipat', type: 'senjata', el: 'angin', rar: 'Biasa', stat: 'ATK', val: 22, lvl: 8, icon: 'beach_access', desc: 'Bisa untuk menyerang. Bisa untuk hujan. Jarang keduanya.' },
+  centong: { name: 'Centong Nasi Kuno', type: 'senjata', el: 'api', rar: 'Epik', stat: 'ATK', val: 58, lvl: 1, icon: 'restaurant', desc: 'Pernah dipakai di tiga kenduri. Aura nasinya masih terasa.' },
+  panci: { name: 'Panci Antik', type: 'topi', el: 'api', rar: 'Epik', stat: 'HP', val: 260, lvl: 10, icon: 'soup_kitchen', desc: 'Dipakai di kepala. Masih bisa untuk merebus.' },
+  pramuka: { name: 'Topi Pramuka', type: 'topi', el: 'tanah', rar: 'Biasa', stat: 'HP', val: 120, lvl: 5, icon: 'school', desc: 'Siap sedia. Tidak jelas untuk apa.' },
+  helm: { name: 'Helm Proyek', type: 'topi', el: 'tanah', rar: 'Langka', stat: 'HP', val: 190, lvl: 4, icon: 'engineering', desc: 'Kuning. Membuat Santoni tampak bertanggung jawab.' },
+  syal: { name: 'Syal Rajut Nenek', type: 'baju', el: 'angin', rar: 'Langka', stat: 'DEF', val: 14, lvl: 9, icon: 'checkroom', desc: 'Panjangnya empat meter. Nenek tidak tahu kapan berhenti.' },
+  jashujan: { name: 'Jas Hujan Plastik', type: 'baju', el: 'petir', rar: 'Biasa', stat: 'DEF', val: 8, lvl: 6, icon: 'water_drop', desc: 'Berbunyi kresek setiap Santoni bergerak.' },
+  tutup: { name: 'Kalung Tutup Botol', type: 'kalung', el: 'petir', rar: 'Langka', stat: 'ATK', val: 18, lvl: 7, icon: 'trip_origin', desc: 'Tutup botol limun. Dikoleksi dengan serius.' },
+  cincin: { name: 'Cincin Karet', type: 'kalung', el: null, rar: 'Biasa', stat: 'ATK', val: 10, lvl: 4, icon: 'radio_button_unchecked', desc: 'Bekas ikat bungkus nasi. Elastis secara emosional.' },
+  rafia: { name: 'Tali Rafia', type: 'sabuk', el: null, rar: 'Biasa', stat: 'HP', val: 90, lvl: 6, icon: 'cable', desc: 'Merah muda. Kuat menahan apa saja kecuali angin.' },
+  gesper: { name: 'Gesper Raksasa', type: 'sabuk', el: 'tanah', rar: 'Epik', stat: 'HP', val: 180, lvl: 2, icon: 'link', desc: 'Beratnya dua kilo. Gaya tetap nomor satu.' },
+  sandal: { name: 'Sandal Kiri', type: 'sepatu', el: 'angin', rar: 'Legendaris', stat: 'DEF', val: 22, lvl: 15, icon: 'directions_walk', desc: 'Hanya yang kiri. Ternyata cukup.' },
+  kaoskaki: { name: 'Kaus Kaki Ganjil', type: 'sepatu', el: 'petir', rar: 'Biasa', stat: 'DEF', val: 9, lvl: 3, icon: 'nordic_walking', desc: 'Satu motif bebek, satu motif galaksi.' },
   // New weapons
-  raket: { name: 'Raket Nyamuk Listrik', type: 'senjata', rar: 'Langka', stat: 'ATK', val: 40, lvl: 9, icon: 'sports_tennis', desc: 'Dijual sebagai alat rumah tangga. Santoni tidak setuju.' },
-  sapu: { name: 'Sapu Lidi Sakti', type: 'senjata', rar: 'Epik', stat: 'ATK', val: 52, lvl: 11, icon: 'cleaning_services', desc: 'Seribu lidi, satu tekad. Menyapu musuh dan debu sekaligus.' },
-  ulekan: { name: 'Ulekan Batu Nenek', type: 'senjata', rar: 'Epik', stat: 'ATK', val: 61, lvl: 13, icon: 'blender', desc: 'Sudah menghaluskan sambal tiga generasi. Musuh berikutnya.' },
-  gitar: { name: 'Gitar Pengamen Legendaris', type: 'senjata', rar: 'Legendaris', stat: 'ATK', val: 76, lvl: 18, icon: 'music_note', desc: 'Senarnya lima. Lagunya satu. Semua orang tetap menangis.' },
+  raket: { name: 'Raket Nyamuk Listrik', type: 'senjata', el: 'petir', rar: 'Langka', stat: 'ATK', val: 40, lvl: 9, icon: 'sports_tennis', desc: 'Dijual sebagai alat rumah tangga. Santoni tidak setuju.' },
+  sapu: { name: 'Sapu Lidi Sakti', type: 'senjata', el: 'angin', rar: 'Epik', stat: 'ATK', val: 52, lvl: 11, icon: 'cleaning_services', desc: 'Seribu lidi, satu tekad. Menyapu musuh dan debu sekaligus.' },
+  ulekan: { name: 'Ulekan Batu Nenek', type: 'senjata', el: 'tanah', rar: 'Epik', stat: 'ATK', val: 61, lvl: 13, icon: 'blender', desc: 'Sudah menghaluskan sambal tiga generasi. Musuh berikutnya.' },
+  gitar: { name: 'Gitar Pengamen Legendaris', type: 'senjata', el: 'petir', rar: 'Legendaris', stat: 'ATK', val: 76, lvl: 18, icon: 'music_note', desc: 'Senarnya lima. Lagunya satu. Semua orang tetap menangis.' },
   // New gear
-  caping: { name: 'Caping Sawah', type: 'topi', rar: 'Langka', stat: 'HP', val: 170, lvl: 6, icon: 'agriculture', desc: 'Lebar, adem, dan bisa untuk menampung hujan.' },
-  blangkon: { name: 'Blangkon Kondangan', type: 'topi', rar: 'Epik', stat: 'HP', val: 240, lvl: 12, icon: 'face', desc: 'Dipakai sekali setahun. Hari ini termasuk.' },
-  batik: { name: 'Kemeja Batik Rapi', type: 'baju', rar: 'Epik', stat: 'DEF', val: 20, lvl: 11, icon: 'checkroom', desc: 'Motif parang. Disetrika oleh nenek dengan penuh harapan.' },
-  sarung: { name: 'Sarung Kotak-Kotak', type: 'baju', rar: 'Langka', stat: 'DEF', val: 15, lvl: 7, icon: 'checkroom', desc: 'Bisa jadi baju, selimut, atau tas darurat.' },
-  peluit: { name: 'Kalung Peluit Satpam', type: 'kalung', rar: 'Langka', stat: 'ATK', val: 21, lvl: 8, icon: 'campaign', desc: 'Disita dari Bebek Satpam. Bebeknya masih mencari.' },
-  kunci: { name: 'Gantungan Kunci Kenangan', type: 'kalung', rar: 'Epik', stat: 'ATK', val: 29, lvl: 12, icon: 'key', desc: 'Oleh-oleh dari kota yang tidak pernah Santoni datangi.' },
-  pinggang: { name: 'Tas Pinggang Turis', type: 'sabuk', rar: 'Langka', stat: 'HP', val: 150, lvl: 7, icon: 'work', desc: 'Berisi permen, tiket bekas, dan rasa ingin tahu.' },
-  bakiak: { name: 'Bakiak Kayu', type: 'sepatu', rar: 'Epik', stat: 'DEF', val: 19, lvl: 10, icon: 'directions_walk', desc: 'Bunyinya terdengar dari tiga desa. Musuh tahu Santoni datang.' },
+  caping: { name: 'Caping Sawah', type: 'topi', el: 'tanah', rar: 'Langka', stat: 'HP', val: 170, lvl: 6, icon: 'agriculture', desc: 'Lebar, adem, dan bisa untuk menampung hujan.' },
+  blangkon: { name: 'Blangkon Kondangan', type: 'topi', el: null, rar: 'Epik', stat: 'HP', val: 240, lvl: 12, icon: 'face', desc: 'Dipakai sekali setahun. Hari ini termasuk.' },
+  batik: { name: 'Kemeja Batik Rapi', type: 'baju', el: 'api', rar: 'Epik', stat: 'DEF', val: 20, lvl: 11, icon: 'checkroom', desc: 'Motif parang. Disetrika oleh nenek dengan penuh harapan.' },
+  sarung: { name: 'Sarung Kotak-Kotak', type: 'baju', el: 'api', rar: 'Langka', stat: 'DEF', val: 15, lvl: 7, icon: 'checkroom', desc: 'Bisa jadi baju, selimut, atau tas darurat.' },
+  peluit: { name: 'Kalung Peluit Satpam', type: 'kalung', el: 'angin', rar: 'Langka', stat: 'ATK', val: 21, lvl: 8, icon: 'campaign', desc: 'Disita dari Bebek Satpam. Bebeknya masih mencari.' },
+  kunci: { name: 'Gantungan Kunci Kenangan', type: 'kalung', el: 'petir', rar: 'Epik', stat: 'ATK', val: 29, lvl: 12, icon: 'key', desc: 'Oleh-oleh dari kota yang tidak pernah Santoni datangi.' },
+  pinggang: { name: 'Tas Pinggang Turis', type: 'sabuk', el: null, rar: 'Langka', stat: 'HP', val: 150, lvl: 7, icon: 'work', desc: 'Berisi permen, tiket bekas, dan rasa ingin tahu.' },
+  bakiak: { name: 'Bakiak Kayu', type: 'sepatu', el: 'tanah', rar: 'Epik', stat: 'DEF', val: 19, lvl: 10, icon: 'directions_walk', desc: 'Bunyinya terdengar dari tiga desa. Musuh tahu Santoni datang.' },
   // Third wave of gear
-  kipasangin: { name: 'Kipas Angin Meja', type: 'senjata', rar: 'Epik', stat: 'ATK', val: 57, lvl: 14, icon: 'mode_fan', desc: 'Tiga kecepatan. Yang ketiga tidak pernah dipakai karena terlalu berisik.' },
-  peci: { name: 'Peci Hitam Licin', type: 'topi', rar: 'Langka', stat: 'HP', val: 165, lvl: 8, icon: 'face', desc: 'Licin sekali. Lalat pun tidak bisa hinggap.' },
-  mahkota: { name: 'Mahkota Kardus', type: 'topi', rar: 'Legendaris', stat: 'HP', val: 330, lvl: 20, icon: 'crown', desc: 'Dibuat dari kardus mi instan. Kewibawaannya asli.' },
-  jaketojek: { name: 'Jaket Ojek Hijau', type: 'baju', rar: 'Langka', stat: 'DEF', val: 16, lvl: 9, icon: 'checkroom', desc: 'Disita dari Kodok Ojek. Masih ada nomor antrean di saku.' },
-  jubah: { name: 'Jubah Mandi Hotel', type: 'baju', rar: 'Epik', stat: 'DEF', val: 23, lvl: 15, icon: 'dry_cleaning', desc: 'Bukan dicuri. Hanya belum dikembalikan.' },
-  bawang: { name: 'Kalung Bawang Putih', type: 'kalung', rar: 'Biasa', stat: 'ATK', val: 12, lvl: 5, icon: 'eco', desc: 'Mengusir vampir dan sebagian besar teman.' },
-  karate: { name: 'Sabuk Karate Pinjaman', type: 'sabuk', rar: 'Epik', stat: 'HP', val: 210, lvl: 14, icon: 'sports_martial_arts', desc: 'Sabuk hitam. Pemiliknya sabuk kuning. Jangan tanya.' },
-  sepaturoda: { name: 'Sepatu Roda Bekas', type: 'sepatu', rar: 'Langka', stat: 'DEF', val: 17, lvl: 11, icon: 'roller_skating', desc: 'Satu rodanya macet. Santoni berbelok ke kiri terus.' },
+  kipasangin: { name: 'Kipas Angin Meja', type: 'senjata', el: 'angin', rar: 'Epik', stat: 'ATK', val: 57, lvl: 14, icon: 'mode_fan', desc: 'Tiga kecepatan. Yang ketiga tidak pernah dipakai karena terlalu berisik.' },
+  peci: { name: 'Peci Hitam Licin', type: 'topi', el: null, rar: 'Langka', stat: 'HP', val: 165, lvl: 8, icon: 'face', desc: 'Licin sekali. Lalat pun tidak bisa hinggap.' },
+  mahkota: { name: 'Mahkota Kardus', type: 'topi', el: 'api', rar: 'Legendaris', stat: 'HP', val: 330, lvl: 20, icon: 'crown', desc: 'Dibuat dari kardus mi instan. Kewibawaannya asli.' },
+  jaketojek: { name: 'Jaket Ojek Hijau', type: 'baju', el: 'angin', rar: 'Langka', stat: 'DEF', val: 16, lvl: 9, icon: 'checkroom', desc: 'Disita dari Kodok Ojek. Masih ada nomor antrean di saku.' },
+  jubah: { name: 'Jubah Mandi Hotel', type: 'baju', el: 'api', rar: 'Epik', stat: 'DEF', val: 23, lvl: 15, icon: 'dry_cleaning', desc: 'Bukan dicuri. Hanya belum dikembalikan.' },
+  bawang: { name: 'Kalung Bawang Putih', type: 'kalung', el: 'api', rar: 'Biasa', stat: 'ATK', val: 12, lvl: 5, icon: 'eco', desc: 'Mengusir vampir dan sebagian besar teman.' },
+  karate: { name: 'Sabuk Karate Pinjaman', type: 'sabuk', el: 'tanah', rar: 'Epik', stat: 'HP', val: 210, lvl: 14, icon: 'sports_martial_arts', desc: 'Sabuk hitam. Pemiliknya sabuk kuning. Jangan tanya.' },
+  sepaturoda: { name: 'Sepatu Roda Bekas', type: 'sepatu', el: 'angin', rar: 'Langka', stat: 'DEF', val: 17, lvl: 11, icon: 'roller_skating', desc: 'Satu rodanya macet. Santoni berbelok ke kiri terus.' },
   // Festival exclusives (not in the chest pool)
-  topibambu: { name: 'Topi Bambu Anyaman', type: 'topi', rar: 'Epik', stat: 'HP', val: 255, lvl: 12, icon: 'forest', event: true, desc: 'Hadiah Festival Bambu. Dianyam tangan, sedikit miring.' },
-  kartumember: { name: 'Kartu Member Emas', type: 'kalung', rar: 'Epik', stat: 'ATK', val: 31, lvl: 12, icon: 'credit_card', event: true, desc: 'Hadiah Pekan Diskon. Poinnya tidak pernah bisa ditukar.' },
-  sabukdisko: { name: 'Sabuk Bola Disko', type: 'sabuk', rar: 'Epik', stat: 'HP', val: 225, lvl: 12, icon: 'blur_circular', event: true, desc: 'Hadiah Malam Karaoke. Berkilau di bawah lampu mana pun.' },
-  karung: { name: 'Sepatu Karung Juara', type: 'sepatu', rar: 'Epik', stat: 'DEF', val: 21, lvl: 12, icon: 'sports', event: true, desc: 'Hadiah Lomba Kampung. Bekas balap karung, masih ada nomor dadanya.' }
+  topibambu: { name: 'Topi Bambu Anyaman', type: 'topi', el: 'tanah', rar: 'Epik', stat: 'HP', val: 255, lvl: 12, icon: 'forest', event: true, desc: 'Hadiah Festival Bambu. Dianyam tangan, sedikit miring.' },
+  kartumember: { name: 'Kartu Member Emas', type: 'kalung', el: 'petir', rar: 'Epik', stat: 'ATK', val: 31, lvl: 12, icon: 'credit_card', event: true, desc: 'Hadiah Pekan Diskon. Poinnya tidak pernah bisa ditukar.' },
+  sabukdisko: { name: 'Sabuk Bola Disko', type: 'sabuk', el: 'petir', rar: 'Epik', stat: 'HP', val: 225, lvl: 12, icon: 'blur_circular', event: true, desc: 'Hadiah Malam Karaoke. Berkilau di bawah lampu mana pun.' },
+  karung: { name: 'Sepatu Karung Juara', type: 'sepatu', el: 'tanah', rar: 'Epik', stat: 'DEF', val: 21, lvl: 12, icon: 'sports', event: true, desc: 'Hadiah Lomba Kampung. Bekas balap karung, masih ada nomor dadanya.' }
 };
 // Festivals rotate every FEST_DAYS local days. Each has a rule active in all runs, a token
 // earned from enemies (1, bosses 5) and a one-time shop with an exclusive item.

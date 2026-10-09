@@ -47,7 +47,7 @@ export default function Lobby({ v }) {
           <div onClick={v.tapMail} style={{ position: "relative", width: "54px", height: "58px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "4px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", cursor: "pointer" }}>
             <span style={{ font: "24px/1 'Material Symbols Rounded'", color: "#3166B0" }}>mail</span>
             <span style={{ font: "700 10px/1 'Bricolage Grotesque'" }}>Surat</span>
-            <span style={{ position: "absolute", top: "-7px", right: "-7px", minWidth: "18px", height: "18px", boxSizing: "border-box", padding: "0 4px", borderRadius: "9px", border: "2px solid #2B1E18", background: "#D2532A", color: "#FFF8EC", font: "800 10px/14px 'Bricolage Grotesque'", textAlign: "center" }}>2</span>
+            {v.mailBadge > 0 && <span style={{ position: "absolute", top: "-7px", right: "-7px", minWidth: "18px", height: "18px", boxSizing: "border-box", padding: "0 4px", borderRadius: "9px", border: "2px solid #2B1E18", background: "#D2532A", color: "#FFF8EC", font: "800 10px/14px 'Bricolage Grotesque'", textAlign: "center" }}>{v.mailBadge}</span>}
           </div>
           <div onClick={v.tapFest} style={{ position: "relative", width: "54px", height: "58px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "4px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#FFF8EC", boxShadow: "0 3px 0 #2B1E18", cursor: "pointer" }}>
             <span style={{ font: "24px/1 'Material Symbols Rounded'", color: "#2F7A5C" }}>celebration</span>

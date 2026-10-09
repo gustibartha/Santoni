@@ -14,6 +14,58 @@ export const modeMethods = {
   gearLv(id) { return ((this.state.gearLv || {})[id]) || 1; },
   gearStar(id) { return ((this.state.gearStar || {})[id]) || 0; },
   // Effective stat of an item after workshop levels and merge stars.
+  // Count of equipped pieces per element; `skip` leaves out one slot (e.g. lost to the waves).
+  equipEls(eq = this.state.equipped, skip = null) {
+    const n = {};
+    for (const [t, id] of Object.entries(eq || {})) {
+      const it = C.ITEMS[id];
+      if (it && it.el && t !== skip) n[it.el] = (n[it.el] || 0) + 1;
+    }
+    return n;
+  },
+  // Active resonance bonus (%) per element: ATK for api, HP for tanah, DEF for angin, crit for petir.
+  resonance(eq = this.state.equipped) {
+    const n = this.equipEls(eq), out = {};
+    for (const el of Object.keys(C.RESONANCE)) { const t = C.resoTier(n[el] || 0); out[el] = t >= 0 ? C.RESONANCE[el].vals[t] : 0; }
+    return out;
+  },
+  openItem(id, from) { this.setState({ itemPick: { id, from } }); },
+  closeItem() { this.setState({ itemPick: null }); },
+
+  // Detail sheet for one piece of equipment: stats, element, resonance and (for weapons) the ultimate.
+  itemSheetView(s, { g, fmt }) {
+    const pick = s.itemPick, it = pick && C.ITEMS[pick.id];
+    if (!it) return null;
+    const rr = C.RAR[it.rar], lv = (s.gearLv || {})[pick.id] || 1, star = (s.gearStar || {})[pick.id] || 0;
+    const val = this.itemVal(pick.id, s), curId = s.equipped[it.type], cur = curId && C.ITEMS[curId];
+    const TL = { senjata: 'Senjata', topi: 'Topi', baju: 'Baju', kalung: 'Kalung', sabuk: 'Sabuk', sepatu: 'Sepatu' };
+    const fromBag = pick.from === 'bag';
+    const after = fromBag ? { ...s.equipped, [it.type]: pick.id } : s.equipped;
+    const el = it.el ? C.ELEMENTS[it.el] : null, R = it.el ? C.RESONANCE[it.el] : null;
+    const have = it.el ? (this.equipEls(after)[it.el] || 0) : 0;
+    const combos = it.el ? C.COMBOS.filter(c => c.els.includes(it.el)).map(c => c.name) : [];
+    const ult = it.type === 'senjata' ? C.ULTIMATES[pick.id] : null;
+    let compare = null;
+    if (fromBag && cur && curId !== pick.id) {
+      const cv = this.itemVal(curId, s);
+      compare = { name: cur.name, val: `${cur.stat} +${fmt(cv)}`, diff: cur.stat === it.stat ? val - cv : null };
+    }
+    return {
+      id: pick.id, name: it.name, desc: it.desc, rar: rr.label, rarBg: rr.bg, rarFg: rr.fg, type: TL[it.type],
+      lvl: `Lv ${lv}${star ? ` ★${star}` : ''}`, stat: it.stat, val: fmt(val), compare, fromBag,
+      el: el ? { ...el, key: it.el } : null,
+      elLines: el ? [
+        { icon: 'auto_awesome', text: `Menyulut Jurus Pamungkas: ${C.ULT_ELEMENTS[it.el]}.` },
+        { icon: 'join', text: `Dihitung untuk Kombo ${combos.join(', ')}.` },
+        { icon: 'hub', text: `Resonansi: 2 → ${R.stat} +${R.vals[0]}%, 3 → +${R.vals[1]}%, 4 → +${R.vals[2]}%. ${fromBag ? 'Kalau dipasang' : 'Terpasang'}: ${have} ${el.label}.` }
+      ] : [{ icon: 'radio_button_unchecked', text: 'Netral, tanpa elemen. Aman dipadukan dengan apa saja.' }],
+      ult: ult ? { name: ult.name, desc: ult.desc } : null,
+      equip: g(() => { this.equip(pick.id); this.closeItem(); }),
+      bengkel: g(() => { this.setState({ itemPick: null }); this.go('bengkel'); }),
+      close: g(() => this.closeItem())
+    };
+  },
+
   itemVal(id, s = this.state) {
     const it = C.ITEMS[id]; if (!it) return 0;
     const lv = ((s.gearLv || {})[id]) || 1, star = ((s.gearStar || {})[id]) || 0;

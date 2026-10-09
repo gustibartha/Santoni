@@ -21,6 +21,8 @@ import BengkelScreen from '../screens/BengkelScreen.jsx';
 import RekanScreen from '../screens/RekanScreen.jsx';
 import PetScreen from '../screens/PetScreen.jsx';
 import SvgDefs from '../components/SvgDefs.jsx';
+import ItemSheet from '../screens/ItemSheet.jsx';
+import SuratScreen from '../screens/SuratScreen.jsx';
 
 // The 390×844 phone frame. Layer order matters: offers, pulls and toasts sit above screens.
 export default function GameView({ v }) {
@@ -40,6 +42,7 @@ export default function GameView({ v }) {
         {v.isMisi && <MisiScreen v={v} />}
         {v.isFestival && <FestivalScreen v={v} />}
         {v.isTeman && <TemanScreen v={v} />}
+        {v.isSurat && <SuratScreen v={v} />}
         {v.isMode && <ModeHub v={v} />}
         {v.isTambang && <TambangScreen v={v} />}
         {v.isBengkel && <BengkelScreen v={v} />}
@@ -49,6 +52,7 @@ export default function GameView({ v }) {
       {v.hasOffer && <SkillOffer v={v} />}
       {v.hasPull && <PullReveal v={v} />}
       {v.showNav && <NavBar v={v} />}
+      {v.itemSheet && <ItemSheet s={v.itemSheet} />}
       {v.confirm && <ConfirmDialog c={v.confirm} />}
       {v.hasToast && <Toast v={v} />}
       <div className="phone-rim" />
