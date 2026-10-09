@@ -7,7 +7,7 @@ const onKey = fn => e => { if (fn && (e.key === 'Enter' || e.key === ' ')) { e.p
 
 export default function Lobby({ v }) {
   return (
-    <div style={{ position: "absolute", top: "66px", left: "0", right: "0", bottom: "84px", display: "flex", flexDirection: "column", gap: "12px", padding: "6px 14px 16px" }}>
+    <div style={{ position: "absolute", top: "66px", left: "0", right: "0", bottom: "84px", display: "flex", flexDirection: "column", gap: "12px", padding: "6px 14px 16px", overflowY: "auto", overscrollBehavior: "contain", scrollbarWidth: "none" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
         <button onClick={v.prevChapter} style={{ flex: "none", width: "40px", height: "40px", display: "grid", placeItems: "center", padding: "0", border: "2.5px solid #2B1E18", borderRadius: "14px", background: "#FFF8EC", boxShadow: "var(--lift3)", color: "#2B1E18", font: "26px/1 'Material Symbols Rounded'", cursor: "pointer", opacity: v.prevOpacity }}>chevron_left</button>
         <div style={{ flex: "1", minWidth: "0", textAlign: "center", padding: "7px 10px 8px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#FFF8EC", boxShadow: "var(--lift3)" }}>
@@ -28,7 +28,7 @@ export default function Lobby({ v }) {
         <span style={{ padding: "6px 9px", borderRadius: "9px", background: "#FFF8EC", color: "#2B1E18", font: "800 11px/1 'Bricolage Grotesque'" }}>Lihat</span>
       </div>
       )}
-      <div style={{ position: "relative", flex: "1", minHeight: "0", border: "2.5px solid #2B1E18", borderRadius: "26px", overflow: "hidden", backgroundColor: v.lobbySky, transition: "background-color .4s", backgroundImage: "radial-gradient(rgba(43,30,24,.13) 1.2px,transparent 1.5px)", backgroundSize: "10px 10px", boxShadow: "var(--lift4)" }}>
+      <div style={{ position: "relative", flex: "1 0 auto", minHeight: "300px", border: "2.5px solid #2B1E18", borderRadius: "26px", overflow: "hidden", backgroundColor: v.lobbySky, transition: "background-color .4s", backgroundImage: "radial-gradient(rgba(43,30,24,.13) 1.2px,transparent 1.5px)", backgroundSize: "10px 10px", boxShadow: "var(--lift4)" }}>
         <div style={{ position: "absolute", left: "-30%", right: "-30%", bottom: "-130px", height: "310px", borderRadius: "50%", background: v.lobbyHill, border: "2.5px solid #2B1E18" }} />
         <div style={{ position: "absolute", left: "0", right: "0", bottom: "0", height: "74px", background: v.lobbyGround, borderTop: "2.5px solid #2B1E18" }} />
         <div style={{ position: "absolute", right: "30px", bottom: "52px", width: "8px", height: "52px", border: "2.5px solid #2B1E18", borderRadius: "4px", background: "#8E5A2B" }} />
@@ -115,7 +115,7 @@ export default function Lobby({ v }) {
       </div>
       )}
       {v.unlockHint && <div style={{ display: "flex", alignItems: "center", gap: "6px", padding: "7px 10px", border: "2px dashed rgba(43,30,24,.35)", borderRadius: "12px", font: "600 11.5px/1.3 'Bricolage Grotesque'", color: "#5B4A40" }}><span style={{ font: "16px/1 'Material Symbols Rounded'", color: "#7E43B5" }}>lock_open</span>{v.unlockHint}</div>}
-      <div style={{ display: "flex", gap: "10px", flex: "none" }}>
+      <div style={{ position: "sticky", bottom: "-16px", zIndex: "3", display: "flex", gap: "10px", flex: "none", margin: "0 -14px -16px", padding: "8px 14px 16px", background: "linear-gradient(180deg, rgba(235,216,190,0), #EBD8BE 30%)" }}>
         {v.unlock.modes && (
         <button onClick={v.openModes} aria-label="Tantangan" style={{ position: "relative", width: "72px", height: "68px", flex: "none", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "3px", padding: "0", border: "3px solid #2B1E18", borderRadius: "20px", background: "#5A3E8A", boxShadow: "var(--lift6)", color: "#FFF8EC", font: "800 11px/1 'Bricolage Grotesque'", cursor: "pointer" }}>
           <span style={{ font: "28px/1 'Material Symbols Rounded'", color: "#F2B63C" }}>swords</span>Tantangan

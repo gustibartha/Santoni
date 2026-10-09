@@ -27,6 +27,7 @@ export const accountMethods = {
       }
       if (user && cloud.cameFromReset) return this.startRecovery(user);
       if (user && this.submitDaily) this.submitDaily();
+      if (user && this.claimPaid) this.claimPaid();
       if (user) await this.cloudReconcile(user);
     } catch {
       this.setAcct({ checking: false, status: 'Server akun tidak terjangkau. Progres tetap tersimpan di perangkat ini.' });
@@ -92,6 +93,7 @@ export const accountMethods = {
     this.setAcct({ busy: false, password: '', note: '', user });
     this.toast(`Masuk sebagai ${user.email}.`);
     if (this.submitDaily) this.submitDaily();
+    if (this.claimPaid) this.claimPaid();
     await this.cloudReconcile(user);
   },
 

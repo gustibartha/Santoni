@@ -122,3 +122,21 @@ export async function submitDaily(row) {
   const { error } = await sb.from('daily_scores').insert(row);
   if (error && error.code !== '23505') throw error;
 }
+
+// Gem purchases: the server function creates the order and the Midtrans payment page.
+export async function createOrder(pack, returnUrl) {
+  const sb = await client();
+  const { data, error } = await sb.functions.invoke('create-order', { body: { package: pack, returnUrl } });
+  if (error) {
+    let code = 'gateway';
+    try { code = (await error.context.json()).error || code; } catch { /* no body */ }
+    throw new Error(code);
+  }
+  return data;
+}
+export async function claimGems() {
+  const sb = await client();
+  const { data, error } = await sb.rpc('claim_gems');
+  if (error) throw error;
+  return data || 0;
+}

@@ -12,6 +12,7 @@ import { shareMethods } from './sharing.js';
 import { isStandalone, isIOS, canPrompt, promptInstall, onInstallChange } from './install.js';
 import { sendEvent } from './analytics.js';
 import { dailyMethods, wibDay } from './daily.js';
+import { storeMethods } from './store.js';
 import * as M from './modesData.js';
 
 // Local calendar day, used to reset daily missions at midnight.
@@ -365,7 +366,8 @@ export default class Game extends Component {
     if (this.props.persist) {
       this._save = hide => { if (this._leaving) return; writeSave(this.state, this.days(), this._uid); this.cloudTick(hide === true); };
       this._saveIv = setInterval(this._save, 2000);
-      this._saveHide = () => this._save(true);
+      this._saveHide = () => { this._save(true); if (!document.hidden) this.claimPaid(); };
+      this._payIv = setInterval(() => { const p = this.state.pendingPay; if (p && Date.now() - p.at < 30 * 60e3) this.claimPaid(); }, 8000);
       addEventListener('pagehide', this._saveHide);
       document.addEventListener('visibilitychange', this._saveHide);
       this.initAccount();
@@ -381,7 +383,7 @@ export default class Game extends Component {
       document.removeEventListener('visibilitychange', this._vis);
     }
     if (this._save) {
-      clearInterval(this._saveIv);
+      clearInterval(this._saveIv); clearInterval(this._payIv);
       removeEventListener('pagehide', this._saveHide);
       document.removeEventListener('visibilitychange', this._saveHide);
     }
@@ -1400,6 +1402,7 @@ export default class Game extends Component {
     v.themes = [['modern', 'Modern', 'Font tegas, kartu berbayang lembut'], ['klasik', 'Klasik', 'Tampilan awal yang bulat dan lucu']].map(([id, label, desc]) => ({ id, label, desc, on: v.theme === id, pick: g(() => this.setState({ theme: id })) }));
     Object.assign(v, this.mailView(s, { g, fmt }));
     Object.assign(v, this.dailyView(s, { g, fmt }));
+    Object.assign(v, this.storeView(s, { g }));
     v.openSettings = g(() => this.go('setelan'));
     v.isSetelan = scr === 'setelan'; v.lite = !!s.lite;
     const audio = () => this.setState({ audTick: Date.now() });
@@ -1432,7 +1435,7 @@ export default class Game extends Component {
 }
 
 // Dungeons, arena, mine and workshop live in modes.js.
-Object.assign(Game.prototype, modeMethods, companionMethods, accountMethods, mailMethods, shareMethods, dailyMethods);
+Object.assign(Game.prototype, modeMethods, companionMethods, accountMethods, mailMethods, shareMethods, dailyMethods, storeMethods);
 // Daily challenge runs draw every random roll from the day's seed (see daily.js).
 for (const name of ['advanceDay', 'choose', 'battleStep', 'endBattle', 'reroll', 'pickSkill']) {
   const orig = Game.prototype[name];
