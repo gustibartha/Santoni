@@ -55,11 +55,17 @@ for (const tr of Object.values(TRACKS)) {
 function loadMuted() {
   try { return localStorage.getItem(KEY) === '1'; } catch { return false; }
 }
+// Volumes and the sound-effects switch, kept per device.
+const PREF = 'santoni:audio';
+function loadPrefs() {
+  try { return { vol: 0.8, sfxOn: true, sfxVol: 0.8, ...JSON.parse(localStorage.getItem(PREF) || '{}') }; } catch { return { vol: 0.8, sfxOn: true, sfxVol: 0.8 }; }
+}
 
 class Music {
   constructor() {
     this.ctx = null;
     this.muted = loadMuted();
+    Object.assign(this, loadPrefs());
     this.want = 'santai';
     this.track = null;
     this.step = 0;
@@ -69,7 +75,7 @@ class Music {
 
   // Creates/resumes the audio context. Must run inside a user gesture handler.
   unlock() {
-    if (this.muted) return;
+    if (this.muted && !this.sfxOn) return;
     if (!this.ctx) {
       const AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) return;
@@ -77,17 +83,20 @@ class Music {
       this.build();
     }
     if (this.ctx.state === 'suspended') this.ctx.resume();
-    if (!this.timer) this.start();
+    if (!this.muted && !this.timer) this.start();
   }
 
   build() {
     const c = this.ctx;
     this.master = c.createGain();
-    this.master.gain.value = this.muted ? 0 : 0.5;
+    this.master.gain.value = this.musicLevel();
+    // Sound effects have their own bus, so they keep playing with the music off.
+    this.sfxBus = c.createGain();
+    this.sfxBus.gain.value = this.sfxOn ? 0.6 * this.sfxVol : 0;
     // Gentle bus compression glues the mix together.
     const comp = c.createDynamicsCompressor();
     comp.threshold.value = -18; comp.ratio.value = 3; comp.attack.value = 0.01; comp.release.value = 0.2;
-    this.master.connect(comp); comp.connect(c.destination);
+    this.master.connect(comp); this.sfxBus.connect(comp); comp.connect(c.destination);
     // Soft echo for the lead and EP.
     this.echo = c.createDelay(1);
     this.echo.delayTime.value = 0.3;
@@ -113,7 +122,7 @@ class Music {
     // Quick dip so the switch doesn't click, then restart from the top.
     const t = this.ctx.currentTime, g = this.master.gain;
     g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(0, t + 0.12);
-    if (!this.muted) g.linearRampToValueAtTime(0.5, t + 0.5);
+    if (!this.muted) g.linearRampToValueAtTime(this.musicLevel(), t + 0.5);
     this.track = name; this.step = 0; this.nextTime = t + 0.15;
   }
 
@@ -123,8 +132,21 @@ class Music {
     if (!muted) this.unlock();
     if (!this.ctx) return;
     const t = this.ctx.currentTime, g = this.master.gain;
-    g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(muted ? 0 : 0.5, t + 0.25);
+    g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(muted ? 0 : this.musicLevel(), t + 0.25);
+    if (!muted && !this.timer) this.start();
     if (muted) setTimeout(() => { if (this.muted) this.stop(); }, 300);
+  }
+
+  musicLevel() { return this.muted ? 0 : 0.5 * this.vol; }
+  savePrefs() { try { localStorage.setItem(PREF, JSON.stringify({ vol: this.vol, sfxOn: this.sfxOn, sfxVol: this.sfxVol })); } catch { /* storage unavailable */ } }
+  setVolume(v) {
+    this.vol = Math.max(0, Math.min(1, v)); this.savePrefs();
+    if (this.ctx) this.master.gain.setTargetAtTime(this.musicLevel(), this.ctx.currentTime, 0.05);
+  }
+  setSfx(on, vol = this.sfxVol) {
+    this.sfxOn = on; this.sfxVol = Math.max(0, Math.min(1, vol)); this.savePrefs();
+    if (on) this.unlock();
+    if (this.ctx) this.sfxBus.gain.setTargetAtTime(on ? 0.6 * this.sfxVol : 0, this.ctx.currentTime, 0.05);
   }
 
   // Pause while the tab is hidden; resume when it comes back.
@@ -180,14 +202,18 @@ class Music {
     g.gain.setValueAtTime(0.0001, t);
     g.gain.exponentialRampToValueAtTime(vol, t + 0.012);
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    o.connect(f); f.connect(g); g.connect(this.master);
-    if (echo) g.connect(this.echo);
+    o.connect(f); f.connect(g); g.connect(this._bus || this.master);
+    if (echo && !this._bus) g.connect(this.echo);
     o.start(t); o.stop(t + dur + 0.05);
   }
 
   // Short one-shot sound effects layered over the music. Silent when muted or before unlock.
   sfx(name) {
-    if (this.muted || !this.ctx || this.ctx.state !== 'running') return;
+    if (!this.sfxOn || !this.ctx || this.ctx.state !== 'running') return;
+    this._bus = this.sfxBus;
+    try { this.playSfx(name); } finally { this._bus = null; }
+  }
+  playSfx(name) {
     const t = this.ctx.currentTime + 0.01;
     const arp = (notes, step, type, vol, len) => notes.forEach((n, i) => {
       this.tone(midi(n), t + i * step, len, type, vol, true);
@@ -205,7 +231,7 @@ class Music {
       s.buffer = this.noise; s.loop = true; f.type = 'bandpass'; f.Q.value = 1.2;
       f.frequency.setValueAtTime(300, t); f.frequency.exponentialRampToValueAtTime(4000, t + 0.5);
       g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.18, t + 0.3); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.6);
-      s.connect(f); f.connect(g); g.connect(this.master); s.start(t); s.stop(t + 0.65);
+      s.connect(f); f.connect(g); g.connect(this._bus || this.master); s.start(t); s.stop(t + 0.65);
       this.kick(t + 0.5, 0.45);
       arp([60, 67, 72], 0.05, 'sawtooth', 0.04, 0.5);
     }
@@ -215,7 +241,7 @@ class Music {
     const c = this.ctx, o = c.createOscillator(), g = c.createGain();
     o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.12);
     g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.18);
-    o.connect(g); g.connect(this.master); o.start(t); o.stop(t + 0.22);
+    o.connect(g); g.connect(this._bus || this.master); o.start(t); o.stop(t + 0.22);
   }
 
   // Noise crack plus a short body tone.
@@ -223,18 +249,18 @@ class Music {
     const c = this.ctx, s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
     s.buffer = this.noise; f.type = 'bandpass'; f.frequency.value = 1900; f.Q.value = 0.8;
     g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.14);
-    s.connect(f); f.connect(g); g.connect(this.master); s.start(t); s.stop(t + 0.16);
+    s.connect(f); f.connect(g); g.connect(this._bus || this.master); s.start(t); s.stop(t + 0.16);
     const o = c.createOscillator(), og = c.createGain();
     o.frequency.setValueAtTime(210, t); o.frequency.exponentialRampToValueAtTime(140, t + 0.06);
     og.gain.setValueAtTime(vol * 0.6, t); og.gain.exponentialRampToValueAtTime(0.0001, t + 0.08);
-    o.connect(og); og.connect(this.master); o.start(t); o.stop(t + 0.1);
+    o.connect(og); og.connect(this._bus || this.master); o.start(t); o.stop(t + 0.1);
   }
 
   hat(t, vol = 0.06, decay = 0.04) {
     const c = this.ctx, s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
     s.buffer = this.noise; f.type = 'highpass'; f.frequency.value = 7500;
     g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + decay);
-    s.connect(f); f.connect(g); g.connect(this.master); s.start(t); s.stop(t + decay + 0.02);
+    s.connect(f); f.connect(g); g.connect(this._bus || this.master); s.start(t); s.stop(t + decay + 0.02);
   }
 }
 

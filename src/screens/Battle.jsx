@@ -155,7 +155,7 @@ function Stage({ theme, still }) {
 const MOTES = [[30, 300, 7], [92, 380, 9.5], [150, 330, 8], [214, 400, 10.5], [268, 310, 7.5], [330, 370, 9], [360, 260, 11]];
 function Motes() {
   return MOTES.map(([x, y, t], i) => (
-    <span key={i} style={{ position: "absolute", left: `${x}px`, top: `${y}px`, width: `${i % 3 ? 5 : 7}px`, height: `${i % 3 ? 5 : 7}px`, borderRadius: "50%", background: "rgba(255,252,230,.95)", boxShadow: "0 0 6px rgba(255,240,180,.9)", pointerEvents: "none", '--mx': `${i % 2 ? 26 : -22}px`, animation: `moteDrift ${t}s ${-i * 1.3}s ease-in-out infinite` }} />
+    <span key={i} className="fx-ambient" style={{ position: "absolute", left: `${x}px`, top: `${y}px`, width: `${i % 3 ? 5 : 7}px`, height: `${i % 3 ? 5 : 7}px`, borderRadius: "50%", background: "rgba(255,252,230,.95)", boxShadow: "0 0 6px rgba(255,240,180,.9)", pointerEvents: "none", '--mx': `${i % 2 ? 26 : -22}px`, animation: `moteDrift ${t}s ${-i * 1.3}s ease-in-out infinite` }} />
   ));
 }
 

@@ -93,20 +93,11 @@ export default function Journal({ v }) {
           {v.install.prompt && <button onClick={v.install.go} style={{ flex: "none", height: "38px", padding: "0 12px", border: "2.5px solid #2B1E18", borderRadius: "12px", background: "#F2B63C", color: "#2B1E18", boxShadow: "var(--lift2)", font: "800 12.5px/1 'Bricolage Grotesque'", cursor: "pointer" }}>Pasang</button>}
         </div>
       )}
-      <div style={{ marginTop: "12px", padding: "11px 14px 13px", border: "2.5px solid #2B1E18", borderRadius: "18px", background: "#FFF8EC", boxShadow: "var(--lift3)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <span style={{ font: "21px/1 'Material Symbols Rounded'", color: "#7E43B5" }}>palette</span>
-          <div style={{ font: "16px/1.1 var(--display)" }}>Tampilan</div>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginTop: "9px" }}>
-          {v.themes.map(t => (
-            <button key={t.id} onClick={t.pick} aria-pressed={t.on} style={{ padding: "9px 10px", textAlign: "left", border: `2.5px solid ${t.on ? '#2B1E18' : 'rgba(43,30,24,.2)'}`, borderRadius: "13px", background: t.on ? "#F2B63C" : "#FFF8EC", color: "#2B1E18", cursor: "pointer", boxShadow: t.on ? "var(--lift2)" : "none" }}>
-              <span style={{ display: "block", font: `17px/1 ${t.id === 'klasik' ? "'Bagel Fat One',system-ui" : "'Lilita One',system-ui"}` }}>{t.label}</span>
-              <span style={{ display: "block", font: "500 10.5px/1.3 'Bricolage Grotesque'", color: "#5B4A40", marginTop: "4px" }}>{t.desc}</span>
-            </button>
-          ))}
-        </div>
-      </div>
+      <button onClick={v.openSettings} style={{ display: "flex", alignItems: "center", gap: "10px", width: "100%", boxSizing: "border-box", marginTop: "12px", padding: "11px 14px", border: "2.5px solid #2B1E18", borderRadius: "18px", background: "#FFF8EC", boxShadow: "var(--lift3)", color: "#2B1E18", cursor: "pointer", textAlign: "left" }}>
+        <span style={{ font: "21px/1 'Material Symbols Rounded'", color: "#7E43B5" }}>settings</span>
+        <span style={{ flex: "1", font: "16px/1.1 var(--display)" }}>Pengaturan</span>
+        <span style={{ font: "600 11.5px/1.2 'Bricolage Grotesque'", color: "#5B4A40" }}>Suara, tampilan, mode hemat</span>
+      </button>
       <div style={{ display: "flex", flexDirection: "column", gap: "14px", marginTop: "14px" }}>
         {v.journal.map((j, i) => (
             <div key={j.key ?? j.id ?? i} style={{ border: "2.5px solid #2B1E18", borderRadius: "20px", background: "#FFF8EC", boxShadow: "var(--lift3)", overflow: "hidden" }}>

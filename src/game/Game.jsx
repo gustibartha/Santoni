@@ -358,8 +358,7 @@ export default class Game extends Component {
       // Audio may only start from a user gesture; any tap or key press unlocks it.
       this._unlock = () => music.unlock();
       this._vis = () => music.setHidden(document.hidden);
-      addEventListener('pointerdown', this._unlock);
-      addEventListener('keydown', this._unlock);
+      for (const ev of ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown']) addEventListener(ev, this._unlock);
       document.addEventListener('visibilitychange', this._vis);
       music.setTrack(this.trackFor(this.state));
     }
@@ -378,8 +377,7 @@ export default class Game extends Component {
   componentWillUnmount() {
     clearInterval(this._iv); this._iv = null;
     if (this._unlock) {
-      removeEventListener('pointerdown', this._unlock);
-      removeEventListener('keydown', this._unlock);
+      for (const ev of ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown']) removeEventListener(ev, this._unlock);
       document.removeEventListener('visibilitychange', this._vis);
     }
     if (this._save) {
@@ -1100,8 +1098,8 @@ export default class Game extends Component {
     const toneLight = { plain: '#6E5A4E', win: '#2F7A5C', bad: '#C2412A', skill: '#7E43B5', enemy: '#C2412A' };
     const toneDark = { plain: '#FFF8EC', crit: '#F2B63C', skill: '#C9A8F0', enemy: '#FF9C8A', win: '#8FD6A8', bad: '#FF9C8A' };
     const FX = { hp: ['favorite', 'HP'], maxHp: ['favorite', 'HP maks'], atk: ['swords', 'ATK'], def: ['shield', 'DEF'], coins: ['toll', 'koin'], xp: ['star', 'XP'] };
-    const labels = { harian: 'Tantangan Harian', surat: 'Surat', lobby: 'Lobby', run: 'Petualangan', battle: 'Battle', hero: 'Hero', map: 'Peta', shop: 'Toko', result: 'Hasil', misi: 'Misi', festival: 'Festival', teman: 'Teman', mode: 'Tantangan', tambang: 'Tambang', bengkel: 'Bengkel', rekan: 'Rekan', pet: 'Pet', journal: 'Jurnal' };
-    const hudScreens = ['lobby', 'hero', 'map', 'shop', 'journal', 'misi', 'festival', 'teman', 'mode', 'tambang', 'bengkel', 'rekan', 'pet', 'surat', 'harian'];
+    const labels = { setelan: 'Pengaturan', harian: 'Tantangan Harian', surat: 'Surat', lobby: 'Lobby', run: 'Petualangan', battle: 'Battle', hero: 'Hero', map: 'Peta', shop: 'Toko', result: 'Hasil', misi: 'Misi', festival: 'Festival', teman: 'Teman', mode: 'Tantangan', tambang: 'Tambang', bengkel: 'Bengkel', rekan: 'Rekan', pet: 'Pet', journal: 'Jurnal' };
+    const hudScreens = ['setelan', 'lobby', 'hero', 'map', 'shop', 'journal', 'misi', 'festival', 'teman', 'mode', 'tambang', 'bengkel', 'rekan', 'pet', 'surat', 'harian'];
     const v = {
       screenLabel: o && scr === 'run' ? 'Pilih skill' : labels[scr], screenKey: scr,
       isLobby: scr === 'lobby', isRun: scr === 'run', isBattle: scr === 'battle', isHero: scr === 'hero', isMap: scr === 'map', isShop: scr === 'shop', isResult: scr === 'result',
@@ -1402,6 +1400,15 @@ export default class Game extends Component {
     v.themes = [['modern', 'Modern', 'Font tegas, kartu berbayang lembut'], ['klasik', 'Klasik', 'Tampilan awal yang bulat dan lucu']].map(([id, label, desc]) => ({ id, label, desc, on: v.theme === id, pick: g(() => this.setState({ theme: id })) }));
     Object.assign(v, this.mailView(s, { g, fmt }));
     Object.assign(v, this.dailyView(s, { g, fmt }));
+    v.openSettings = g(() => this.go('setelan'));
+    v.isSetelan = scr === 'setelan'; v.lite = !!s.lite;
+    const audio = () => this.setState({ audTick: Date.now() });
+    v.setelan = { back: g(() => this.go('lobby')), musicOn: !!s.musicOn, vol: music.vol, sfxOn: music.sfxOn, sfxVol: music.sfxVol,
+      toggleMusic: g(() => this.toggleMusic()), setVol: g(e => { music.setVolume(e.target.value / 100); audio(); }),
+      toggleSfx: g(() => { music.setSfx(!music.sfxOn); audio(); }), setSfxVol: g(e => { music.setSfx(music.sfxOn, e.target.value / 100); audio(); }),
+      test: g(() => { music.unlock(); setTimeout(() => music.sfx('chest'), 60); }),
+      themes: v.themes, lite: !!s.lite, toggleLite: g(() => this.setState({ lite: !s.lite })),
+      email: s.acct && s.acct.user ? s.acct.user.email : '', account: g(() => this.go('journal')), install: v.install, shareGame: g(() => this.shareRecord()) };
     const cf = s.confirm;
     v.confirm = cf && cf.kind === 'cloud' ? v.cloudConfirm || null : cf ? {
       title: cf.kind === 'tower' ? 'Menyerah di lantai ini?' : 'Pulang sekarang?',

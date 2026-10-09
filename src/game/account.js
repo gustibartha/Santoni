@@ -160,7 +160,7 @@ export const accountMethods = {
     const a = { ...ACCT0, ...s.acct };
     const v = {
       acctBadge: !!this.props.persist, acctOnline: !!a.user,
-      openAccount: g(() => { this.go('journal'); if (!a.user && !a.checking) this.toast('Masuk di kartu Akun online supaya progres tersimpan di server.'); }),
+      openAccount: g(() => this.go('setelan')),
       acct: {
         checking: a.checking, user: a.user, mode: a.mode, busy: a.busy, email: a.email, password: a.password, note: a.note,
         status: a.status || (a.user ? 'Menyambungkan…' : ''), online: !!this.props.persist,

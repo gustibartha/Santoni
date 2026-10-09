@@ -24,11 +24,12 @@ import SvgDefs from '../components/SvgDefs.jsx';
 import ItemSheet from '../screens/ItemSheet.jsx';
 import SuratScreen from '../screens/SuratScreen.jsx';
 import HarianScreen from '../screens/HarianScreen.jsx';
+import SetelanScreen from '../screens/SetelanScreen.jsx';
 
 // The 390×844 phone frame. Layer order matters: offers, pulls and toasts sit above screens.
 export default function GameView({ v }) {
   return (
-    <div className="phone" data-theme={v.theme} data-screen-label={v.screenLabel}>
+    <div className="phone" data-theme={v.theme} data-lite={v.lite ? "1" : undefined} data-screen-label={v.screenLabel}>
       <SvgDefs />
       {v.showHud && <Hud v={v} />}
       <div key={v.screenKey} className="screen-in">
@@ -45,6 +46,7 @@ export default function GameView({ v }) {
         {v.isTeman && <TemanScreen v={v} />}
         {v.isSurat && <SuratScreen v={v} />}
         {v.isHarian && <HarianScreen v={v} />}
+        {v.isSetelan && <SetelanScreen v={v} />}
         {v.isMode && <ModeHub v={v} />}
         {v.isTambang && <TambangScreen v={v} />}
         {v.isBengkel && <BengkelScreen v={v} />}
