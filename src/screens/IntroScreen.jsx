@@ -17,8 +17,27 @@ const RIVALS = [
 
 // Opening cinematic: prologue, a silhouette at dawn, the rivals' roll call, a close-up, and the
 // title slam. Tapping anywhere (or "Lewati") starts the game and its music.
+// Title card before the cinematic: one tap here lets the browser play sound.
+function Gate({ i }) {
+  return (
+    <div onClick={i.play} role="button" aria-label="Tonton opening" style={{ ...ABS, zIndex: "70", overflow: "hidden", cursor: "pointer", background: "radial-gradient(circle at 50% 45%, #3A2240 0%, #140E0C 70%)" }}>
+      {EMBERS.map(([x, y, s, d, del], k) => (
+        <span key={k} style={{ position: "absolute", left: `${x}%`, top: `${y}%`, width: `${s}px`, height: `${s}px`, borderRadius: "50%", background: "#FFB65C", boxShadow: "0 0 10px 3px rgba(255,150,60,.7)", animation: `emberRise ${d}s ${del}s linear infinite` }} />
+      ))}
+      <div style={{ position: "absolute", left: "0", right: "0", top: "24%", textAlign: "center", animation: at('lineIn', .8, .1, 'ease-out') }}>
+        <div style={{ font: "36px/1 var(--display)", color: "#F2B63C", textShadow: OUT }}>Petualangan</div>
+        <div style={{ font: "68px/1 var(--display)", color: "#FFF8EC", textShadow: OUT, marginTop: "4px" }}>Santoni</div>
+      </div>
+      <div style={{ position: "absolute", left: "50%", top: "56%", width: "96px", height: "96px", margin: "-48px 0 0 -48px", display: "grid", placeItems: "center", borderRadius: "50%", border: "4px solid #FFF8EC", background: "rgba(210,83,42,.92)", boxShadow: "0 0 0 10px rgba(210,83,42,.25), 0 0 40px rgba(255,150,60,.6)", color: "#FFF8EC", font: "54px/1 'Material Symbols Rounded'", animation: "introPulse 1.4s ease-in-out infinite" }}>play_arrow</div>
+      <div style={{ position: "absolute", left: "0", right: "0", top: "66%", textAlign: "center", color: "#F3E6D3", font: "600 14px/1.4 'Bricolage Grotesque'" }}>Ketuk untuk menonton opening<br /><span style={{ opacity: .7 }}>nyalakan suara 🔊</span></div>
+      <button onClick={e => { e.stopPropagation(); i.start(); }} style={{ position: "absolute", left: "50%", bottom: "7%", transform: "translateX(-50%)", height: "36px", padding: "0 16px", border: "2px solid rgba(255,248,236,.5)", borderRadius: "12px", background: "transparent", color: "#F3E6D3", font: "800 12.5px/1 'Bricolage Grotesque'", cursor: "pointer" }}>Langsung main ›</button>
+    </div>
+  );
+}
+
 export default function IntroScreen({ v }) {
   const i = v.intro;
+  if (!i.playing && !i.leaving) return <Gate i={i} />;
   return (
     <div onClick={i.start} role="button" aria-label="Ketuk untuk mulai" style={{ ...ABS, zIndex: "70", overflow: "hidden", cursor: "pointer", background: "#0E0A08", animation: i.leaving ? "introOut .45s ease-in both" : "none" }}>
 

@@ -7,6 +7,7 @@ export default function Shop({ v }) {
         <div style={{ font: "28px/1 var(--display)" }}>Toko</div>
         <div style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#5E4A3F" }}>PERMATA DAN PENYESALAN</div>
       </div>
+      {!v.playApp && (
       <div style={{ marginTop: "12px", padding: "12px", border: "3px solid #2B1E18", borderRadius: "22px", background: "linear-gradient(160deg,#3A2A5E,#5A3E8A)", color: "#FFF8EC", boxShadow: "var(--lift5)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <span style={{ font: "22px/1 'Material Symbols Rounded'", color: "#E7D9F5" }}>diamond</span>
@@ -43,6 +44,7 @@ export default function Shop({ v }) {
         )}
         <div style={{ marginTop: "8px", font: "500 10.5px/1.4 'Bricolage Grotesque'", color: "#E7D9F5" }}>{v.loggedIn ? 'Pembayaran diproses Midtrans. Permata masuk ke akunmu setelah lunas.' : 'Masuk ke akun dulu supaya permata yang dibeli tersimpan aman.'}</div>
       </div>
+      )}
       <div style={{ marginTop: "12px", border: "3px solid #2B1E18", borderRadius: "24px", background: "#FFF8EC", boxShadow: "var(--lift5)", overflow: "hidden" }}>
         <div style={{ position: "relative", height: "166px", borderBottom: "2.5px solid #2B1E18", backgroundColor: "#2B1E18", backgroundImage: "radial-gradient(rgba(255,248,236,.1) 1.2px,transparent 1.5px)", backgroundSize: "10px 10px", color: "#FFF8EC" }}>
           <ShopBanner still={v.still} />

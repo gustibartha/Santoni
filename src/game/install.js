@@ -24,3 +24,13 @@ export async function promptInstall() {
   notify();
   return choice.outcome;
 }
+
+// Running as the Play Store app (a Trusted Web Activity): Google Play rules require Play Billing for
+// digital goods, so the Midtrans gem store is hidden there. The app launches with ?source=twa or
+// from an android-app:// referrer; remember it for the session.
+export function isPlayApp() {
+  try {
+    if (new URLSearchParams(location.search).get('source') === 'twa' || document.referrer.startsWith('android-app://')) sessionStorage.setItem('santoni:twa', '1');
+    return sessionStorage.getItem('santoni:twa') === '1';
+  } catch { return false; }
+}

@@ -82,7 +82,7 @@ export default function SetelanScreen({ v }) {
           <button onClick={a.shareGame} style={{ height: "34px", padding: "0 11px", border: "2px solid #2B1E18", borderRadius: "11px", background: "#FFF8EC", color: "#2B1E18", font: "800 12px/1 'Bricolage Grotesque'", cursor: "pointer" }}>Bagikan</button>
         </Row>
       </div>
-      <div style={{ ...NOTE, textAlign: "center", marginTop: "14px" }}>Petualangan Santoni · santoni.vercel.app</div>
+      <div style={{ ...NOTE, textAlign: "center", marginTop: "14px" }}>Petualangan Santoni · santoni.vercel.app · <a href="/privasi.html" style={{ color: "#A93D1C" }}>Kebijakan Privasi</a></div>
     </div>
   );
 }

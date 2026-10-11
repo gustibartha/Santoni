@@ -30,6 +30,7 @@ build
 cable
 calendar_month
 call
+camera
 campaign
 cancel
 cards
@@ -64,6 +65,7 @@ credit_card
 crown
 cruelty_free
 css
+cut
 cycle
 cyclone
 delete
@@ -78,6 +80,7 @@ done
 download
 drafts
 draw
+drone
 dry_cleaning
 eco
 edit_note
@@ -287,6 +290,7 @@ store
 storefront
 stream
 style
+sweep
 switch
 swords
 sync

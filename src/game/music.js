@@ -237,6 +237,60 @@ class Music {
     }
   }
 
+  // Cinematic cues for the opening, scheduled on the audio clock (seconds from now).
+  // Returns a cancel function that silences anything not yet played.
+  cinematic(cues) {
+    if (!this.sfxOn || !this.ctx) return () => {};
+    const c = this.ctx, bus = c.createGain(), t0 = c.currentTime + 0.05;
+    bus.gain.value = 1; bus.connect(this.sfxBus);
+    this._bus = bus;
+    try { for (const [name, at] of cues) this.cue(name, t0 + at); } finally { this._bus = null; }
+    return () => { const t = c.currentTime; bus.gain.cancelScheduledValues(t); bus.gain.setValueAtTime(bus.gain.value, t); bus.gain.linearRampToValueAtTime(0, t + 0.15); };
+  }
+  sweep(t, dur, type, f0, f1, vol, q = 0.8) {
+    const c = this.ctx, s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain(), bus = this._bus || this.master;
+    s.buffer = this.noise; s.loop = true; f.type = type; f.Q.value = q;
+    f.frequency.setValueAtTime(f0, t); f.frequency.exponentialRampToValueAtTime(f1, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + dur * 0.35); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(f); f.connect(g); g.connect(bus); s.start(t); s.stop(t + dur + 0.05);
+  }
+  boom(t, vol = 0.6) {
+    const c = this.ctx, o = c.createOscillator(), g = c.createGain(), bus = this._bus || this.master;
+    o.type = 'sine'; o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(32, t + 0.9);
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.1);
+    o.connect(g); g.connect(bus); o.start(t); o.stop(t + 1.2);
+  }
+  cue(name, t) {
+    if (name === 'drone') {
+      this.sweep(t, 2.2, 'lowpass', 220, 520, 0.12, 0.6);
+      [43, 50].forEach(n => this.tone(midi(n), t, 2.1, 'sine', 0.05));
+    } else if (name === 'chime') {
+      [84, 91].forEach((n, i) => this.tone(midi(n), t + i * 0.05, 1.1, 'sine', 0.05));
+    } else if (name === 'whoosh') this.sweep(t, 0.5, 'bandpass', 400, 3200, 0.22, 1.2);
+    else if (name === 'swell') {
+      [60, 64, 67, 72].forEach((n, i) => this.tone(midi(n), t + i * 0.12, 1.8, 'triangle', 0.035));
+      this.sweep(t, 1.6, 'lowpass', 300, 2400, 0.06);
+    } else if (name === 'panel') {
+      this.sweep(t, 0.28, 'highpass', 1200, 6000, 0.16, 0.7);
+      this.kick(t + 0.18, 0.4);
+      this.tone(midi(48), t + 0.18, 0.4, 'sawtooth', 0.04, false, 500);
+    } else if (name === 'flash') {
+      this.boom(t, 0.55);
+      this.sweep(t, 1.4, 'highpass', 5000, 9000, 0.12, 0.5);
+    } else if (name === 'slam') {
+      this.boom(t, 0.75); this.kick(t, 0.55);
+      this.sweep(t, 1.6, 'highpass', 4000, 8000, 0.16, 0.5);
+      [48, 55, 60].forEach(n => this.tone(midi(n), t, 1.4, 'sawtooth', 0.03, false, 1200));
+    } else if (name === 'boing') {
+      const c = this.ctx, o = c.createOscillator(), g = c.createGain(), bus = this._bus || this.master;
+      o.type = 'triangle'; o.frequency.setValueAtTime(220, t); o.frequency.exponentialRampToValueAtTime(660, t + 0.12); o.frequency.exponentialRampToValueAtTime(330, t + 0.3);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.14, t + 0.03); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
+      o.connect(g); g.connect(bus); o.start(t); o.stop(t + 0.4);
+    } else if (name === 'sparkle') {
+      [84, 88, 91, 96].forEach((n, i) => this.tone(midi(n), t + i * 0.07, 0.6, 'sine', 0.045));
+    }
+  }
+
   kick(t, vol = 0.35) {
     const c = this.ctx, o = c.createOscillator(), g = c.createGain();
     o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.12);

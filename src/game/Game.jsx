@@ -9,7 +9,7 @@ import { companionMethods } from './companions.js';
 import { accountMethods } from './account.js';
 import { mailMethods } from './mail.js';
 import { shareMethods } from './sharing.js';
-import { isStandalone, isIOS, canPrompt, promptInstall, onInstallChange } from './install.js';
+import { isStandalone, isIOS, canPrompt, promptInstall, onInstallChange, isPlayApp } from './install.js';
 import { sendEvent } from './analytics.js';
 import { dailyMethods, wibDay } from './daily.js';
 import { storeMethods } from './store.js';
@@ -1406,10 +1406,20 @@ export default class Game extends Component {
     Object.assign(v, this.mailView(s, { g, fmt }));
     Object.assign(v, this.dailyView(s, { g, fmt }));
     Object.assign(v, this.storeView(s, { g }));
+    v.playApp = isPlayApp();
     v.openSettings = g(() => this.go('setelan'));
-    v.intro = s.intro ? { leaving: s.intro.leaving, start: () => {
+    v.intro = s.intro ? { leaving: s.intro.leaving, playing: !!s.intro.playing,
+      // The first tap unlocks audio, so the cinematic can play with its sound cues.
+      play: () => {
+        if (this.state.intro && this.state.intro.playing) return;
+        music.unlock();
+        this._introCancel = music.cinematic(INTRO_CUES);
+        this.setState({ intro: { leaving: false, playing: true } });
+      },
+      start: () => {
       if (this.state.intro && this.state.intro.leaving) return;
       try { sessionStorage.setItem('santoni:intro', '1'); } catch { /* storage blocked */ }
+      if (this._introCancel) { this._introCancel(); this._introCancel = null; }
       music.unlock(); music.sfx('chest');
       this.setState({ intro: { leaving: true } }); setTimeout(() => this.setState({ intro: null }), 450);
     } } : null;
@@ -1420,7 +1430,7 @@ export default class Game extends Component {
       toggleSfx: g(() => { music.setSfx(!music.sfxOn); audio(); }), setSfxVol: g(e => { music.setSfx(music.sfxOn, e.target.value / 100); audio(); }),
       test: g(() => { music.unlock(); setTimeout(() => music.sfx('chest'), 60); }),
       themes: v.themes, lite: !!s.lite, toggleLite: g(() => this.setState({ lite: !s.lite })), introOn: !s.introOff, toggleIntro: g(() => this.setState({ introOff: !s.introOff })),
-      replayIntro: g(() => this.setState({ intro: { leaving: false } })),
+      replayIntro: g(() => this.setState({ intro: { leaving: false, playing: false } })),
       email: s.acct && s.acct.user ? s.acct.user.email : '', account: g(() => this.go('journal')), install: v.install, shareGame: g(() => this.shareRecord()) };
     const cf = s.confirm;
     v.confirm = cf && cf.kind === 'cloud' ? v.cloudConfirm || null : cf ? {
@@ -1445,6 +1455,8 @@ export default class Game extends Component {
 }
 
 // Dungeons, arena, mine and workshop live in modes.js.
+// Sound cues for the opening cinematic: [cue, seconds after the viewer taps play].
+const INTRO_CUES = [['drone', 0], ['chime', 0.3], ['chime', 1.0], ['whoosh', 2.05], ['swell', 2.2], ['panel', 4.25], ['panel', 4.95], ['panel', 5.65], ['flash', 6.3], ['whoosh', 7.2], ['slam', 7.6], ['boing', 8.25], ['sparkle', 9.1]];
 Object.assign(Game.prototype, modeMethods, companionMethods, accountMethods, mailMethods, shareMethods, dailyMethods, storeMethods);
 // Daily challenge runs draw every random roll from the day's seed (see daily.js).
 for (const name of ['advanceDay', 'choose', 'battleStep', 'endBattle', 'reroll', 'pickSkill']) {

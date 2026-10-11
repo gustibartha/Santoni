@@ -1,7 +1,7 @@
 // Builds promo thumbnails from the game's own art: link preview (1200×630), square (1080) and
 // landscape video thumbnail (1920×1080). Titles are drawn as vector outlines from Lilita One
 // (scripts/fonts, OFL licence) so they render the same everywhere.
-// Run:  npm run thumbnail   → public/og-image.png, public/thumbnail-1080.png, public/thumbnail-1920.png
+// Run:  npm run thumbnail   → public/og-image.png, thumbnail-1080/1920.png, play-feature-graphic.png (Play Store)
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
@@ -85,6 +85,7 @@ function scene(W, H, o) {
 }
 
 const jobs = [
+  ['play-feature-graphic.png', 1024, 500, { titleSize: 118, titleY: 100, hero: { x: 200, y: 190, w: 280 }, boss: { x: 560, y: 120, w: 400 }, vs: { x: 512, y: 380, size: 92 } }],
   ['og-image.png', 1200, 630, { titleSize: 140, titleY: 120, hero: { x: 250, y: 250, w: 330 }, boss: { x: 640, y: 170, w: 470 }, vs: { x: 600, y: 470, size: 110 } }],
   ['thumbnail-1080.png', 1080, 1080, { titleSize: 190, titleY: 180, subY: 1015, hero: { x: 110, y: 470, w: 470 }, boss: { x: 520, y: 360, w: 580 }, vs: { x: 560, y: 760, size: 140 }, side: { kind: 'merak', x: -40, y: 690, w: 260 } }],
   ['thumbnail-1920.png', 1920, 1080, { titleSize: 220, titleY: 210, subY: 1015, hero: { x: 470, y: 450, w: 500 }, boss: { x: 1020, y: 300, w: 680 }, vs: { x: 1000, y: 780, size: 170 }, side: { kind: 'angsa', x: 40, y: 600, w: 380 } }]
