@@ -140,3 +140,9 @@ export async function claimGems() {
   if (error) throw error;
   return data || 0;
 }
+export async function listOrders() {
+  const sb = await client();
+  const { data, error } = await sb.from('gem_orders').select('order_id, gems, amount, status, created_at').order('created_at', { ascending: false }).limit(8);
+  if (error) throw error;
+  return data || [];
+}

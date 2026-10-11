@@ -57,6 +57,17 @@ export default function GameView({ v }) {
       {v.hasPull && <PullReveal v={v} />}
       {v.showNav && <NavBar v={v} />}
       {v.itemSheet && <ItemSheet s={v.itemSheet} />}
+      {v.purchaseDone && (
+        <div onClick={v.purchaseDone.close} style={{ position: "absolute", inset: "0", zIndex: "46", display: "grid", placeItems: "center", padding: "0 28px", background: "rgba(32,22,17,.7)", animation: "fadeIn .2s ease-out both" }}>
+          <div style={{ width: "100%", boxSizing: "border-box", padding: "22px 18px 18px", border: "3px solid #2B1E18", borderRadius: "26px", background: "linear-gradient(180deg,#FFF8EC,#F3E6FA)", boxShadow: "var(--lift6)", textAlign: "center", animation: "hatchPop .5s ease-out both" }}>
+            <div style={{ font: "500 11px/1 'DM Mono',monospace", letterSpacing: ".1em", color: "#2F7A5C" }}>PEMBAYARAN BERHASIL</div>
+            <div style={{ font: "64px/1 'Material Symbols Rounded'", color: "#7E43B5", marginTop: "10px", animation: "itemFloat 2s ease-in-out infinite" }}>diamond</div>
+            <div style={{ font: "38px/1 var(--display)", marginTop: "6px" }}>+{v.purchaseDone.gems}</div>
+            <div style={{ font: "600 13px/1.4 'Bricolage Grotesque'", color: "#5B4A40", marginTop: "6px" }}>Permata sudah masuk ke akunmu. Saldo sekarang {v.purchaseDone.balance}. Terima kasih sudah mendukung Santoni!</div>
+            <button onClick={v.purchaseDone.close} style={{ width: "100%", boxSizing: "border-box", height: "48px", marginTop: "14px", border: "3px solid #2B1E18", borderRadius: "16px", background: "#F2B63C", color: "#2B1E18", boxShadow: "var(--lift4)", font: "20px/1 var(--display)", cursor: "pointer" }}>Mantap</button>
+          </div>
+        </div>
+      )}
       {v.confirm && <ConfirmDialog c={v.confirm} />}
       {v.hasToast && <Toast v={v} />}
       <div className="phone-rim" />

@@ -27,7 +27,11 @@ export const accountMethods = {
       }
       if (user && cloud.cameFromReset) return this.startRecovery(user);
       if (user && this.submitDaily) this.submitDaily();
-      if (user && this.claimPaid) this.claimPaid();
+      if (user && this.claimPaid) {
+        this.claimPaid(); this.loadOrders();
+        const q = new URLSearchParams(location.search);
+        if (q.has('bayar') || q.has('transaction_status') || q.has('order_id')) { this.watchPayment(); history.replaceState(null, '', location.pathname); }
+      }
       if (user) await this.cloudReconcile(user);
     } catch {
       this.setAcct({ checking: false, status: 'Server akun tidak terjangkau. Progres tetap tersimpan di perangkat ini.' });

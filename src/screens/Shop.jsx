@@ -13,7 +13,8 @@ export default function Shop({ v }) {
           <span style={{ flex: "1", font: "19px/1 var(--display)" }}>Beli Permata</span>
           <span style={{ font: "500 9.5px/1 'DM Mono',monospace", letterSpacing: ".06em", color: "#E7D9F5" }}>QRIS · E-WALLET · VA</span>
         </div>
-        {v.payPending && <div style={{ marginTop: "8px", padding: "7px 10px", borderRadius: "10px", background: "rgba(255,248,236,.14)", font: "600 11.5px/1.35 'Bricolage Grotesque'" }}>Menunggu pembayaran selesai. Permata masuk otomatis begitu lunas.</div>}
+        {v.payChecking && <div style={{ marginTop: "8px", padding: "7px 10px", borderRadius: "10px", background: "#F2B63C", color: "#2B1E18", font: "700 11.5px/1.35 'Bricolage Grotesque'" }}>Memeriksa pembayaran… permata muncul begitu Midtrans mengonfirmasi.</div>}
+        {!v.payChecking && v.payPending && <div style={{ marginTop: "8px", padding: "7px 10px", borderRadius: "10px", background: "rgba(255,248,236,.14)", font: "600 11.5px/1.35 'Bricolage Grotesque'" }}>Menunggu pembayaran selesai. Permata masuk otomatis begitu lunas.</div>}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: "8px", marginTop: "10px" }}>
           {v.gemPacks.map((p, i) => (
             <button key={p.id} onClick={p.buy} className="dc-press" style={{ position: "relative", gridColumn: i === v.gemPacks.length - 1 ? "1 / -1" : "auto", display: "flex", flexDirection: "column", alignItems: "center", gap: "4px", padding: "12px 6px 10px", border: "2.5px solid #2B1E18", borderRadius: "16px", background: "#FFF8EC", color: "#2B1E18", boxShadow: "var(--lift3)", cursor: "pointer", '--press-tf': "translateY(2px)", '--press-sh': "var(--lift2)" }}>
@@ -25,6 +26,21 @@ export default function Shop({ v }) {
             </button>
           ))}
         </div>
+        {v.orders.length > 0 && (
+          <div style={{ marginTop: "10px", padding: "8px 10px", borderRadius: "12px", background: "rgba(255,248,236,.12)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ font: "500 10px/1 'DM Mono',monospace", letterSpacing: ".08em", color: "#E7D9F5" }}>RIWAYAT PEMBELIAN</span>
+              <button onClick={v.refreshOrders} style={{ border: "0", background: "none", color: "#F2B63C", font: "800 11px/1 'Bricolage Grotesque'", cursor: "pointer" }}>Muat ulang</button>
+            </div>
+            {v.orders.map(o => (
+              <div key={o.id} style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "6px", font: "600 11.5px/1.2 'Bricolage Grotesque'" }}>
+                <span style={{ flex: "1" }}>{o.gems} permata · {o.price}</span>
+                <span style={{ color: "#E7D9F5", font: "500 10px/1 'DM Mono',monospace" }}>{o.when}</span>
+                <span style={{ padding: "3px 7px", borderRadius: "7px", background: o.color, color: "#FFF8EC", font: "800 10px/1 'Bricolage Grotesque'" }}>{o.status}</span>
+              </div>
+            ))}
+          </div>
+        )}
         <div style={{ marginTop: "8px", font: "500 10.5px/1.4 'Bricolage Grotesque'", color: "#E7D9F5" }}>{v.loggedIn ? 'Pembayaran diproses Midtrans. Permata masuk ke akunmu setelah lunas.' : 'Masuk ke akun dulu supaya permata yang dibeli tersimpan aman.'}</div>
       </div>
       <div style={{ marginTop: "12px", border: "3px solid #2B1E18", borderRadius: "24px", background: "#FFF8EC", boxShadow: "var(--lift5)", overflow: "hidden" }}>
