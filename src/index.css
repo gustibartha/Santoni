@@ -221,3 +221,20 @@ button:disabled { cursor: default !important; }
 @keyframes introHop { 0% { transform: translateY(320px) } 55% { transform: translateY(-40px) scale(.95, 1.06) } 75% { transform: translateY(0) scale(1.08, .93) } 100% { transform: none } }
 @keyframes introPulse { 0%, 100% { transform: scale(1) } 50% { transform: scale(1.07) } }
 @keyframes introOut { to { opacity: 0; transform: scale(1.08) } }
+/* Cinematic opening: cuts, camera moves, rays, panels, flash and shake. */
+@keyframes cutIn { from { opacity: 0 } to { opacity: 1 } }
+@keyframes cutOut { from { opacity: 1 } to { opacity: 0; visibility: hidden } }
+@keyframes emberRise { 0% { opacity: 0; transform: translateY(30px) } 20% { opacity: 1 } 100% { opacity: 0; transform: translate(14px, -140px) } }
+@keyframes lineIn { from { opacity: 0; transform: translateY(14px); filter: blur(4px) } to { opacity: 1; transform: none; filter: none } }
+@keyframes pushIn { from { transform: scale(1) } to { transform: scale(1.14) } }
+@keyframes raysSpin { to { transform: rotate(360deg) } }
+@keyframes sunUp { from { transform: translateY(170px) scale(.7); opacity: .4 } to { transform: none; opacity: 1 } }
+@keyframes silIn { from { opacity: 0; transform: translateY(26px) } to { opacity: 1; transform: none } }
+@keyframes panelL { from { transform: skewY(-8deg) translateX(-115%) } to { transform: skewY(-8deg) } }
+@keyframes panelR { from { transform: skewY(-8deg) translateX(115%) } to { transform: skewY(-8deg) } }
+@keyframes stareZoom { from { transform: scale(.55) translateY(60px) } to { transform: scale(1) } }
+@keyframes flashHit { 0% { opacity: 0 } 15% { opacity: .95 } 100% { opacity: 0 } }
+@keyframes camShake { 0%, 100% { transform: none } 15% { transform: translate(-9px, 5px) } 30% { transform: translate(8px, -6px) } 45% { transform: translate(-6px, 4px) } 60% { transform: translate(5px, -3px) } 80% { transform: translate(-2px, 1px) } }
+@keyframes shockwave { from { opacity: .95; transform: scale(.4) } to { opacity: 0; transform: scale(11) } }
+@keyframes barTop { to { transform: translateY(-100%) } }
+@keyframes barBottom { to { transform: translateY(100%) } }
