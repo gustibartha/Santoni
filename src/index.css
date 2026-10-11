@@ -210,3 +210,14 @@ button:disabled { cursor: default !important; }
 .stage-full { background: #2B1E18; }
 .stage-full .phone { border-radius: 0; box-shadow: none; }
 .stage-full .phone-rim { display: none; }
+/* Opening cinematic. */
+@keyframes introFade { from { opacity: 0 } to { opacity: 1 } }
+@keyframes introSun { from { opacity: 0; transform: translateY(160px) scale(.5) } to { opacity: 1; transform: none } }
+@keyframes introRise { from { transform: translateY(110%) } to { transform: none } }
+@keyframes introPeekL { from { transform: translateX(-180px) rotate(-12deg) } to { transform: none } }
+@keyframes introPeekR { from { transform: translateX(190px) rotate(12deg) } to { transform: none } }
+@keyframes introDrop { 0% { opacity: 0; transform: translateY(-120px) } 70% { opacity: 1; transform: translateY(8px) } 100% { transform: none } }
+@keyframes introSlam { 0% { opacity: 0; transform: scale(2.6) rotate(-6deg) } 60% { opacity: 1; transform: scale(.92) rotate(-2deg) } 80% { transform: scale(1.06) rotate(-2deg) } 100% { transform: rotate(-2deg) } }
+@keyframes introHop { 0% { transform: translateY(320px) } 55% { transform: translateY(-40px) scale(.95, 1.06) } 75% { transform: translateY(0) scale(1.08, .93) } 100% { transform: none } }
+@keyframes introPulse { 0%, 100% { transform: scale(1) } 50% { transform: scale(1.07) } }
+@keyframes introOut { to { opacity: 0; transform: scale(1.08) } }

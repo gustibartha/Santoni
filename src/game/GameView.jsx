@@ -25,6 +25,7 @@ import ItemSheet from '../screens/ItemSheet.jsx';
 import SuratScreen from '../screens/SuratScreen.jsx';
 import HarianScreen from '../screens/HarianScreen.jsx';
 import SetelanScreen from '../screens/SetelanScreen.jsx';
+import IntroScreen from '../screens/IntroScreen.jsx';
 
 // The 390×844 phone frame. Layer order matters: offers, pulls and toasts sit above screens.
 export default function GameView({ v }) {
@@ -57,6 +58,7 @@ export default function GameView({ v }) {
       {v.hasPull && <PullReveal v={v} />}
       {v.showNav && <NavBar v={v} />}
       {v.itemSheet && <ItemSheet s={v.itemSheet} />}
+      {v.intro && <IntroScreen v={v} />}
       {v.purchaseDone && (
         <div onClick={v.purchaseDone.close} style={{ position: "absolute", inset: "0", zIndex: "46", display: "grid", placeItems: "center", padding: "0 28px", background: "rgba(32,22,17,.7)", animation: "fadeIn .2s ease-out both" }}>
           <div style={{ width: "100%", boxSizing: "border-box", padding: "22px 18px 18px", border: "3px solid #2B1E18", borderRadius: "26px", background: "linear-gradient(180deg,#FFF8EC,#F3E6FA)", boxShadow: "var(--lift6)", textAlign: "center", animation: "hatchPop .5s ease-out both" }}>

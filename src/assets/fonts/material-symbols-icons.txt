@@ -107,6 +107,7 @@ folder
 forest
 fort
 function
+functions
 gavel
 gesture
 gradient
@@ -174,6 +175,7 @@ mode_fan
 mood
 more
 move
+movie
 music_note
 music_off
 nightlight
@@ -183,7 +185,9 @@ notes
 numbers
 nutrition
 opacity
+orders
 pace
+package
 padding
 paid
 palette
@@ -191,7 +195,9 @@ pan_tool
 park
 password
 pause
+payment
 payments
+pending
 people
 person
 person_add
@@ -207,6 +213,7 @@ place
 play_arrow
 play_circle
 pool
+portrait
 post
 power
 preview

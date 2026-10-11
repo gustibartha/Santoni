@@ -30,6 +30,9 @@ export default class Game extends Component {
     const saved = props.persist && loadSave(this._initDays);
     if (saved) { this.state = { ...this.state, ...saved.state }; this._uid = saved.uid || this._uid; }
     if (this.state.confirm && this.state.confirm.kind === 'cloud') this.state.confirm = null;
+    // Opening cinematic: once per browser session, unless switched off in settings.
+    let introSeen = false; try { introSeen = sessionStorage.getItem('santoni:intro') === '1'; } catch { /* storage blocked */ }
+    this.state.intro = props.persist && !introSeen && !this.state.introOff ? { leaving: false } : null;
     this.state = { ...this.state, ...this.energyPatch(this.state, Date.now()) };
     if (this.state.best.length < C.CHAPTERS.length) this.state.best = this.state.best.concat(Array(C.CHAPTERS.length - this.state.best.length).fill(0));
     // One-time gift of new gear for saves made before it existed.
@@ -1404,13 +1407,20 @@ export default class Game extends Component {
     Object.assign(v, this.dailyView(s, { g, fmt }));
     Object.assign(v, this.storeView(s, { g }));
     v.openSettings = g(() => this.go('setelan'));
+    v.intro = s.intro ? { leaving: s.intro.leaving, start: () => {
+      if (this.state.intro && this.state.intro.leaving) return;
+      try { sessionStorage.setItem('santoni:intro', '1'); } catch { /* storage blocked */ }
+      music.unlock(); music.sfx('chest');
+      this.setState({ intro: { leaving: true } }); setTimeout(() => this.setState({ intro: null }), 450);
+    } } : null;
     v.isSetelan = scr === 'setelan'; v.lite = !!s.lite;
     const audio = () => this.setState({ audTick: Date.now() });
     v.setelan = { back: g(() => this.go('lobby')), musicOn: !!s.musicOn, vol: music.vol, sfxOn: music.sfxOn, sfxVol: music.sfxVol,
       toggleMusic: g(() => this.toggleMusic()), setVol: g(e => { music.setVolume(e.target.value / 100); audio(); }),
       toggleSfx: g(() => { music.setSfx(!music.sfxOn); audio(); }), setSfxVol: g(e => { music.setSfx(music.sfxOn, e.target.value / 100); audio(); }),
       test: g(() => { music.unlock(); setTimeout(() => music.sfx('chest'), 60); }),
-      themes: v.themes, lite: !!s.lite, toggleLite: g(() => this.setState({ lite: !s.lite })),
+      themes: v.themes, lite: !!s.lite, toggleLite: g(() => this.setState({ lite: !s.lite })), introOn: !s.introOff, toggleIntro: g(() => this.setState({ introOff: !s.introOff })),
+      replayIntro: g(() => this.setState({ intro: { leaving: false } })),
       email: s.acct && s.acct.user ? s.acct.user.email : '', account: g(() => this.go('journal')), install: v.install, shareGame: g(() => this.shareRecord()) };
     const cf = s.confirm;
     v.confirm = cf && cf.kind === 'cloud' ? v.cloudConfirm || null : cf ? {

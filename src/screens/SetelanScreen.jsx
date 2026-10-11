@@ -61,6 +61,10 @@ export default function SetelanScreen({ v }) {
             </button>
           ))}
         </div>
+        <Row icon="movie" color="#D2532A" title="Opening saat membuka game" sub="Tampil sekali setiap game dibuka.">
+          <button onClick={a.replayIntro} style={{ height: "30px", padding: "0 9px", border: "2px solid #2B1E18", borderRadius: "10px", background: "#FFF8EC", color: "#2B1E18", font: "800 11px/1 'Bricolage Grotesque'", cursor: "pointer" }}>Putar</button>
+          <Toggle on={a.introOn} onClick={a.toggleIntro} label="Opening saat membuka game" />
+        </Row>
         <Row icon="speed" color="#5E6E52" title="Mode Hemat" sub="Untuk HP ringan: tanpa efek cahaya dan partikel hiasan."><Toggle on={a.lite} onClick={a.toggleLite} label="Mode Hemat" /></Row>
       </div>
 
